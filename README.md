@@ -9,7 +9,10 @@ package, and saying when the model is wrong.
 - `contract/` — what a valid package is: a JSON Schema for the written shape, the codes a checker may
   report, and a corpus of cases. A browser editor for the same packages is tested against it too, so the two
   cannot silently disagree about a package.
-- `checker/` — a Python checker held to that contract.
+- `checker/` — a Python checker held to that contract. Install its dependencies with
+  `python -m pip install -r checker/requirements.txt`, then run
+  `python checker/check.py path/to/package.yaml`. It exits 0 for a package that fits the schema and raises
+  no issue, 1 for one that does not, and 2 for a file it could not check.
 
 The skills themselves come later, under `skills/`.
 
