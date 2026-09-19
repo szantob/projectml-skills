@@ -30,7 +30,8 @@ implementations can disagree about what a file says before any rule is applied t
 - An unquoted number is a number: `010` reads as ten and `1.0` as one. A number where the schema wants a
   string fails the schema, so an identity or a version that looks numeric must be quoted.
 - A date-like scalar such as `2026-09-19` is a string.
-- At most 100 alias resolutions are made. A document needing more is refused, not expanded.
+- A document that contains an alias is unreadable. An anchor that is never aliased changes nothing and is
+  read as if it were absent.
 
 YAML 1.1 differs on most of these points, and PyYAML's `safe_load` implements YAML 1.1. A consumer must use
 a reader that follows the rules above, whatever language it is written in.
