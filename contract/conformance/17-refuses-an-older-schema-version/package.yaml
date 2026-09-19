@@ -1,0 +1,14 @@
+schemaVersion: 2
+name: "A package written under an older schema version"
+version: ""
+valueDomains: []
+kinds:
+  - id: a
+    name: "A"
+    text: "shall hold"
+    whenItApplies: "Always."
+    parameters: []
+    rules: []
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: null

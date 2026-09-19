@@ -1,0 +1,14 @@
+schemaVersion: 3
+name: "A template names a parameter the kind does not declare"
+version: ""
+valueDomains: []
+kinds:
+  - id: capacity
+    name: "Capacity"
+    text: "shall seat {count} people"
+    whenItApplies: "When the venue seats an audience."
+    parameters: []
+    rules: []
+    howItWouldBeVerified: "By counting the seats."
+    wordingRule: "One sentence."
+    specialises: null

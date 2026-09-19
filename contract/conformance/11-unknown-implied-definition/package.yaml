@@ -1,0 +1,26 @@
+schemaVersion: 3
+name: "Completeness rules that imply nothing, or nothing that exists"
+version: ""
+valueDomains: []
+kinds:
+  - id: a
+    name: "A"
+    text: "shall hold"
+    whenItApplies: "Always."
+    parameters: []
+    rules:
+      - id: r1
+        type: CompletenessRule
+        inForce: true
+        whenItApplies: "When this kind is stated."
+        whatToLookFor: "A kind it depends on."
+        implies: null
+      - id: r2
+        type: CompletenessRule
+        inForce: true
+        whenItApplies: "When this kind is stated."
+        whatToLookFor: "Another kind it depends on."
+        implies: ghost
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: null

@@ -1,0 +1,5 @@
+{
+	"schemaValid": true,
+	"issues": [{ "code": "parameter-without-placeholder", "kind": "capacity" }],
+	"gaps": []
+}

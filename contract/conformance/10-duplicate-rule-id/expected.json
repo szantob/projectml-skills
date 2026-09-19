@@ -1,0 +1,5 @@
+{
+	"schemaValid": true,
+	"issues": [{ "code": "duplicate-rule-id", "kind": "a" }],
+	"gaps": []
+}

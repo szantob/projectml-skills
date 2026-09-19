@@ -1,0 +1,8 @@
+{
+	"schemaValid": true,
+	"issues": [
+		{ "code": "unknown-implied-definition", "kind": "a" },
+		{ "code": "unknown-implied-definition", "kind": "a" }
+	],
+	"gaps": []
+}

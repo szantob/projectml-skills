@@ -1,0 +1,11 @@
+{
+	"schemaValid": true,
+	"issues": [],
+	"gaps": [
+		{ "kind": "blank", "field": "name", "parameter": null },
+		{ "kind": "blank", "field": "text", "parameter": null },
+		{ "kind": "blank", "field": "whenItApplies", "parameter": null },
+		{ "kind": "blank", "field": "howItWouldBeVerified", "parameter": null },
+		{ "kind": "blank", "field": "wordingRule", "parameter": null }
+	]
+}

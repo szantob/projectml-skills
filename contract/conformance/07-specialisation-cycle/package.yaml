@@ -1,0 +1,23 @@
+schemaVersion: 3
+name: "Two kinds specialise each other"
+version: ""
+valueDomains: []
+kinds:
+  - id: a
+    name: "A"
+    text: "shall hold"
+    whenItApplies: "Always."
+    parameters: []
+    rules: []
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: b
+  - id: b
+    name: "B"
+    text: "shall hold"
+    whenItApplies: "Always."
+    parameters: []
+    rules: []
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: a

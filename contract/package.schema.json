@@ -1,0 +1,96 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "ProjectML implementation package",
+	"description": "The written shape of an implementation package, schema version 3. Strict: every attribute is required, and no attribute outside this schema is allowed. This is the editor's notation, not ProjectML's.",
+	"type": "object",
+	"additionalProperties": false,
+	"required": ["schemaVersion", "name", "version", "valueDomains", "kinds"],
+	"properties": {
+		"schemaVersion": { "const": 3 },
+		"name": { "type": "string" },
+		"version": { "type": "string" },
+		"valueDomains": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/valueDomain" }
+		},
+		"kinds": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/kind" }
+		}
+	},
+	"definitions": {
+		"valueDomain": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["id", "name", "description"],
+			"properties": {
+				"id": { "type": "string" },
+				"name": { "type": "string" },
+				"description": { "type": "string" }
+			}
+		},
+		"parameter": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["name", "valueDomainId", "whatToAsk"],
+			"properties": {
+				"name": { "type": "string" },
+				"valueDomainId": { "type": "string" },
+				"whatToAsk": { "type": "string" }
+			}
+		},
+		"rule": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["id", "type", "inForce", "whenItApplies", "whatToLookFor", "implies"],
+			"properties": {
+				"id": { "type": "string" },
+				"type": { "enum": ["ConflictRule", "CompletenessRule"] },
+				"inForce": { "type": "boolean" },
+				"whenItApplies": { "type": "string" },
+				"whatToLookFor": { "type": "string" },
+				"implies": { "type": ["string", "null"] }
+			},
+			"$comment": "ProjectML K96: a ConflictRule carries nothing beyond the shape every rule shares, so it implies no kind. A CompletenessRule may imply null; that is an issue a checker reports, not a malformed shape.",
+			"if": {
+				"required": ["type"],
+				"properties": { "type": { "const": "ConflictRule" } }
+			},
+			"then": {
+				"properties": { "implies": { "type": "null" } }
+			}
+		},
+		"kind": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": [
+				"id",
+				"name",
+				"text",
+				"whenItApplies",
+				"parameters",
+				"rules",
+				"howItWouldBeVerified",
+				"wordingRule",
+				"specialises"
+			],
+			"properties": {
+				"id": { "type": "string" },
+				"name": { "type": "string" },
+				"text": { "type": "string" },
+				"whenItApplies": { "type": "string" },
+				"parameters": {
+					"type": "array",
+					"items": { "$ref": "#/definitions/parameter" }
+				},
+				"rules": {
+					"type": "array",
+					"items": { "$ref": "#/definitions/rule" }
+				},
+				"howItWouldBeVerified": { "type": "string" },
+				"wordingRule": { "type": "string" },
+				"specialises": { "type": ["string", "null"] }
+			}
+		}
+	}
+}

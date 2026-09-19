@@ -1,0 +1,20 @@
+schemaVersion: 3
+name: "A conflict rule names a kind it implies"
+version: ""
+valueDomains: []
+kinds:
+  - id: a
+    name: "A"
+    text: "shall hold"
+    whenItApplies: "Always."
+    parameters: []
+    rules:
+      - id: r1
+        type: ConflictRule
+        inForce: true
+        whenItApplies: "When two statements are made."
+        whatToLookFor: "Two that cannot both hold."
+        implies: a
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: null

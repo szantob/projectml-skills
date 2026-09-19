@@ -1,0 +1,26 @@
+schemaVersion: 3
+name: "A parameter and a rule with their prose unwritten"
+version: ""
+valueDomains:
+  - id: headcount
+    name: "Headcount"
+    description: "A whole number of people."
+kinds:
+  - id: capacity
+    name: "Capacity"
+    text: "shall seat {count} people"
+    whenItApplies: "When the venue seats an audience."
+    parameters:
+      - name: count
+        valueDomainId: headcount
+        whatToAsk: ""
+    rules:
+      - id: r1
+        type: ConflictRule
+        inForce: true
+        whenItApplies: ""
+        whatToLookFor: ""
+        implies: null
+    howItWouldBeVerified: "By counting the seats."
+    wordingRule: "One sentence."
+    specialises: null

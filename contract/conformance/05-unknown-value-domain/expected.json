@@ -1,0 +1,5 @@
+{
+	"schemaValid": true,
+	"issues": [{ "code": "unknown-value-domain", "kind": "capacity" }],
+	"gaps": []
+}

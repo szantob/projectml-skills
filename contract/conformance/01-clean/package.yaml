@@ -1,0 +1,41 @@
+schemaVersion: 3
+name: "A clean package"
+version: "1.0"
+valueDomains:
+  - id: headcount
+    name: "Headcount"
+    description: "A whole number of people."
+kinds:
+  - id: capacity
+    name: "Capacity"
+    text: "shall seat {count} people"
+    whenItApplies: "When the venue seats an audience."
+    parameters:
+      - name: count
+        valueDomainId: headcount
+        whatToAsk: "How many people must be seated?"
+    rules: []
+    howItWouldBeVerified: "By counting the seats."
+    wordingRule: "One sentence, in the present tense."
+    specialises: null
+  - id: seating
+    name: "Seating"
+    text: "shall provide seats"
+    whenItApplies: "When the audience is seated."
+    parameters: []
+    rules:
+      - id: r1
+        type: ConflictRule
+        inForce: true
+        whenItApplies: "When two seating plans are stated."
+        whatToLookFor: "Two plans that cannot both hold."
+        implies: null
+      - id: r2
+        type: CompletenessRule
+        inForce: false
+        whenItApplies: "When seating is required."
+        whatToLookFor: "A stated capacity."
+        implies: capacity
+    howItWouldBeVerified: "By inspecting the floor plan."
+    wordingRule: "One sentence, in the present tense."
+    specialises: capacity

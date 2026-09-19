@@ -1,0 +1,46 @@
+{
+	"issueCodes": [
+		"duplicate-kind-id",
+		"duplicate-value-domain-id",
+		"duplicate-parameter-name",
+		"unknown-value-domain",
+		"unknown-parent",
+		"specialisation-cycle",
+		"placeholder-without-parameter",
+		"parameter-without-placeholder",
+		"duplicate-rule-id",
+		"unknown-implied-definition"
+	],
+	"gapFields": [
+		"name",
+		"text",
+		"whenItApplies",
+		"howItWouldBeVerified",
+		"wordingRule",
+		"whatToAsk",
+		"ruleWhenItApplies",
+		"ruleWhatToLookFor"
+	],
+	"issueGlosses": {
+		"duplicate-kind-id": "Two or more kinds carry the same identity. Reported once per repeated identity, naming it, however many kinds carry it.",
+		"duplicate-value-domain-id": "Two or more value domains carry the same identity. Reported once per repeated identity, as an issue about the package as a whole, so it names no kind.",
+		"duplicate-parameter-name": "A kind declares two or more parameters with the same name. Reported once per repeated name, naming the kind.",
+		"unknown-value-domain": "A parameter names a value domain the package does not declare, an empty name included. Reported once per such parameter, naming its kind.",
+		"unknown-parent": "A kind specialises an identity no kind carries. Reported once per such kind. A kind that specialises itself is a cycle, not an unknown parent.",
+		"specialisation-cycle": "A kind sits on a specialisation cycle, a kind that specialises itself included. Reported once per kind on the cycle, each naming itself. A kind that only descends from a cycle is not reported.",
+		"placeholder-without-parameter": "A placeholder in a kind's wording template names no parameter of that kind. A placeholder is written {name}: whitespace inside the braces is trimmed, an empty placeholder is ignored, and a placeholder repeated within one template is reported once.",
+		"parameter-without-placeholder": "A parameter appears in no placeholder of its kind's wording template, read by the same rules. Reported once per parameter.",
+		"duplicate-rule-id": "A kind states two or more rules with the same identity. Reported once per repeated identity, naming the kind. A rule's identity is unique among its own kind's rules only, so the same identity on rules of two different kinds is not an issue.",
+		"unknown-implied-definition": "A CompletenessRule implies no kind, or implies an identity no kind carries. Reported once per such rule, naming its kind. A ConflictRule is never checked, and a rule is checked whether or not it is in force."
+	},
+	"gapGlosses": {
+		"name": "A kind's name is unwritten. For this field and every other, text of only whitespace counts as unwritten.",
+		"text": "A kind's wording template is unwritten.",
+		"whenItApplies": "A kind's statement of when it applies is unwritten.",
+		"howItWouldBeVerified": "A kind's statement of how it would be verified is unwritten.",
+		"wordingRule": "A kind's wording rule is unwritten.",
+		"whatToAsk": "A parameter's statement of what to ask is unwritten. The only gap that names a parameter, which it does by name.",
+		"ruleWhenItApplies": "A rule's statement of when it applies is unwritten. Reported once per such rule, naming its kind and no parameter, so two such rules on one kind give two identical entries. A rule is checked whether or not it is in force.",
+		"ruleWhatToLookFor": "A rule's statement of what to look for is unwritten. Reported once per such rule, naming its kind and no parameter, so two such rules on one kind give two identical entries. A rule is checked whether or not it is in force."
+	}
+}

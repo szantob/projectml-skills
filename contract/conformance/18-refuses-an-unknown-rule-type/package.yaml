@@ -1,0 +1,20 @@
+schemaVersion: 3
+name: "A rule of a specialisation the metamodel does not define"
+version: ""
+valueDomains: []
+kinds:
+  - id: a
+    name: "A"
+    text: "shall hold"
+    whenItApplies: "Always."
+    parameters: []
+    rules:
+      - id: r1
+        type: SizingRule
+        inForce: true
+        whenItApplies: "When a size is stated."
+        whatToLookFor: "A size too small for the audience."
+        implies: null
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: null

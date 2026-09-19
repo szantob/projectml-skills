@@ -1,0 +1,15 @@
+schemaVersion: 3
+name: "A kind carries an attribute the notation does not define"
+version: ""
+valueDomains: []
+kinds:
+  - id: a
+    name: "A"
+    text: "shall hold"
+    whenItApplies: "Always."
+    parameters: []
+    rules: []
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: null
+    notes: "An attribute of the agent's own invention."

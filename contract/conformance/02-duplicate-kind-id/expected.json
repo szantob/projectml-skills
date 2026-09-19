@@ -1,0 +1,5 @@
+{
+	"schemaValid": true,
+	"issues": [{ "code": "duplicate-kind-id", "kind": "twin" }],
+	"gaps": []
+}

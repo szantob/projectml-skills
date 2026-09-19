@@ -1,0 +1,13 @@
+schemaVersion: 3
+name: "A kind is missing its wording rule"
+version: ""
+valueDomains: []
+kinds:
+  - id: a
+    name: "A"
+    text: "shall hold"
+    whenItApplies: "Always."
+    parameters: []
+    rules: []
+    howItWouldBeVerified: "By inspection."
+    specialises: null

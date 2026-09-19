@@ -1,0 +1,14 @@
+schemaVersion: 3
+name: "A kind with its prose unwritten"
+version: ""
+valueDomains: []
+kinds:
+  - id: blank
+    name: ""
+    text: ""
+    whenItApplies: ""
+    parameters: []
+    rules: []
+    howItWouldBeVerified: ""
+    wordingRule: "   "
+    specialises: null
