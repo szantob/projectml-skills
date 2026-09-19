@@ -1,0 +1,6 @@
+schemaVersion: 3
+name: "A kind filling its attributes with a merge key"
+version: ""
+valueDomains: []
+kinds:
+  - <<: {id: copy, name: "Copy", text: "shall hold", whenItApplies: "Always.", parameters: [], rules: [], howItWouldBeVerified: "By inspection.", wordingRule: "One sentence.", specialises: null}

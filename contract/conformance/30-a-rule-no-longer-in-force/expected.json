@@ -1,0 +1,21 @@
+{
+	"schemaValid": true,
+	"issues": [
+		{
+			"code": "unknown-implied-definition",
+			"kind": "a"
+		}
+	],
+	"gaps": [
+		{
+			"kind": "a",
+			"field": "ruleWhenItApplies",
+			"parameter": null
+		},
+		{
+			"kind": "a",
+			"field": "ruleWhatToLookFor",
+			"parameter": null
+		}
+	]
+}

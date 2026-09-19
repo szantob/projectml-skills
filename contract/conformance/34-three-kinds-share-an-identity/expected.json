@@ -1,0 +1,10 @@
+{
+	"schemaValid": true,
+	"issues": [
+		{
+			"code": "duplicate-kind-id",
+			"kind": "triplet"
+		}
+	],
+	"gaps": []
+}

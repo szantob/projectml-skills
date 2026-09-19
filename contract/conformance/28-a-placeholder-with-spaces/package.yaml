@@ -1,0 +1,20 @@
+schemaVersion: 3
+name: "A placeholder written with spaces inside its braces"
+version: ""
+valueDomains:
+  - id: headcount
+    name: "Headcount"
+    description: "A whole number of people."
+kinds:
+  - id: a
+    name: "A"
+    text: "shall seat { count } people"
+    whenItApplies: "Always."
+    parameters:
+      - name: count
+        valueDomainId: headcount
+        whatToAsk: "How many?"
+    rules: []
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: null

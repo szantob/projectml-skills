@@ -1,0 +1,14 @@
+schemaVersion: 3
+name: "An identity that reads as a word"
+version: ""
+valueDomains: []
+kinds:
+  - id: yes
+    name: "Yes"
+    text: "shall hold"
+    whenItApplies: "Always."
+    parameters: []
+    rules: []
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: null

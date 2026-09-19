@@ -1,0 +1,6 @@
+schemaVersion: 3
+name: "A key repeated in one mapping"
+name: "The second value"
+version: ""
+valueDomains: []
+kinds: []

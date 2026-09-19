@@ -1,0 +1,11 @@
+schemaVersion: 3
+name: "The first of two documents"
+version: ""
+valueDomains: []
+kinds: []
+---
+schemaVersion: 3
+name: "The second"
+version: ""
+valueDomains: []
+kinds: []

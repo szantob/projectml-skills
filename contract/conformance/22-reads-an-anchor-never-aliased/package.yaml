@@ -1,0 +1,5 @@
+schemaVersion: 3
+name: &title "An anchor nothing refers to"
+version: ""
+valueDomains: []
+kinds: []

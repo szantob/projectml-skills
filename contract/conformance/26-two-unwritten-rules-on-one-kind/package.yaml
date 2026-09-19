@@ -1,0 +1,27 @@
+schemaVersion: 3
+name: "Two rules on one kind with their prose unwritten"
+version: ""
+valueDomains: []
+kinds:
+  - id: a
+    name: "A"
+    text: "shall hold"
+    whenItApplies: "Always."
+    parameters: []
+    rules:
+      - id: r1
+        type: ConflictRule
+        inForce: true
+        whenItApplies: ""
+        whatToLookFor: ""
+        implies: null
+      - id: r2
+        type: ConflictRule
+        inForce: true
+        whenItApplies: ""
+        whatToLookFor: ""
+        implies: null
+
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: null

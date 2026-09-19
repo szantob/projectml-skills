@@ -1,0 +1,10 @@
+{
+	"schemaValid": true,
+	"issues": [
+		{
+			"code": "specialisation-cycle",
+			"kind": "a"
+		}
+	],
+	"gaps": []
+}

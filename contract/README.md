@@ -38,6 +38,8 @@ a reader that follows the rules above, whatever language it is written in.
 
 ## How a case is compared
 
+- A case first says whether its file can be read at all. `"parses": false` marks one that cannot, and such a
+  case carries nothing else. A case that can be read omits `parses`, and says whether it fits the schema.
 - Issues are compared as a code and the kind they name — or `null`, for an issue about the package as a
   whole. Gaps are compared as a kind, a field, and, for a *what to ask* gap, the parameter.
 - Results are compared as sets. The order a checker presents them in is its own business.
@@ -49,7 +51,9 @@ a reader that follows the rules above, whatever language it is written in.
 ## Rules for adding a case
 
 - **Invent it.** No case may contain, quote or paraphrase a real organisation's package.
-- Every issue code and every gap field must appear in at least one case. A test enforces this.
+- Every issue code and every gap field must appear in at least one case, and a test enforces this. That is
+  the floor, not the aim: **every rule needs at least one case that separates it from its likeliest wrong
+  reading**, so that an implementation getting the rule wrong reaches a different verdict somewhere.
 - YAML is indented with spaces. Quote prose, so a colon or a brace in it cannot change the document's
   structure.
 

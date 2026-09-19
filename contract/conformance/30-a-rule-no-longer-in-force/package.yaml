@@ -1,0 +1,21 @@
+schemaVersion: 3
+name: "A retired rule is checked like any other"
+version: ""
+valueDomains: []
+kinds:
+  - id: a
+    name: "A"
+    text: "shall hold"
+    whenItApplies: "Always."
+    parameters: []
+    rules:
+      - id: r1
+        type: CompletenessRule
+        inForce: false
+        whenItApplies: ""
+        whatToLookFor: ""
+        implies: null
+
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: null

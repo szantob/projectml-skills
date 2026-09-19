@@ -1,0 +1,26 @@
+{
+	"schemaValid": true,
+	"issues": [],
+	"gaps": [
+		{
+			"kind": "a",
+			"field": "ruleWhenItApplies",
+			"parameter": null
+		},
+		{
+			"kind": "a",
+			"field": "ruleWhenItApplies",
+			"parameter": null
+		},
+		{
+			"kind": "a",
+			"field": "ruleWhatToLookFor",
+			"parameter": null
+		},
+		{
+			"kind": "a",
+			"field": "ruleWhatToLookFor",
+			"parameter": null
+		}
+	]
+}

@@ -1,0 +1,37 @@
+schemaVersion: 3
+name: "The same rule identity on the rules of two kinds"
+version: ""
+valueDomains: []
+kinds:
+  - id: a
+    name: "A"
+    text: "shall hold"
+    whenItApplies: "Always."
+    parameters: []
+    rules:
+      - id: r1
+        type: ConflictRule
+        inForce: true
+        whenItApplies: "When stated."
+        whatToLookFor: "A contradiction."
+        implies: null
+
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: null
+  - id: b
+    name: "B"
+    text: "shall hold"
+    whenItApplies: "Always."
+    parameters: []
+    rules:
+      - id: r1
+        type: ConflictRule
+        inForce: true
+        whenItApplies: "When stated."
+        whatToLookFor: "A contradiction."
+        implies: null
+
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: null

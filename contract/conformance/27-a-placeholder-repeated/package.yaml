@@ -1,0 +1,14 @@
+schemaVersion: 3
+name: "A template naming one missing parameter twice"
+version: ""
+valueDomains: []
+kinds:
+  - id: a
+    name: "A"
+    text: "shall seat {count} and then {count} again"
+    whenItApplies: "Always."
+    parameters: []
+    rules: []
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: null
