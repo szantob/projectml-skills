@@ -1,0 +1,14 @@
+schemaVersion: 3
+name: "Prose written with whitespace other than the space character"
+version: ""
+valueDomains: []
+kinds:
+  - id: blank
+    name: "\t"
+    text: "shall hold"
+    whenItApplies: "\r\n"
+    parameters: []
+    rules: []
+    howItWouldBeVerified: " \t "
+    wordingRule: "One sentence."
+    specialises: null

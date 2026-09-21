@@ -1,0 +1,23 @@
+schemaVersion: 3
+name: "Three value domains share one identity"
+version: ""
+valueDomains:
+  - id: headcount
+    name: "Headcount"
+    description: "A whole number of people."
+  - id: headcount
+    name: "Headcount again"
+    description: "The same identity, declared twice."
+  - id: headcount
+    name: "Headcount a third time"
+    description: "The same identity, declared three times."
+kinds:
+  - id: a
+    name: "A"
+    text: "shall hold"
+    whenItApplies: "Always."
+    parameters: []
+    rules: []
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: null

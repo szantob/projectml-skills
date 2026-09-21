@@ -1,0 +1,23 @@
+schemaVersion: 3
+name: "Two parameters, and a template that names neither"
+version: ""
+valueDomains:
+  - id: headcount
+    name: "Headcount"
+    description: "A whole number of people."
+kinds:
+  - id: capacity
+    name: "Capacity"
+    text: "shall seat people"
+    whenItApplies: "When the venue seats an audience."
+    parameters:
+      - name: count
+        valueDomainId: headcount
+        whatToAsk: "How many people must be seated?"
+      - name: area
+        valueDomainId: headcount
+        whatToAsk: "Over how large an area?"
+    rules: []
+    howItWouldBeVerified: "By counting the seats."
+    wordingRule: "One sentence."
+    specialises: null

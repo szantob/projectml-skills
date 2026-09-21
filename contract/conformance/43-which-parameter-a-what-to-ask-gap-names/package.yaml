@@ -1,0 +1,26 @@
+schemaVersion: 3
+name: "Three parameters, and only the middle one has nothing to ask"
+version: ""
+valueDomains:
+  - id: headcount
+    name: "Headcount"
+    description: "A whole number of people."
+kinds:
+  - id: capacity
+    name: "Capacity"
+    text: "shall seat {count} people within {area} for {duration}"
+    whenItApplies: "When the venue seats an audience."
+    parameters:
+      - name: count
+        valueDomainId: headcount
+        whatToAsk: "How many people must be seated?"
+      - name: area
+        valueDomainId: headcount
+        whatToAsk: ""
+      - name: duration
+        valueDomainId: headcount
+        whatToAsk: "For how long?"
+    rules: []
+    howItWouldBeVerified: "By counting the seats."
+    wordingRule: "One sentence."
+    specialises: null

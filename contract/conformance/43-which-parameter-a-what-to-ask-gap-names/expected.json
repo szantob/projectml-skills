@@ -1,0 +1,5 @@
+{
+	"schemaValid": true,
+	"issues": [],
+	"gaps": [{ "kind": "capacity", "field": "whatToAsk", "parameter": "area" }]
+}

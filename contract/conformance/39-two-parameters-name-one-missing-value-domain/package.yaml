@@ -1,0 +1,20 @@
+schemaVersion: 3
+name: "Two parameters name the same value domain, and it is not declared"
+version: ""
+valueDomains: []
+kinds:
+  - id: capacity
+    name: "Capacity"
+    text: "shall seat {count} people within {area}"
+    whenItApplies: "When the venue seats an audience."
+    parameters:
+      - name: count
+        valueDomainId: ghost
+        whatToAsk: "How many people must be seated?"
+      - name: area
+        valueDomainId: ghost
+        whatToAsk: "Over how large an area?"
+    rules: []
+    howItWouldBeVerified: "By counting the seats."
+    wordingRule: "One sentence."
+    specialises: null

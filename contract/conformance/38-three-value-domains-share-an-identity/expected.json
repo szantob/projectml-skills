@@ -1,0 +1,5 @@
+{
+	"schemaValid": true,
+	"issues": [{ "code": "duplicate-value-domain-id", "kind": null }],
+	"gaps": []
+}
