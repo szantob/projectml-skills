@@ -55,6 +55,7 @@ def test_an_anchor_never_aliased_is_read_as_if_absent():
         pytest.param("a: 1\n---\nb: 2\n", id="two documents"),
         pytest.param("a: &x 1\nb: *x\n", id="an alias"),
         pytest.param("a: [unclosed\n", id="a syntax error"),
+        pytest.param("? [1, 2]\n: 3\n", id="a key that is not a scalar"),
     ],
 )
 def test_the_unreadable_is_refused(text):

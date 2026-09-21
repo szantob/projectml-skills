@@ -81,6 +81,12 @@ def main(argv):
     except OSError as error:
         print(f"Cannot be read: {error}")
         return 2
+    except UnicodeDecodeError:
+        # A file in some other encoding is not a package this checker can
+        # read, and saying so is not the same answer as "the package is
+        # wrong": it must not reach the exit status that means it is.
+        print(f"Cannot be read: {argv[1]} is not UTF-8 text.")
+        return 2
     return check(text, sys.stdout)
 
 

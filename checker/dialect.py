@@ -16,6 +16,7 @@ failure a checker must not have.
 """
 
 import re
+from collections import abc
 
 import yaml
 
@@ -41,6 +42,17 @@ class _Loader(yaml.SafeLoader):
         seen = set()
         for key_node, _value_node in node.value:
             key = self.construct_object(key_node, deep=deep)
+            # A key that is a sequence or a mapping cannot be looked up in
+            # ``seen``, and PyYAML would refuse it a moment later anyway. The
+            # check for a repeated key must not get there first with a
+            # ``TypeError``, which is not an error this module can report.
+            if not isinstance(key, abc.Hashable):
+                raise yaml.constructor.ConstructorError(
+                    "while constructing a mapping",
+                    node.start_mark,
+                    "found a key that is not a scalar",
+                    key_node.start_mark,
+                )
             if key in seen:
                 raise yaml.constructor.ConstructorError(
                     None, None, f"the key {key!r} is repeated", key_node.start_mark
@@ -101,7 +113,8 @@ def load(text):
     """The document in ``text``, read by the contract's dialect.
 
     Raises ``Unreadable`` for anything the contract says cannot be read: a
-    syntax error, a repeated key, a second document, or an alias.
+    syntax error, a repeated key, a key that is not a scalar, a second
+    document, or an alias.
     """
     try:
         return yaml.load(text, Loader=_Loader)

@@ -53,6 +53,15 @@ def test_a_missing_file_exits_two(tmp_path, capsys):
     assert capsys.readouterr().out.startswith("Cannot be read:")
 
 
+def test_a_file_that_is_not_utf_8_exits_two(tmp_path, capsys):
+    # A package written out in a Windows console's own code page, which is the
+    # likeliest way a file that is not UTF-8 reaches the checker.
+    path = tmp_path / "not-utf-8.yaml"
+    path.write_bytes("version: 1\nname: tészt\n".encode("cp1250"))
+    assert check.main(["check.py", str(path)]) == 2
+    assert capsys.readouterr().out.startswith("Cannot be read:")
+
+
 def test_the_wrong_number_of_arguments_exits_two(capsys):
     assert check.main(["check.py"]) == 2
     assert "Usage:" in capsys.readouterr().out
