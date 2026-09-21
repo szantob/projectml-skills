@@ -1,0 +1,9 @@
+{
+	"schemaValid": true,
+	"issues": [
+		{ "code": "duplicate-kind-id", "kind": "twin" },
+		{ "code": "specialisation-cycle", "kind": "twin" },
+		{ "code": "specialisation-cycle", "kind": "twin" }
+	],
+	"gaps": []
+}

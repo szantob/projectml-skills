@@ -1,0 +1,23 @@
+schemaVersion: 3
+name: "Two kinds share one identity, and that identity specialises itself"
+version: ""
+valueDomains: []
+kinds:
+  - id: twin
+    name: "First"
+    text: "shall hold"
+    whenItApplies: "Always."
+    parameters: []
+    rules: []
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: twin
+  - id: twin
+    name: "Second"
+    text: "shall hold"
+    whenItApplies: "Always."
+    parameters: []
+    rules: []
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: twin
