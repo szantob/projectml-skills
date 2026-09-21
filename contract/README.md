@@ -35,7 +35,11 @@ implementations can disagree about what a file says before any rule is applied t
   ever looked up.
 - The line feed and the carriage return are the only line breaks. U+0085, U+2028 and U+2029 were line
   breaks in YAML 1.1 and are ordinary characters from 1.2 on, for JSON's sake, so a quoted scalar holding
-  one holds that character — not the space a folded line break would leave.
+  one holds that character — not the space a folded line break would leave. **Outside a quoted scalar, one
+  of the three makes the document unreadable, and whatever writes a package quotes any text holding one.**
+  A reader still following the 1.1 set reads a different document from such a file, and in the worst case
+  reads it without complaining: to that reader `a: x‹U+0085›b: 2` is two keys, and the rest of the first
+  value is gone. The three are not worth the room a silent disagreement would need.
 - A document that declares a YAML version with `%YAML`, or that gives any node an explicit tag, is
   unreadable. The rules above all say what a value means when it is left to the reader to work out; an
   explicit tag such as `!!bool` overrides that reasoning, and a version directive replaces the rules it

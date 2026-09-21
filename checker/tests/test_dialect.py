@@ -56,10 +56,34 @@ def test_the_non_ascii_line_breaks_are_ordinary_characters():
     # YAML 1.1 broke lines on these three and 1.2 does not. The library turns
     # U+0085 into a line feed, which a quoted scalar then folds to a space, so
     # without this correction a name written as one arrives unwritten.
-    assert dialect.load('a: ""\nb: " "\nc: " "\n') == {
-        "a": "",
-        "b": " ",
-        "c": " ",
+    assert dialect.load('a: "\u0085"\nb: "\u2028"\nc: "\u2029"\n') == {
+        "a": "\u0085",
+        "b": "\u2028",
+        "c": "\u2029",
+    }
+
+
+def test_the_three_are_refused_outside_a_quoted_scalar():
+    # Unquoted, this reader goes on breaking lines on them everywhere the
+    # scanner looks, so the two implementations cannot be made to agree.
+    # The worst shape it took was silent: a plain scalar holding one read
+    # as two keys, with the rest of the first value gone.
+    for text in (
+        "a: x\u0085b: 2\n",
+        "a: x\u2028y\n",
+        "a: x\u2029y\n",
+        "a: |\n  one\u0085two\n",
+    ):
+        with pytest.raises(dialect.Unreadable):
+            dialect.load(text)
+
+
+def test_the_three_are_read_inside_either_kind_of_quotes():
+    assert dialect.load("a: 'x\u2028y'\n") == {
+        "a": "x\u2028y",
+    }
+    assert dialect.load('a: \"x\u0085y\"\n') == {
+        "a": "x\u0085y",
     }
 
 

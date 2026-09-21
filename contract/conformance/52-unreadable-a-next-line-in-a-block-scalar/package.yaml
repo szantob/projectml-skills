@@ -1,0 +1,6 @@
+schemaVersion: 3
+name: |-
+  A package holding a nextline character in a block scalar
+version: ""
+valueDomains: []
+kinds: []

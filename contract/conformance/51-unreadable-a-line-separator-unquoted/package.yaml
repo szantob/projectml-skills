@@ -1,0 +1,5 @@
+schemaVersion: 3
+name: A package holding a line separator outside quotes
+version: ""
+valueDomains: []
+kinds: []

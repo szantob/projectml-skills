@@ -30,26 +30,53 @@ class Unreadable(Exception):
     """The file is not a YAML document this contract can read."""
 
 
+NON_ASCII_LINE_BREAKS = "\x85\u2028\u2029"
+
+
 class _Loader(yaml.SafeLoader):
     """SafeLoader with YAML 1.1's resolvers replaced by the 1.2 core schema's."""
 
+    # Raised to one while a quoted scalar is being scanned. The scanner has
+    # no other way to tell where it is, and inside quotes is exactly where
+    # the three characters below are read rather than refused.
+    _quoted = 0
+
+    def scan_flow_scalar(self, style):
+        self._quoted += 1
+        try:
+            return super().scan_flow_scalar(style)
+        finally:
+            self._quoted -= 1
+
     def scan_line_break(self):
-        # YAML 1.2 has two line breaks, the line feed and the carriage return;
-        # U+0085, U+2028 and U+2029 were breaks in 1.1 and are ordinary
-        # characters from 1.2 on, for JSON's sake. The library keeps the last
-        # two as themselves already, and turns U+0085 into a line feed — which
-        # a quoted scalar then folds to a space, so a name written as a single
-        # U+0085 arrived here unwritten and reached the other implementation
-        # as the character it was.
+        # YAML 1.2 has two line breaks, the line feed and the carriage
+        # return; U+0085, U+2028 and U+2029 were breaks in 1.1 and are
+        # ordinary characters from 1.2 on, for JSON's sake.
         #
-        # Returning it as itself is the whole correction. It must still be
-        # consumed: the scanner tests for the wider set in a dozen places and
-        # loops forever on a character it thinks is a break and cannot pass.
-        # The line number in an error's mark still counts it as a break, and
-        # no rule of this contract reads that.
-        if self.peek() == "\x85":
-            self.forward()
-            return "\x85"
+        # Quoted, one of them is the character it is. The library folds
+        # U+0085 to a space there and keeps the other two, so returning it
+        # as itself is the whole correction. It must still be consumed: the
+        # scanner tests for the wider set in a dozen places and loops
+        # forever on a break it cannot pass.
+        #
+        # Unquoted, the two implementations cannot be made to agree here -
+        # this one goes on breaking lines on all three everywhere else it
+        # looks - so the contract puts such a document outside the dialect
+        # and this refuses it. Without that, `a: x<U+0085>b: 2` read as two
+        # keys and dropped the rest of the first value, with no error at
+        # all: the worst shape a disagreement can take.
+        ch = self.peek()
+        if ch in NON_ASCII_LINE_BREAKS:
+            if self._quoted:
+                self.forward()
+                return ch
+            raise yaml.scanner.ScannerError(
+                None,
+                None,
+                f"a package quotes text holding U+{ord(ch):04X}, "
+                f"and this document does not",
+                self.get_mark(),
+            )
         return super().scan_line_break()
 
     def process_directives(self):

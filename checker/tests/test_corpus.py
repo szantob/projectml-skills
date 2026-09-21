@@ -65,7 +65,7 @@ def test_case(name):
 
 
 def test_the_corpus_is_all_there():
-    assert len(NAMES) == 50
+    assert len(NAMES) == 52
 
 
 def test_every_issue_code_and_every_gap_field_has_a_case():
