@@ -72,7 +72,7 @@ def _specialisation_edges(kinds):
     for position, kind in enumerate(kinds):
         positions.setdefault(kind["id"], []).append(position)
     return [
-        positions.get(kind["specialises"], []) if kind["specialises"] is not None else []
+        [] if kind["specialises"] is None else positions.get(kind["specialises"], [])
         for kind in kinds
     ]
 

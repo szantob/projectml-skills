@@ -15,17 +15,26 @@ The exit status says what kind of answer this is:
 import sys
 from pathlib import Path
 
-REQUIREMENTS = Path(__file__).resolve().parent / "requirements.txt"
+HERE = Path(__file__).resolve().parent
+REQUIREMENTS = HERE / "requirements.txt"
+OWN_MODULES = ("contract_schema", "dialect", "findings")
 
 try:
     import contract_schema
     import dialect
     import findings
 except ImportError as error:
-    print(
-        f"The checker needs PyYAML and jsonschema, and {error.name} is missing. "
-        f"Install them with: python -m pip install -r {REQUIREMENTS}"
-    )
+    # One import statement, two ways to fail: a dependency is not installed,
+    # or the checker itself is not all there. Installing the dependencies is
+    # no answer to the second, so it is not what this says.
+    if error.name in OWN_MODULES:
+        print(f"The checker is incomplete: {error.name}.py is missing from {HERE}.")
+    else:
+        print(
+            f"The checker needs PyYAML and jsonschema, and {error.name} is "
+            f"missing. Install them with: "
+            f"python -m pip install -r {REQUIREMENTS}"
+        )
     sys.exit(2)
 
 

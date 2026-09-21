@@ -11,9 +11,12 @@ import jsonschema
 
 CONTRACT = Path(__file__).resolve().parent.parent / "contract"
 
-_VALIDATOR = jsonschema.Draft7Validator(
-    json.loads((CONTRACT / "package.schema.json").read_text(encoding="utf-8"))
-)
+_SCHEMA = json.loads((CONTRACT / "package.schema.json").read_text(encoding="utf-8"))
+
+# The schema says which draft it is written against, so it is asked rather than
+# assumed. Naming a draft here would go on meaning the old one after the
+# contract moved to a newer draft, and nothing would fail to say so.
+_VALIDATOR = jsonschema.validators.validator_for(_SCHEMA)(_SCHEMA)
 
 
 def _where(error):

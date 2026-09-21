@@ -11,7 +11,8 @@ CASES = contract_schema.CONTRACT / "conformance"
 
 def _run(name):
     out = io.StringIO()
-    status = check.check((CASES / name / "package.yaml").read_text(encoding="utf-8"), out)
+    text = (CASES / name / "package.yaml").read_text(encoding="utf-8")
+    status = check.check(text, out)
     return status, out.getvalue()
 
 

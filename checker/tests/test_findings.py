@@ -10,7 +10,9 @@ def _blank_kind(kind_id):
         "name": "",
         "text": "",
         "whenItApplies": "",
-        "parameters": [{"name": "count", "valueDomainId": "headcount", "whatToAsk": ""}],
+        "parameters": [
+            {"name": "count", "valueDomainId": "headcount", "whatToAsk": ""}
+        ],
         "rules": [
             {
                 "id": "r1",

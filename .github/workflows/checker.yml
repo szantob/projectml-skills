@@ -4,6 +4,11 @@ on:
   push:
   pull_request:
 
+# This workflow reads the repository and runs tests. It writes nothing back,
+# so it is given no scope to.
+permissions:
+  contents: read
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -16,4 +21,5 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: python -m pip install -r checker/requirements-dev.txt
+      - run: python -m ruff check checker
       - run: python -m pytest checker/tests

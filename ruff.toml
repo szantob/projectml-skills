@@ -1,0 +1,11 @@
+# PEP 8, with the one thing PEP 8 leaves to the project fixed: a line is at
+# most 88 characters. CLAUDE.md says the checker follows PEP 8, and this file
+# is what makes that sentence something a reader can check rather than take on
+# trust.
+line-length = 88
+
+[lint]
+# pycodestyle's errors and warnings, which is where PEP 8 lives, and pyflakes,
+# which finds what is unused or undefined. Nothing here reformats: the checker
+# is read as prose is read, and a formatter would decide where its lines break.
+select = ["E", "W", "F"]

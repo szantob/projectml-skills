@@ -53,13 +53,14 @@ def test_case(name):
         _asserts_nothing_else(expected)
         return
 
-    assert Counter((issue.code, issue.kind) for issue in findings.issues(document)) == Counter(
-        (issue["code"], issue["kind"]) for issue in expected.get("issues", [])
-    )
+    assert Counter(
+        (issue.code, issue.kind) for issue in findings.issues(document)
+    ) == Counter((issue["code"], issue["kind"]) for issue in expected.get("issues", []))
     assert Counter(
         (gap.kind, gap.field, gap.parameter) for gap in findings.gaps(document)
     ) == Counter(
-        (gap["kind"], gap["field"], gap["parameter"]) for gap in expected.get("gaps", [])
+        (gap["kind"], gap["field"], gap["parameter"])
+        for gap in expected.get("gaps", [])
     )
 
 
