@@ -30,9 +30,15 @@ class Gap:
     parameter: str | None
 
 
+# Whitespace, as the contract defines it. Not what ``str.strip`` calls
+# whitespace with no argument: that follows Unicode, the other implementation
+# follows its own language, and the two do not agree.
+WHITESPACE = " \t\r\n"
+
+
 def _blank(text):
     """Whether ``text`` counts as unwritten: empty, or whitespace only."""
-    return text.strip() == ""
+    return text.strip(WHITESPACE) == ""
 
 
 def _repeated(values):
@@ -58,7 +64,7 @@ def _placeholders(text):
     names = []
     seen = set()
     for match in _PLACEHOLDER.finditer(text):
-        name = match.group(1).strip()
+        name = match.group(1).strip(WHITESPACE)
         if name and name not in seen:
             seen.add(name)
             names.append(name)

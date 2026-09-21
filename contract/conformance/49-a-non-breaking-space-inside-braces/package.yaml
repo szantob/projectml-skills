@@ -1,0 +1,20 @@
+schemaVersion: 3
+name: "A placeholder padded with non-breaking spaces"
+version: ""
+valueDomains:
+  - id: headcount
+    name: "Headcount"
+    description: "A whole number of people."
+kinds:
+  - id: capacity
+    name: "Capacity"
+    text: "shall seat { count } people"
+    whenItApplies: "When the venue seats an audience."
+    parameters:
+      - name: count
+        valueDomainId: headcount
+        whatToAsk: "How many people must be seated?"
+    rules: []
+    howItWouldBeVerified: "By counting the seats."
+    wordingRule: "One sentence."
+    specialises: null

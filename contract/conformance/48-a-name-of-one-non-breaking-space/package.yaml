@@ -1,0 +1,14 @@
+schemaVersion: 3
+name: "A kind whose name is one non-breaking space"
+version: ""
+valueDomains: []
+kinds:
+  - id: a
+    name: " "
+    text: "shall hold"
+    whenItApplies: "Always."
+    parameters: []
+    rules: []
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: null

@@ -34,7 +34,7 @@
 		"unknown-implied-definition": "A CompletenessRule implies no kind, or implies an identity no kind carries. Reported once per such rule, naming its kind. A ConflictRule is never checked, and a rule is checked whether or not it is in force."
 	},
 	"gapGlosses": {
-		"name": "A kind's name is unwritten. For this field and every other, text of only whitespace counts as unwritten.",
+		"name": "A kind's name is unwritten. For this field and every other, text of only whitespace counts as unwritten, and whitespace is the space, tab, carriage return and line feed — nothing else, whatever the implementation's language calls whitespace.",
 		"text": "A kind's wording template is unwritten.",
 		"whenItApplies": "A kind's statement of when it applies is unwritten.",
 		"howItWouldBeVerified": "A kind's statement of how it would be verified is unwritten.",

@@ -42,6 +42,16 @@ implementations can disagree about what a file says before any rule is applied t
 YAML 1.1 differs on most of these points, and PyYAML's `safe_load` implements YAML 1.1. A consumer must use
 a reader that follows the rules above, whatever language it is written in.
 
+## What counts as whitespace
+
+Two rules turn on it: text of only whitespace is unwritten, and whitespace inside a placeholder's braces is
+trimmed. Whitespace is **space, tab, carriage return and line feed**, and nothing else. Every other
+character is text, however it prints — a name of one non-breaking space is a name.
+
+The four are named rather than left to the implementation's language, because `strip` in one language and
+`trim` in another do not agree. They part over U+0085, U+FEFF and the C1 controls, and a rule that varies
+with the language it is written in is the one thing this contract exists to prevent.
+
 ## How a case is compared
 
 - A case first says whether its file can be read at all. `"parses": false` marks one that cannot, and such a

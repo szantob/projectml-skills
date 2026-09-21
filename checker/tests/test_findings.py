@@ -64,3 +64,24 @@ def test_an_issue_carries_a_message():
     assert issue.code == "unknown-parent"
     assert issue.kind == "a"
     assert issue.message.strip() != ""
+
+
+def test_the_four_whitespace_characters_count_as_unwritten():
+    for text in ("", " ", "\t", "\r", "\n", " \t\r\n "):
+        assert findings._blank(text), repr(text)
+
+
+def test_every_other_character_is_text_however_it_prints():
+    # ``str.strip`` with no argument follows Unicode and would call all three
+    # of these whitespace; the other implementation's ``trim`` calls two of
+    # them whitespace. The contract names its own four so that neither
+    # language decides.
+    for text in ("\u00a0", "\ufeff", "\u0085"):
+        assert not findings._blank(text), repr(text)
+
+
+def test_a_placeholder_is_trimmed_of_the_four_and_nothing_else():
+    assert findings._placeholders("seat {\tcount\n} people") == ["count"]
+    assert findings._placeholders("seat {\u00a0count\u00a0} people") == [
+        "\u00a0count\u00a0"
+    ]
