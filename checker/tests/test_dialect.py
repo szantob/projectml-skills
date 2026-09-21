@@ -52,6 +52,21 @@ def test_two_anchors_may_share_a_name_while_nothing_aliases_them():
     assert dialect.load("a: &x 1\nb: &x 2\n") == {"a": 1, "b": 2}
 
 
+def test_the_non_ascii_line_breaks_are_ordinary_characters():
+    # YAML 1.1 broke lines on these three and 1.2 does not. The library turns
+    # U+0085 into a line feed, which a quoted scalar then folds to a space, so
+    # without this correction a name written as one arrives unwritten.
+    assert dialect.load('a: ""\nb: " "\nc: " "\n') == {
+        "a": "",
+        "b": " ",
+        "c": " ",
+    }
+
+
+def test_a_real_line_break_in_a_quoted_scalar_still_folds_to_a_space():
+    assert dialect.load('a: "one\ntwo"\n') == {"a": "one two"}
+
+
 def test_a_tag_directive_alone_changes_nothing():
     # It declares a shorthand; using one would need the explicit tag refused
     # below, so on its own it leaves the document exactly as it was.

@@ -33,6 +33,25 @@ class Unreadable(Exception):
 class _Loader(yaml.SafeLoader):
     """SafeLoader with YAML 1.1's resolvers replaced by the 1.2 core schema's."""
 
+    def scan_line_break(self):
+        # YAML 1.2 has two line breaks, the line feed and the carriage return;
+        # U+0085, U+2028 and U+2029 were breaks in 1.1 and are ordinary
+        # characters from 1.2 on, for JSON's sake. The library keeps the last
+        # two as themselves already, and turns U+0085 into a line feed — which
+        # a quoted scalar then folds to a space, so a name written as a single
+        # U+0085 arrived here unwritten and reached the other implementation
+        # as the character it was.
+        #
+        # Returning it as itself is the whole correction. It must still be
+        # consumed: the scanner tests for the wider set in a dozen places and
+        # loops forever on a character it thinks is a break and cannot pass.
+        # The line number in an error's mark still counts it as a break, and
+        # no rule of this contract reads that.
+        if self.peek() == "\x85":
+            self.forward()
+            return "\x85"
+        return super().scan_line_break()
+
     def process_directives(self):
         result = super().process_directives()
         # A version directive replaces the rules this dialect reasons by, so a
