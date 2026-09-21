@@ -1,0 +1,5 @@
+schemaVersion: 3
+name: !!str "A package tagging a value with the type it already had"
+version: ""
+valueDomains: []
+kinds: []

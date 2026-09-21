@@ -31,7 +31,13 @@ implementations can disagree about what a file says before any rule is applied t
   string fails the schema, so an identity or a version that looks numeric must be quoted.
 - A date-like scalar such as `2026-09-19` is a string.
 - A document that contains an alias is unreadable. An anchor that is never aliased changes nothing and is
-  read as if it were absent.
+  read as if it were absent, and that holds however many anchors share a name: without an alias, no name is
+  ever looked up.
+- A document that declares a YAML version with `%YAML`, or that gives any node an explicit tag, is
+  unreadable. The rules above all say what a value means when it is left to the reader to work out; an
+  explicit tag such as `!!bool` overrides that reasoning, and a version directive replaces the rules it
+  reasons by. A package needs neither: it is written by a tool, for a tool. A `%TAG` directive alone
+  declares a shorthand and changes nothing, since using it would require the explicit tag this refuses.
 
 YAML 1.1 differs on most of these points, and PyYAML's `safe_load` implements YAML 1.1. A consumer must use
 a reader that follows the rules above, whatever language it is written in.

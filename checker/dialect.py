@@ -10,6 +10,11 @@ read with the core schema. They differ on six points, each corrected here:
 - a date-like scalar is a string, not a date;
 - a document that contains an alias is unreadable.
 
+Two things the dialect refuses outright are corrected here too, because the
+library allows both: an explicit tag on any node, and a `%YAML` directive. Each
+of the six rules above says what a value means when the reader is left to work
+it out, and both of these take that decision away from it.
+
 Every correction is pinned by a case in the contract's corpus and by a test of
 its own, because a reader that silently disagrees with the contract is the one
 failure a checker must not have.
@@ -28,14 +33,53 @@ class Unreadable(Exception):
 class _Loader(yaml.SafeLoader):
     """SafeLoader with YAML 1.1's resolvers replaced by the 1.2 core schema's."""
 
+    def process_directives(self):
+        result = super().process_directives()
+        # A version directive replaces the rules this dialect reasons by, so a
+        # document carrying one is outside the dialect rather than a document
+        # to be read by other rules. A %TAG directive alone declares a
+        # shorthand and changes nothing, because using it would need the
+        # explicit tag `compose_node` refuses.
+        if self.yaml_version is not None:
+            declared = ".".join(str(part) for part in self.yaml_version)
+            raise yaml.parser.ParserError(
+                None,
+                None,
+                f"a package declares no YAML version, and this one declares "
+                f"{declared}",
+                None,
+            )
+        return result
+
     def compose_node(self, parent, index):
-        # An alias makes the document unreadable. An anchor that is never
-        # aliased is harmless and is read as if it were absent.
+        # An alias makes the document unreadable.
         if self.check_event(yaml.AliasEvent):
             event = self.peek_event()
             raise yaml.composer.ComposerError(
                 None, None, "a package contains no aliases", event.start_mark
             )
+
+        event = self.peek_event()
+
+        # Every rule of this dialect says what a value means when the reader is
+        # left to work it out. An explicit tag overrides that reasoning, so a
+        # document carrying one is outside the dialect. A node whose tag was
+        # resolved implicitly carries none on its event at all.
+        if getattr(event, "tag", None) is not None:
+            raise yaml.composer.ComposerError(
+                None,
+                None,
+                f"a package gives no node an explicit tag, and this one has "
+                f"{event.tag!r}",
+                event.start_mark,
+            )
+
+        # An anchor that is never aliased is read as if it were absent, and
+        # every alias is refused above, so no anchor is ever looked up.
+        # Forgetting them is what lets two of them share a name, which the
+        # library would otherwise refuse.
+        self.anchors.clear()
+
         return super().compose_node(parent, index)
 
     def construct_mapping(self, node, deep=False):

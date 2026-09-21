@@ -48,6 +48,16 @@ def test_an_anchor_never_aliased_is_read_as_if_absent():
     assert dialect.load("a: &x 1\nb: 2\n") == {"a": 1, "b": 2}
 
 
+def test_two_anchors_may_share_a_name_while_nothing_aliases_them():
+    assert dialect.load("a: &x 1\nb: &x 2\n") == {"a": 1, "b": 2}
+
+
+def test_a_tag_directive_alone_changes_nothing():
+    # It declares a shorthand; using one would need the explicit tag refused
+    # below, so on its own it leaves the document exactly as it was.
+    assert dialect.load("%TAG !e! tag:example.com,2000:\n---\na: 1\n") == {"a": 1}
+
+
 @pytest.mark.parametrize(
     "text",
     [
@@ -56,6 +66,13 @@ def test_an_anchor_never_aliased_is_read_as_if_absent():
         pytest.param("a: &x 1\nb: *x\n", id="an alias"),
         pytest.param("a: [unclosed\n", id="a syntax error"),
         pytest.param("? [1, 2]\n: 3\n", id="a key that is not a scalar"),
+        pytest.param("a: !!bool yes\n", id="a tag that changes the value"),
+        pytest.param("a: !!str x\n", id="a tag the value would have had"),
+        pytest.param("a: !foo bar\n", id="a tag of the document's own"),
+        pytest.param("a: ! bar\n", id="the non-specific tag"),
+        pytest.param("b:\n  !!merge <<: {y: 2}\n", id="a tagged merge key"),
+        pytest.param("%YAML 1.1\n---\na: 1\n", id="a 1.1 version directive"),
+        pytest.param("%YAML 1.2\n---\na: 1\n", id="a 1.2 version directive"),
     ],
 )
 def test_the_unreadable_is_refused(text):
