@@ -42,7 +42,10 @@ a reader that follows the rules above, whatever language it is written in.
   case carries nothing else. A case that can be read omits `parses`, and says whether it fits the schema.
 - Issues are compared as a code and the kind they name — or `null`, for an issue about the package as a
   whole. Gaps are compared as a kind, a field, and, for a *what to ask* gap, the parameter.
-- Results are compared as sets. The order a checker presents them in is its own business.
+- Results are compared as multisets: how many times an entry appears counts, the order it appears in does
+  not. Two entries alike in every compared part are two results, not one — a checker that reports one where
+  a case expects two does not conform. Several glosses say how often a finding is reported, and this is
+  what makes those sentences testable.
 - A case that does not fit the schema is compared on that verdict alone, and carries no issues or gaps:
   anything written beside the verdict would be asserting nothing, so a test refuses it.
 - Kinds are named by identity because that is how the reports name them. Identities are free text and need
