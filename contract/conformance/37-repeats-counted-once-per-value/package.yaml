@@ -1,0 +1,50 @@
+schemaVersion: 3
+name: "One name repeated three times, another twice, and one rule identity three times"
+version: ""
+valueDomains:
+  - id: headcount
+    name: "Headcount"
+    description: "A whole number of people."
+kinds:
+  - id: capacity
+    name: "Capacity"
+    text: "shall seat {count} people within {area}"
+    whenItApplies: "When the venue seats an audience."
+    parameters:
+      - name: count
+        valueDomainId: headcount
+        whatToAsk: "How many people must be seated?"
+      - name: count
+        valueDomainId: headcount
+        whatToAsk: "How many people, again?"
+      - name: count
+        valueDomainId: headcount
+        whatToAsk: "How many people, a third time?"
+      - name: area
+        valueDomainId: headcount
+        whatToAsk: "Over how large an area?"
+      - name: area
+        valueDomainId: headcount
+        whatToAsk: "Over how large an area, again?"
+    rules:
+      - id: r1
+        type: ConflictRule
+        inForce: true
+        whenItApplies: "When two statements are made."
+        whatToLookFor: "Two that cannot both hold."
+        implies: null
+      - id: r1
+        type: ConflictRule
+        inForce: true
+        whenItApplies: "When a third statement is made."
+        whatToLookFor: "One that contradicts the first two."
+        implies: null
+      - id: r1
+        type: ConflictRule
+        inForce: true
+        whenItApplies: "When a fourth statement is made."
+        whatToLookFor: "One that contradicts any of the first three."
+        implies: null
+    howItWouldBeVerified: "By counting the seats."
+    wordingRule: "One sentence."
+    specialises: null

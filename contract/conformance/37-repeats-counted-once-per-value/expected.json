@@ -1,0 +1,9 @@
+{
+	"schemaValid": true,
+	"issues": [
+		{ "code": "duplicate-parameter-name", "kind": "capacity" },
+		{ "code": "duplicate-parameter-name", "kind": "capacity" },
+		{ "code": "duplicate-rule-id", "kind": "capacity" }
+	],
+	"gaps": []
+}

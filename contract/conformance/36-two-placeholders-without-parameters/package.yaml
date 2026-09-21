@@ -1,0 +1,14 @@
+schemaVersion: 3
+name: "A template naming two parameters, neither of them declared"
+version: ""
+valueDomains: []
+kinds:
+  - id: a
+    name: "A"
+    text: "shall seat {count} within {area}"
+    whenItApplies: "Always."
+    parameters: []
+    rules: []
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: null
