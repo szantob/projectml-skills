@@ -11,6 +11,8 @@ that needs exactly one — a drawing does — asks and is told when there is not
 exactly one.
 """
 
+from dataclasses import dataclass
+
 
 def specialisation_edges(kinds):
     """For each kind, by its position in ``kinds``, the positions of the
@@ -58,3 +60,77 @@ def cyclic_positions(kinds):
     return {
         position for position in range(len(kinds)) if on_a_cycle(edges, position)
     }
+
+
+class NotDrawable(Exception):
+    """The subject has no neighbourhood that could be drawn truthfully."""
+
+
+@dataclass(frozen=True)
+class Neighbourhood:
+    """One hop around a subject, in positions.
+
+    ``parent`` is ``None`` both for a root kind and for one naming a parent
+    that does not exist; ``parent_missing`` is what tells the two apart, and
+    a drawing must, because an edge to the abstract root would call the
+    second a root kind when it is not.
+    """
+
+    subject: int
+    parent: int | None
+    parent_missing: bool
+    children: tuple[int, ...]
+
+
+def neighbourhood(kinds, subject):
+    """The subject, its direct parent and its direct children, by position.
+
+    ``subject`` is a position rather than an identity, because an identity is
+    not a key. Raises ``NotDrawable`` where drawing would have to guess.
+    """
+    cyclic = cyclic_positions(kinds)
+    if subject in cyclic:
+        raise NotDrawable(
+            "the kind sits on a specialisation cycle, so it has no place in a tree"
+        )
+
+    identity = kinds[subject]["id"]
+    sharing = [
+        position
+        for position in positions_carrying(kinds, identity)
+        if position not in cyclic
+    ]
+    if len(sharing) > 1:
+        raise NotDrawable(
+            f"the identity {identity!r} is carried by {len(sharing)} kinds, at "
+            f"positions {sharing}, so whose children these are is not decided"
+        )
+
+    parent = None
+    parent_missing = False
+    named = kinds[subject]["specialises"]
+    if named is not None:
+        carriers = [
+            position
+            for position in positions_carrying(kinds, named)
+            if position not in cyclic
+        ]
+        if len(carriers) > 1:
+            raise NotDrawable(
+                f"the parent identity {named!r} is carried by {len(carriers)} "
+                f"kinds, at positions {carriers}, so which is the parent is not "
+                f"decided"
+            )
+        if carriers:
+            parent = carriers[0]
+        else:
+            parent_missing = True
+
+    children = tuple(
+        position
+        for position in range(len(kinds))
+        if position != subject
+        and position not in cyclic
+        and kinds[position]["specialises"] == identity
+    )
+    return Neighbourhood(subject, parent, parent_missing, children)
