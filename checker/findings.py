@@ -13,6 +13,8 @@ everything it does.
 import re
 from dataclasses import dataclass
 
+from tree import on_a_cycle, specialisation_edges
+
 _PLACEHOLDER = re.compile(r"\{([^{}]*)\}")
 
 
@@ -69,34 +71,6 @@ def _placeholders(text):
             seen.add(name)
             names.append(name)
     return names
-
-
-def _specialisation_edges(kinds):
-    """For each kind, by its position in ``kinds``, the positions of the
-    kinds that carry the identity it specialises."""
-    positions = {}
-    for position, kind in enumerate(kinds):
-        positions.setdefault(kind["id"], []).append(position)
-    return [
-        [] if kind["specialises"] is None else positions.get(kind["specialises"], [])
-        for kind in kinds
-    ]
-
-
-def _on_a_cycle(edges, start):
-    """Whether following ``edges`` from ``start`` can lead back to
-    ``start``."""
-    stack = list(edges[start])
-    visited = set()
-    while stack:
-        position = stack.pop()
-        if position == start:
-            return True
-        if position in visited:
-            continue
-        visited.add(position)
-        stack.extend(edges[position])
-    return False
 
 
 def issues(package):
@@ -196,12 +170,12 @@ def issues(package):
                     )
                 )
 
-    edges = _specialisation_edges(kinds)
+    edges = specialisation_edges(kinds)
     for position, kind in enumerate(kinds):
         parent = kind["specialises"]
         if parent is None:
             continue
-        if _on_a_cycle(edges, position):
+        if on_a_cycle(edges, position):
             found.append(
                 Issue(
                     "specialisation-cycle",
