@@ -38,3 +38,23 @@ def on_a_cycle(edges, start):
         visited.add(position)
         stack.extend(edges[position])
     return False
+
+
+def positions_carrying(kinds, identity):
+    """The positions of the kinds carrying ``identity``, in declaration
+    order. Empty when no kind carries it, and longer than one when more than
+    one does — both ordinary states the checker reports rather than prevents."""
+    return [
+        position for position, kind in enumerate(kinds) if kind["id"] == identity
+    ]
+
+
+def cyclic_positions(kinds):
+    """The positions of the kinds sitting on a specialisation cycle.
+
+    A kind that only descends from one is not on it.
+    """
+    edges = specialisation_edges(kinds)
+    return {
+        position for position in range(len(kinds)) if on_a_cycle(edges, position)
+    }
