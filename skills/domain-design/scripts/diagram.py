@@ -18,6 +18,9 @@ from pathlib import Path
 # through their conftest; a modeller running the command reaches it here.
 sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "checker"))
 
+import contract_schema  # noqa: E402
+import dialect  # noqa: E402
+import tree  # noqa: E402
 from findings import WHITESPACE  # noqa: E402
 
 ROOT = "RequirementDefinition"
@@ -102,3 +105,141 @@ def to_mermaid(kinds, near):
     lines += body
     lines.append(f"\tstyle {names[near.subject]} {_MARK}")
     return "\n".join(lines)
+
+
+def _neighbourhood_by_position(kinds, subject_pos):
+    """Compute a neighbourhood when the subject identity is ambiguous but
+    the position is explicit."""
+    cyclic = tree.cyclic_positions(kinds)
+    if subject_pos in cyclic:
+        return None
+
+    identity = kinds[subject_pos]["id"]
+
+    parent = None
+    parent_missing = False
+    named = kinds[subject_pos]["specialises"]
+    if named is not None:
+        carriers = [
+            position
+            for position in tree.positions_carrying(kinds, named)
+            if position not in cyclic
+        ]
+        if len(carriers) > 1:
+            return None
+        if carriers:
+            parent = carriers[0]
+        else:
+            parent_missing = True
+
+    children = tuple(
+        position
+        for position in range(len(kinds))
+        if position != subject_pos
+        and position not in cyclic
+        and kinds[position]["specialises"] == identity
+    )
+    return tree.Neighbourhood(subject_pos, parent, parent_missing, children)
+
+
+def _subject_position(kinds, subject, position):
+    """Which kind is meant, or a sentence saying why that is not decided."""
+    if position is not None:
+        if not 0 <= position < len(kinds):
+            return None, (
+                f"There is no kind at position {position}: the package has "
+                f"{len(kinds)} kinds."
+            )
+        return position, None
+
+    carrying = tree.positions_carrying(kinds, subject)
+    if not carrying:
+        return None, f"no kind carries the identity {subject!r}."
+    if len(carrying) > 1:
+        return None, (
+            f"The identity {subject!r} is carried by {len(carrying)} kinds, at "
+            f"positions {carrying}. An identity is not a key, so which one is "
+            f"meant has to be said: name one with --position."
+        )
+    return carrying[0], None
+
+
+def draw(text, subject, out, position=None):
+    """Draw ``subject`` from the package in ``text``, and return the exit
+    status."""
+    try:
+        document = dialect.load(text)
+    except dialect.Unreadable as error:
+        out.write(f"Cannot be read: {error}\n")
+        return 2
+
+    wrong = contract_schema.misfits(document)
+    if wrong:
+        out.write("Does not fit the schema:\n")
+        for line in wrong:
+            out.write(f"  - {line}\n")
+        return 2
+
+    kinds = document["kinds"]
+    where, refusal = _subject_position(kinds, subject, position)
+    if refusal is not None:
+        out.write(f"{refusal}\n")
+        return 1
+
+    try:
+        near = tree.neighbourhood(kinds, where)
+    except tree.NotDrawable as error:
+        # If a position was explicitly specified and the only issue is
+        # subject identity ambiguity, compute the neighbourhood manually
+        # rather than rejecting it.
+        if position is not None and "is carried by" in str(error):
+            near = _neighbourhood_by_position(kinds, where)
+            if near is None:
+                out.write(f"Nothing can be drawn for this subject: {error}.\n")
+                return 1
+        else:
+            out.write(f"Nothing can be drawn for this subject: {error}.\n")
+            return 1
+
+    out.write(to_mermaid(kinds, near) + "\n")
+    return 0
+
+
+def main(argv):
+    # A package may hold any language; a Windows console does not default to
+    # one that can print it.
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
+
+    usage = (
+        "Usage: python diagram.py path/to/package.yaml <identity>\n"
+        "       python diagram.py path/to/package.yaml --position N"
+    )
+    subject = None
+    position = None
+    if len(argv) == 3 and argv[2] != "--position":
+        subject = argv[2]
+    elif len(argv) == 4 and argv[2] == "--position":
+        try:
+            position = int(argv[3])
+        except ValueError:
+            print(usage)
+            return 2
+    else:
+        print(usage)
+        return 2
+
+    try:
+        text = Path(argv[1]).read_text(encoding="utf-8")
+    except OSError as error:
+        print(f"Cannot be read: {error}")
+        return 2
+    except UnicodeDecodeError:
+        print(f"Cannot be read: {argv[1]} is not UTF-8 text.")
+        return 2
+
+    return draw(text, subject, sys.stdout, position=position)
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv))
