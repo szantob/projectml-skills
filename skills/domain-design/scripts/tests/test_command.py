@@ -81,9 +81,9 @@ kinds:
 """
 
 
-def run(text, subject=None, position=None):
+def run(text, subject=None):
     out = io.StringIO()
-    status = diagram.draw(text, subject, out, position=position)
+    status = diagram.draw(text, subject, out)
     return status, out.getvalue()
 
 
@@ -109,7 +109,7 @@ def test_a_package_that_does_not_fit_the_schema_exits_two():
 def test_an_identity_no_kind_carries_exits_one():
     status, text = run(CLEAN, subject="ghost")
     assert status == 1
-    assert "no kind carries" in text
+    assert "No kind carries" in text
 
 
 def test_an_identity_two_kinds_carry_names_both_positions():
@@ -117,24 +117,13 @@ def test_an_identity_two_kinds_carry_names_both_positions():
     assert status == 1
     assert "2 kinds" in text
     assert "[0, 1]" in text
-
-
-def test_a_position_names_one_of_them_unambiguously():
-    status, text = run(TWINS, position=1)
-    assert status == 0
-    assert text.startswith("classDiagram")
+    assert "duplicate-kind-id" in text
 
 
 def test_a_subject_on_a_cycle_says_so_rather_than_drawing():
     status, text = run(CYCLIC, subject="child")
     assert status == 1
     assert "cycle" in text
-
-
-def test_a_position_outside_the_package_exits_one():
-    status, text = run(CLEAN, position=7)
-    assert status == 1
-    assert "2 kinds" in text
 
 
 def test_the_wrong_arguments_exit_two(capsys):
