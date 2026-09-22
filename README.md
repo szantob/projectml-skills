@@ -14,7 +14,10 @@ package, and saying when the model is wrong.
   `python checker/check.py path/to/package.yaml`. It exits 0 for a package that fits the schema and raises
   no issue, 1 for one that does not, and 2 for a file it could not check.
 
-The skills themselves come later, under `skills/`.
+- `skills/` — the skills themselves, beginning with `domain-design/`. Its `scripts/diagram.py` draws one
+  kind's neighbourhood as a Mermaid class diagram: run
+  `python skills/domain-design/scripts/diagram.py path/to/package.yaml <identity>`. It exits 0 having
+  drawn, 1 for a subject it cannot draw truthfully, and 2 for a file it could not read.
 
 ## The three phases
 
