@@ -17,7 +17,8 @@ package, and saying when the model is wrong.
 - `skills/` — the skills themselves, beginning with `domain-design/`. Its `scripts/diagram.py` draws one
   kind's neighbourhood as a Mermaid class diagram: run
   `python skills/domain-design/scripts/diagram.py path/to/package.yaml <identity>`. It exits 0 having
-  drawn, 1 for a subject it cannot draw truthfully, and 2 for a file it could not read.
+  drawn, 1 for a subject it cannot draw truthfully, and 2 if the file could not be read or the document
+  it holds does not fit the schema.
 
 ## The three phases
 
