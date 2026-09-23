@@ -20,8 +20,9 @@ let them accept it or rewrite it before going further. Deciding what counts as a
 expensive judgement; a skeleton carries no prose, so rewriting it throws nothing away.
 
 Only once the skeleton holds, do the **filling**, kind by kind: name, wording template, when it applies,
-parameters (each naming the value domain it draws from), how it would be verified, and the wording rule.
-Read `skills/domain-design/reference/requirement-definitions.md` first -- see below.
+parameters (each naming the value domain it draws from), what to ask (each per parameter, the question that
+turns an unknown value into a known one), how it would be verified, and the wording rule. Read
+`skills/domain-design/reference/requirement-definitions.md` first -- see below.
 
 ## Starting from a package that already exists
 
@@ -67,6 +68,14 @@ worded:
   both. It always **names what would settle it** -- what to ask the modeller, or what to check the prose
   against. An opinion never acts on its own: it may be proposed, and nothing it proposes enters the package
   until the modeller accepts it.
+
+## When the work is done
+
+The skill's work is finished when the checker raises no issue, the modeller has seen and answered every gap
+(either by filling it or by choosing to leave it unsaid), and the modeller has answered every opinion the
+skill raised. A remaining gap is not, by itself, a reason to keep going: a gap is something not yet said, and
+a modeller is free to decide it stays unsaid. The work ends when nothing is left that the modeller has not
+seen and either acted on or deliberately declined.
 
 ## When to draw
 
