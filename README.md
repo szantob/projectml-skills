@@ -14,13 +14,13 @@ package, and saying when the model is wrong.
   `python checker/check.py path/to/package.yaml`. It exits 0 for a package that fits the schema and raises
   no issue, 1 for one that does not fit the schema or that raises an issue — a misfit is as wrong as an
   issue — and 2 for a file it could not check at all.
-- `skills/` — the skills themselves, beginning with `domain-design/`. Its `scripts/diagram.py` draws one
-  kind's neighbourhood as a Mermaid class diagram: run
-  `python skills/domain-design/scripts/diagram.py path/to/package.yaml <identity>`. It exits 0 for a
-  diagram written, 1 for a subject it will not draw, and 2 for nothing to draw from — which includes a
-  package that does not fit the schema, since there is then no subject to find in it. stdout is always a
-  Mermaid diagram, never a diagram plus something else: anything the command has to say about what it drew
-  is a `%%` comment inside the same fence, not a line outside it.
+- `skills/` — agent skills for building packages. The first is `domain-design/`, whose method is in
+  `SKILL.md` and whose reference text is in `reference/`. It runs the checker to find what to ask back,
+  and calls `python skills/domain-design/scripts/diagram.py path/to/package.yaml <identity>` to draw
+  one kind's neighbourhood as a Mermaid class diagram. The script exits 0 for a diagram written, 1 for a
+  subject it will not draw, and 2 for nothing to draw from — which includes a package that does not fit
+  the schema, since there is then no subject to find in it. stdout is always a Mermaid diagram, never a
+  diagram plus something else: anything the script has to say is a `%%` comment inside that same fence.
 
 ## The three phases
 
