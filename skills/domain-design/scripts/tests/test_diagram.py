@@ -53,6 +53,17 @@ def test_a_subject_naming_a_parent_that_does_not_exist_is_no_root():
     assert "<|--" not in drawn
 
 
+def test_a_subject_naming_a_parent_on_a_cycle_gets_no_edge_either():
+    # "a" and "b" specialise each other, a cycle; "c" descends from "a" but
+    # is not on the cycle. The parent is carried, but a kind on a cycle has
+    # no place in a tree, so this must draw exactly like a missing parent:
+    # no edge up, and no false claim that "c" is a root kind.
+    kinds = [kind("a", "b"), kind("b", "a"), kind("c", "a")]
+    drawn = draw(kinds, 2)
+    assert "RequirementDefinition" not in drawn
+    assert "<|--" not in drawn
+
+
 def test_children_are_drawn_below_the_subject():
     kinds = [kind("a"), kind("b", "a"), kind("c", "a")]
     drawn = draw(kinds, 0)

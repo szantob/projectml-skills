@@ -12,12 +12,13 @@ package, and saying when the model is wrong.
 - `checker/` — a Python checker held to that contract. Install its dependencies with
   `python -m pip install -r checker/requirements.txt`, then run
   `python checker/check.py path/to/package.yaml`. It exits 0 for a package that fits the schema and raises
-  no issue, 1 for one that does not, and 2 for a file it could not check.
-
+  no issue, 1 for one that does not fit the schema or that raises an issue — a misfit is as wrong as an
+  issue — and 2 for a file it could not check at all.
 - `skills/` — the skills themselves, beginning with `domain-design/`. Its `scripts/diagram.py` draws one
   kind's neighbourhood as a Mermaid class diagram: run
   `python skills/domain-design/scripts/diagram.py path/to/package.yaml <identity>`. It exits 0 for a
-  diagram written, 1 for a subject it cannot draw truthfully, and 2 for nothing to draw from.
+  diagram written, 1 for a subject it will not draw, and 2 for nothing to draw from — which includes a
+  package that does not fit the schema, since there is then no subject to find in it.
 
 ## The three phases
 

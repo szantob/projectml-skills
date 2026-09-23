@@ -63,6 +63,7 @@ def test_a_root_kind_has_no_parent_and_is_not_missing_one():
     assert near.subject == 0
     assert near.parent is None
     assert near.parent_missing is False
+    assert near.parent_cyclic is None
     assert near.children == ()
 
 
@@ -70,6 +71,7 @@ def test_a_child_names_its_parent_s_position():
     near = tree.neighbourhood([kind("a"), kind("b", "a")], 1)
     assert near.parent == 0
     assert near.parent_missing is False
+    assert near.parent_cyclic is None
 
 
 def test_children_come_in_declaration_order():
@@ -86,11 +88,46 @@ def test_a_parent_no_kind_carries_is_missing_rather_than_refused():
     near = tree.neighbourhood([kind("a", "ghost")], 0)
     assert near.parent is None
     assert near.parent_missing is True
+    assert near.parent_cyclic is None
+
+
+def test_a_parent_that_sits_on_a_cycle_is_named_rather_than_missing():
+    # "a" and "b" specialise each other, a cycle; "c" descends from "a" but
+    # is not on the cycle itself. The parent identity is carried — by a kind
+    # that has no place in a tree — so this is not the same state as a
+    # parent no kind carries at all.
+    kinds = [kind("a", "b"), kind("b", "a"), kind("c", "a")]
+    near = tree.neighbourhood(kinds, 2)
+    assert near.parent is None
+    assert near.parent_missing is False
+    assert near.parent_cyclic == 0
+    assert near.children == ()
 
 
 def test_a_subject_on_a_cycle_is_refused():
     with pytest.raises(tree.NotDrawable, match="cycle"):
         tree.neighbourhood([kind("a", "a")], 0)
+
+
+def test_a_subject_on_a_cycle_cites_the_finding():
+    with pytest.raises(tree.NotDrawable, match="specialisation-cycle"):
+        tree.neighbourhood([kind("a", "a")], 0)
+
+
+def test_subject_ambiguity_is_counted_over_cyclic_carriers_too():
+    # "p" and "q" specialise each other, a cycle; a second, non-cyclic kind
+    # also carries "p". Filtering cyclic carriers before counting would call
+    # this subject unambiguous, hiding one of the two kinds called "p" the
+    # way diagram.py used to before its own fix.
+    kinds = [kind("p", "q"), kind("q", "p"), kind("p")]
+    with pytest.raises(tree.NotDrawable, match="2 kinds"):
+        tree.neighbourhood(kinds, 2)
+
+
+def test_parent_ambiguity_is_counted_over_cyclic_carriers_too():
+    kinds = [kind("p", "q"), kind("q", "p"), kind("p"), kind("s", "p")]
+    with pytest.raises(tree.NotDrawable, match="2 kinds"):
+        tree.neighbourhood(kinds, 3)
 
 
 def test_an_ambiguous_parent_is_refused_rather_than_chosen():

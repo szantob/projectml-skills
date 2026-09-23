@@ -89,11 +89,15 @@ def to_mermaid(kinds, near):
         if position == near.subject:
             if near.parent is not None:
                 body.append(f"\t{names[near.parent]} <|-- {own}")
-            elif not near.parent_missing:
+            elif near.parent_missing or near.parent_cyclic is not None:
+                # Neither a parent no kind carries nor one that sits on a
+                # cycle gets an edge: an edge up to the abstract root would
+                # call the subject a root kind when it is not. The two are
+                # told apart in words, not in the diagram — see draw().
+                pass
+            else:
                 # A root kind's parent really is the abstract root, so that
-                # edge is true. A subject naming a parent no kind carries
-                # gets no edge at all: silence says there is something wrong
-                # above, where an edge would say it is a root kind.
+                # edge is true.
                 uses_root = True
                 body.append(f"\t{ROOT} <|-- {own}")
         elif position in near.children:
@@ -133,6 +137,9 @@ def draw(text, subject, out):
 
     wrong = contract_schema.misfits(document)
     if wrong:
+        # The drawer cannot even look for a subject in a package that does
+        # not fit the schema, so a misfit joins "nothing to draw from" here,
+        # unlike the checker, for which a misfit is as wrong as an issue.
         out.write("Does not fit the schema:\n")
         for line in wrong:
             out.write(f"  - {line}\n")
@@ -151,6 +158,13 @@ def draw(text, subject, out):
         return 1
 
     out.write(to_mermaid(kinds, near) + "\n")
+    if near.parent_cyclic is not None:
+        parent_identity = kinds[near.parent_cyclic]["id"]
+        out.write(
+            f"The parent it names, {parent_identity!r}, sits on a "
+            f"specialisation cycle and so is not drawn — reported as "
+            f"specialisation-cycle.\n"
+        )
     return 0
 
 
@@ -160,7 +174,10 @@ def main(argv):
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
 
-    usage = "Usage: python diagram.py path/to/package.yaml <identity>"
+    usage = (
+        "Usage: python skills/domain-design/scripts/diagram.py "
+        "path/to/package.yaml <identity>"
+    )
     if len(argv) != 3:
         print(usage)
         return 2
@@ -172,6 +189,9 @@ def main(argv):
         print(f"Cannot be read: {error}")
         return 2
     except UnicodeDecodeError:
+        # A file in some other encoding is not a package this can read, and
+        # saying so is not the same answer as "this subject will not be
+        # drawn": it must not reach the exit status that means that.
         print(f"Cannot be read: {argv[1]} is not UTF-8 text.")
         return 2
 

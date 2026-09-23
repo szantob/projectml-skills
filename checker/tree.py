@@ -70,15 +70,24 @@ class NotDrawable(Exception):
 class Neighbourhood:
     """One hop around a subject, in positions.
 
-    ``parent`` is ``None`` both for a root kind and for one naming a parent
-    that does not exist; ``parent_missing`` is what tells the two apart, and
-    a drawing must, because an edge to the abstract root would call the
-    second a root kind when it is not.
+    The parent is in exactly one of three states, told apart by ``parent``,
+    ``parent_missing`` and ``parent_cyclic`` together. ``parent`` gives a
+    position when there is a kind to draw an edge to. ``parent_missing`` is
+    true when no kind carries the identity named at all — an edge to the
+    abstract root would call that a root kind, which it is not.
+    ``parent_cyclic`` gives the position of the parent when a kind *does*
+    carry the named identity but sits on a specialisation cycle: carried, but
+    not drawn, because a kind on a cycle has no place in a tree — a caller
+    that draws the subject still owes the modeller a word about why that
+    parent is absent, which ``parent_missing`` alone would say wrongly. All
+    three are ``None``/``False`` only for a root kind, whose parent really is
+    the abstract root.
     """
 
     subject: int
     parent: int | None
     parent_missing: bool
+    parent_cyclic: int | None
     children: tuple[int, ...]
 
 
@@ -87,19 +96,21 @@ def neighbourhood(kinds, subject):
 
     ``subject`` is a position rather than an identity, because an identity is
     not a key. Raises ``NotDrawable`` where drawing would have to guess.
+
+    Ambiguity is counted over every kind carrying an identity, cyclic or not:
+    a shared identity is invalid on its own terms, independent of where its
+    carriers sit. Only once an identity is known to have exactly one carrier
+    does whether that carrier sits on a cycle come into it.
     """
     cyclic = cyclic_positions(kinds)
     if subject in cyclic:
         raise NotDrawable(
-            "the kind sits on a specialisation cycle, so it has no place in a tree"
+            "the kind sits on a specialisation cycle, so it has no place in "
+            "a tree, reported as specialisation-cycle"
         )
 
     identity = kinds[subject]["id"]
-    sharing = [
-        position
-        for position in positions_carrying(kinds, identity)
-        if position not in cyclic
-    ]
+    sharing = positions_carrying(kinds, identity)
     if len(sharing) > 1:
         raise NotDrawable(
             f"the identity {identity!r} is carried by {len(sharing)} kinds, at "
@@ -108,23 +119,22 @@ def neighbourhood(kinds, subject):
 
     parent = None
     parent_missing = False
+    parent_cyclic = None
     named = kinds[subject]["specialises"]
     if named is not None:
-        carriers = [
-            position
-            for position in positions_carrying(kinds, named)
-            if position not in cyclic
-        ]
+        carriers = positions_carrying(kinds, named)
         if len(carriers) > 1:
             raise NotDrawable(
                 f"the parent identity {named!r} is carried by {len(carriers)} "
                 f"kinds, at positions {carriers}, so which is the parent is not "
                 f"decided"
             )
-        if carriers:
-            parent = carriers[0]
-        else:
+        if not carriers:
             parent_missing = True
+        elif carriers[0] in cyclic:
+            parent_cyclic = carriers[0]
+        else:
+            parent = carriers[0]
 
     children = tuple(
         position
@@ -133,4 +143,4 @@ def neighbourhood(kinds, subject):
         and position not in cyclic
         and kinds[position]["specialises"] == identity
     )
-    return Neighbourhood(subject, parent, parent_missing, children)
+    return Neighbourhood(subject, parent, parent_missing, parent_cyclic, children)

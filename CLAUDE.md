@@ -22,6 +22,15 @@ The editor records which commit of this repository it was tested against. Push t
 editor's, or the editor will point at a commit GitHub does not have yet. Pushing is the owner's decision;
 an agent never pushes.
 
+## An identifier is not a key
+
+A kind's identity, and a value domain's, is a free-text attribute the user edits, so it is never unique: two
+may carry the same one, and one may be empty or name a parent that does not exist. Code addresses a kind by
+its position in the package's `kinds` list, or by object identity, never by its id: an id is fine for saying
+what a `specialises` names, but it is no map key, no dictionary key, and no way to tell two kinds apart.
+This is why `tree.py` speaks in positions throughout, and why a shared identity draws nothing rather than
+picking one of the kinds that carry it.
+
 ## The contract
 
 `contract/` is shared by two implementations, so a change to it is a change to both. When a case is added or

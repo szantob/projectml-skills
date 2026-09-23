@@ -49,6 +49,9 @@ def check(text, out):
 
     wrong = contract_schema.misfits(document)
     if wrong:
+        # A misfit is as wrong as an issue: both are "this package is
+        # wrong", so both are exit 1, unlike a file that could not be
+        # checked at all.
         out.write("Does not fit the schema:\n")
         for line in wrong:
             out.write(f"  - {line}\n")
