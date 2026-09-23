@@ -91,9 +91,10 @@ or on a package that already exists, before touching it:
 It draws one subject at a time: exit 0 means a diagram was written for it, exit 1 means the subject given
 will not be drawn, exit 2 means there was nothing to draw from at all. Drawing a whole domain -- walking
 every kind and drawing each one -- is this skill's own job, done by calling the script once per subject; it
-has no whole-package mode of its own. Its stdout is always one Mermaid class diagram, never a diagram plus
+has no whole-package mode of its own. On exit 0 its stdout is one Mermaid class diagram, never a diagram plus
 something else: anything it has to say about what it could not draw -- a missing parent, an identity shared
-by two drawn kinds -- is a `%%` comment inside that same fence. Relay that comment to the modeller.
+by two drawn kinds -- is a `%%` comment inside that same fence. Relay that comment to the modeller. On a
+non-zero exit it writes a sentence saying why, which is not a diagram.
 
 ## The two reference files
 

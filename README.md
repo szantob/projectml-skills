@@ -19,8 +19,9 @@ package, and saying when the model is wrong.
   and calls `python skills/domain-design/scripts/diagram.py path/to/package.yaml <identity>` to draw
   one kind's neighbourhood as a Mermaid class diagram. The script exits 0 for a diagram written, 1 for a
   subject it will not draw, and 2 for nothing to draw from — which includes a package that does not fit
-  the schema, since there is then no subject to find in it. stdout is always a Mermaid diagram, never a
-  diagram plus something else: anything the script has to say is a `%%` comment inside that same fence.
+  the schema, since there is then no subject to find in it. On exit 0 stdout is a Mermaid diagram, never a
+  diagram plus something else: anything the script has to say about what it drew is a `%%` comment inside
+  that same fence. On a non-zero exit it writes a sentence saying why, which is not a diagram.
 
 ## The three phases
 
