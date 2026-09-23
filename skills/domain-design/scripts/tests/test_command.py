@@ -4,6 +4,8 @@ answer it is."""
 import io
 from pathlib import Path
 
+import contract_schema
+import dialect
 import diagram
 
 CONFORMANCE = Path(__file__).resolve().parents[4] / "contract" / "conformance"
@@ -279,6 +281,65 @@ def test_a_cyclic_parent_and_an_unknown_parent_are_told_apart():
     assert "specialisation-cycle" in cyclic_out
     assert "specialisation-cycle" not in unknown_out
     assert "unknown-parent" in unknown_out
+
+
+def _grammatical_lines(out):
+    """Every line of ``out`` that belongs to a Mermaid class diagram: the
+    header, a tab-indented statement, or a trailing ``%%`` comment. A line
+    that is none of these falls outside the fence's grammar wherever it is
+    pasted."""
+    def _in_grammar(line):
+        return line == "classDiagram" or line.startswith("\t") or line.startswith("%%")
+
+    return [line for line in out.splitlines() if not _in_grammar(line)]
+
+
+def test_a_name_of_one_next_line_character_stays_inside_the_grammar():
+    # Corpus case 50: the kind's name is a single U+0085 (NEXT LINE)
+    # character. `str.splitlines()` reads that as ending a line, the same
+    # as `\n` or `\r`, but the flattening step used to only know
+    # `WHITESPACE` - the contract's narrower notion of blank text, which
+    # deliberately leaves U+0085 out - so the character reached the label
+    # unescaped and split the diagram's own fence in two. This does not
+    # assert the label's exact text, only that nothing broke out of the
+    # grammar the fence depends on.
+    path = CONFORMANCE / "50-a-name-of-one-next-line-character" / "package.yaml"
+    text = path.read_text(encoding="utf-8")
+    status, out = run(text, subject="a")
+    assert status == 0
+    assert _grammatical_lines(out) == []
+
+
+def test_every_drawable_kind_in_the_corpus_stays_inside_the_grammar():
+    # The sweep behind the case above: every kind, in every conformance
+    # package, tried once per distinct identity (a second kind sharing one
+    # only ever gets the same duplicate-kind-id refusal as the first) and
+    # drawn where drawing succeeds. Case 50 was the one counterexample this
+    # found among the corpus's successful draws; the property must now hold
+    # for all of them, not just that one.
+    checked = 0
+    for path in sorted(CONFORMANCE.glob("*/package.yaml")):
+        text = path.read_text(encoding="utf-8")
+        try:
+            document = dialect.load(text)
+        except dialect.Unreadable:
+            continue
+        if contract_schema.misfits(document):
+            continue
+        seen = set()
+        for kind in document["kinds"]:
+            identity = kind["id"]
+            if identity in seen:
+                continue
+            seen.add(identity)
+            status, out = run(text, subject=identity)
+            if status != 0:
+                continue
+            checked += 1
+            assert _grammatical_lines(out) == [], (path.parent.name, identity)
+    # A floor, not the exact count: the corpus is free to grow without this
+    # test needing to change, as long as it keeps drawing something.
+    assert checked >= 30
 
 
 def test_the_wrong_arguments_exit_two(capsys):

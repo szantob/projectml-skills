@@ -82,7 +82,16 @@ def _label(name):
     A name is free text, and an unescaped quote or line break ends the label
     early and breaks the whole diagram rather than the one box.
     """
-    return _RUNS.sub(" ", name).strip(WHITESPACE).replace('"', "#quot;")
+    # Flattened on the line boundaries `str.splitlines()` knows, not on
+    # `WHITESPACE`. The two sets answer different questions and must stay
+    # different: `WHITESPACE` is the contract's own, narrower notion of
+    # blank text, which deliberately leaves U+0085 and its relatives out -
+    # a name made of one of them is a name, not blank. Here the question is
+    # which characters the *output* reads as ending a line, and that is a
+    # wider set with nothing to do with blankness; `str.splitlines()` names
+    # it exactly, because it is what will read this text back.
+    single_line = " ".join(name.splitlines())
+    return _RUNS.sub(" ", single_line).strip(WHITESPACE).replace('"', "#quot;")
 
 
 def _duplicate_identity_comments(kinds, positions, names):
@@ -95,6 +104,10 @@ def _duplicate_identity_comments(kinds, positions, names):
     name is what tells their boxes apart, and that name is not in the
     package, so a reader cannot: this says so.
     """
+    # No "subject" or "parent" filter here: each already has exactly one
+    # carrier by the time this runs, or `tree.neighbourhood` has refused to
+    # draw at all - see the analogous note in `tree.py` for children. Only
+    # two or more children can still share an identity here.
     by_identity = {}
     for position in positions:
         by_identity.setdefault(kinds[position]["id"], []).append(position)
