@@ -32,15 +32,18 @@ stands, then treat its existing kinds as the skeleton pass's starting point.
 
 ## Let the checker drive what is asked back
 
-Run the checker at the end of each pass:
+Run the checker at the end of each pass (the paths below are relative to this skill's directory, because
+the working directory will be the package's, not the skill's):
 
-    python checker/check.py path/to/package.yaml
+    python ../../checker/check.py path/to/package.yaml
 
-Its findings decide what is asked back -- the questions come from the package's own holes, not from memory
-of what a package usually needs. This has a limit at the very start: an empty package raises no issue and
-has no gaps, because there is nothing yet for the checker to measure. So the skeleton pass, run from
-nothing, is driven by whatever the modeller has given -- a conversation, documents -- not by the checker.
-Once kinds exist, the checker takes over, and its output is what drives the rest of both passes.
+The checker requires Python with `PyYAML` and `jsonschema` installed; if either is missing, it will say so
+and name what to install. Its findings decide what is asked back -- the questions come from the package's
+own holes, not from memory of what a package usually needs. This has a limit at the very start: an empty
+package raises no issue and has no gaps, because there is nothing yet for the checker to measure. So the
+skeleton pass, run from nothing, is driven by whatever the modeller has given -- a conversation, documents
+-- not by the checker. Once kinds exist, the checker takes over, and its output is what drives the rest of
+both passes.
 
 ## What the checker's exit status means
 
@@ -83,7 +86,7 @@ seen and either acted on or deliberately declined.
 neighbourhood is useful -- during the skeleton pass to show the tree taking shape, after filling in a kind,
 or on a package that already exists, before touching it:
 
-    python skills/domain-design/scripts/diagram.py path/to/package.yaml <identity>
+    python scripts/diagram.py path/to/package.yaml <identity>
 
 It draws one subject at a time: exit 0 means a diagram was written for it, exit 1 means the subject given
 will not be drawn, exit 2 means there was nothing to draw from at all. Drawing a whole domain -- walking
