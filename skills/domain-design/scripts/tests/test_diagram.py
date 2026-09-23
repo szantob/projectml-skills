@@ -2,6 +2,7 @@
 
 import diagram
 import tree
+from tree import Neighbourhood
 
 
 def kind(identity, specialises=None, name=""):
@@ -57,11 +58,64 @@ def test_a_subject_naming_a_parent_on_a_cycle_gets_no_edge_either():
     # "a" and "b" specialise each other, a cycle; "c" descends from "a" but
     # is not on the cycle. The parent is carried, but a kind on a cycle has
     # no place in a tree, so this must draw exactly like a missing parent:
-    # no edge up, and no false claim that "c" is a root kind.
-    kinds = [kind("a", "b"), kind("b", "a"), kind("c", "a")]
+    # no edge up, no false claim that "c" is a root kind, and no box for
+    # the cyclic parent either — a floating box drawn nowhere would be
+    # silent about what it is doing there.
+    kinds = [kind("a", "b", name="Ay"), kind("b", "a"), kind("c", "a")]
     drawn = draw(kinds, 2)
     assert "RequirementDefinition" not in drawn
     assert "<|--" not in drawn
+    assert "Ay" not in drawn
+
+
+def test_root_edge_is_a_positive_test_not_a_fallthrough():
+    # A hand-built Neighbourhood with every parent flag clear, over a kind
+    # that still names a parent, must not draw the root edge. Whether that
+    # edge is true is decided from the package's own `specialises`, not
+    # from near having nothing else to say about the parent — a fourth
+    # parent state, if one ever arrives, must fall into "no edge" too.
+    kinds = [kind("a", "ghost")]
+    near = Neighbourhood(
+        subject=0, parent=None, parent_missing=False, parent_cyclic=None,
+        children=(),
+    )
+    drawn = diagram.to_mermaid(kinds, near)
+    assert "RequirementDefinition" not in drawn
+    assert "<|--" not in drawn
+
+
+def test_two_children_sharing_an_identity_both_draw_and_the_diagram_says_so():
+    # "s" is the subject; two children both carry the identity "t" and both
+    # specialise "s". Both edges are true — draw only what is true — but a
+    # shared identity is not a reference that has to resolve to one kind
+    # here, it is two kinds pointing at the subject, so both are drawn. The
+    # package gives no way to tell their boxes apart, so the diagram must.
+    kinds = [
+        kind("s"),
+        kind("t", "s", name="T first"),
+        kind("t", "s", name="T second"),
+    ]
+    drawn = draw(kinds, 0)
+    lines = drawn.splitlines()
+    assert "\ts <|-- t" in lines
+    assert "\ts <|-- t_1" in lines
+    assert 'class t["T first"]' in drawn
+    assert 'class t_1["T second"]' in drawn
+    assert "%% The identity 't' is carried by 2 of the drawn kinds" in drawn
+    assert "duplicate-kind-id" in drawn
+
+
+def test_a_missing_parent_says_why_in_a_mermaid_comment():
+    drawn = draw([kind("a", "ghost")], 0)
+    assert "%% The parent it names, 'ghost'" in drawn
+    assert "unknown-parent" in drawn
+
+
+def test_a_cyclic_parent_says_why_in_a_mermaid_comment():
+    kinds = [kind("a", "b"), kind("b", "a"), kind("c", "a")]
+    drawn = draw(kinds, 2)
+    assert "%% The parent it names, 'a'" in drawn
+    assert "specialisation-cycle" in drawn
 
 
 def test_children_are_drawn_below_the_subject():

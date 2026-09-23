@@ -136,11 +136,13 @@ def neighbourhood(kinds, subject):
         else:
             parent = carriers[0]
 
+    # No "not in cyclic" filter here: a child's only edge is to `subject`
+    # (the sole carrier of `identity`, established above), so a cyclic
+    # child would have to reach back to itself through `subject` — which
+    # would make `subject` cyclic too, and that is already refused above.
     children = tuple(
         position
         for position in range(len(kinds))
-        if position != subject
-        and position not in cyclic
-        and kinds[position]["specialises"] == identity
+        if position != subject and kinds[position]["specialises"] == identity
     )
     return Neighbourhood(subject, parent, parent_missing, parent_cyclic, children)

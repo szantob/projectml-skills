@@ -1,5 +1,7 @@
 """One kind's neighbourhood, as a Mermaid class diagram.
 
+    python skills/domain-design/scripts/diagram.py path/to/package.yaml <identity>
+
 One subject, one diagram. There is no whole-package mode and no fallback:
 assembling more than one picture is the agent's business, and a diagram of
 nothing helps nobody.
@@ -7,6 +9,19 @@ nothing helps nobody.
 What the tree *is* - which kind a ``specialises`` names, what falls out for
 sitting on a cycle - is not decided here. ``tree`` decides it, for the
 checker and for this alike.
+
+**stdout is always a Mermaid diagram, never a diagram plus something else.**
+Anything the command has to say about what it drew - a parent left out, an
+identity two drawn kinds share - is a trailing ``%%`` line: a Mermaid
+comment, inside the same fence as the diagram it explains. The fence stays
+valid wherever it is pasted, and an agent reading stdout still sees the
+sentence and can relay it to the modeller.
+
+The exit status says what kind of answer this is:
+
+    0   a diagram was written for the subject - gaps or not
+    1   the subject given will not be drawn
+    2   there is nothing to draw from at all
 """
 
 import re
@@ -70,8 +85,34 @@ def _label(name):
     return _RUNS.sub(" ", name).strip(WHITESPACE).replace('"', "#quot;")
 
 
+def _duplicate_identity_comments(kinds, positions, names):
+    """One ``%%`` comment for each identity that more than one drawn kind
+    carries.
+
+    Two kinds may truly specialise one identity — a child is not a
+    reference that has to resolve to exactly one kind, it is a kind that
+    points *at* the subject — so both are drawn. But the Mermaid class
+    name is what tells their boxes apart, and that name is not in the
+    package, so a reader cannot: this says so.
+    """
+    by_identity = {}
+    for position in positions:
+        by_identity.setdefault(kinds[position]["id"], []).append(position)
+    return [
+        f"%% The identity {identity!r} is carried by {len(shared)} of the "
+        f"drawn kinds; nothing in the package tells their boxes apart — "
+        f"reported as duplicate-kind-id."
+        for identity, shared in by_identity.items()
+        if len(shared) > 1
+    ]
+
+
 def to_mermaid(kinds, near):
-    """``near``, drawn. Every edge in the result is one the package states."""
+    """``near``, drawn. Every edge in the result is one the package states.
+
+    Anything the diagram cannot say as a box or an edge is appended as
+    trailing ``%%`` comment lines — see the module docstring.
+    """
     positions = sorted(
         {near.subject, *near.children}
         | ({near.parent} if near.parent is not None else set())
@@ -89,17 +130,18 @@ def to_mermaid(kinds, near):
         if position == near.subject:
             if near.parent is not None:
                 body.append(f"\t{names[near.parent]} <|-- {own}")
-            elif near.parent_missing or near.parent_cyclic is not None:
-                # Neither a parent no kind carries nor one that sits on a
-                # cycle gets an edge: an edge up to the abstract root would
-                # call the subject a root kind when it is not. The two are
-                # told apart in words, not in the diagram — see draw().
-                pass
-            else:
-                # A root kind's parent really is the abstract root, so that
-                # edge is true.
+            elif kinds[near.subject]["specialises"] is None:
+                # A positive test, derived from the package: a root kind's
+                # parent really is the abstract root, so that edge is
+                # true. Not the else of a chain over near's flags — a
+                # fourth state there would otherwise fall into this
+                # branch, the one that claims "this is a root kind".
                 uses_root = True
                 body.append(f"\t{ROOT} <|-- {own}")
+            # Neither a parent no kind carries nor one that sits on a
+            # cycle gets an edge: an edge up to the abstract root would
+            # call the subject a root kind when it is not. The two are
+            # told apart in words, not in the diagram — see below.
         elif position in near.children:
             body.append(f"\t{names[near.subject]} <|-- {own}")
 
@@ -108,6 +150,21 @@ def to_mermaid(kinds, near):
         lines += [f"\tclass {ROOT} {{", "\t\t<<abstract>>", "\t}"]
     lines += body
     lines.append(f"\tstyle {names[near.subject]} {_MARK}")
+
+    lines += _duplicate_identity_comments(kinds, positions, names)
+    if near.parent_cyclic is not None:
+        parent_identity = kinds[near.parent_cyclic]["id"]
+        lines.append(
+            f"%% The parent it names, {parent_identity!r}, sits on a "
+            f"specialisation cycle and so is not drawn — reported as "
+            f"specialisation-cycle."
+        )
+    elif near.parent_missing:
+        parent_identity = kinds[near.subject]["specialises"]
+        lines.append(
+            f"%% The parent it names, {parent_identity!r}, is carried by "
+            f"no kind and so is not drawn — reported as unknown-parent."
+        )
     return "\n".join(lines)
 
 
@@ -158,13 +215,6 @@ def draw(text, subject, out):
         return 1
 
     out.write(to_mermaid(kinds, near) + "\n")
-    if near.parent_cyclic is not None:
-        parent_identity = kinds[near.parent_cyclic]["id"]
-        out.write(
-            f"The parent it names, {parent_identity!r}, sits on a "
-            f"specialisation cycle and so is not drawn — reported as "
-            f"specialisation-cycle.\n"
-        )
     return 0
 
 

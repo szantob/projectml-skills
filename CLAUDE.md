@@ -27,9 +27,16 @@ an agent never pushes.
 A kind's identity, and a value domain's, is a free-text attribute the user edits, so it is never unique: two
 may carry the same one, and one may be empty or name a parent that does not exist. Code addresses a kind by
 its position in the package's `kinds` list, or by object identity, never by its id: an id is fine for saying
-what a `specialises` names, but it is no map key, no dictionary key, and no way to tell two kinds apart.
-This is why `tree.py` speaks in positions throughout, and why a shared identity draws nothing rather than
-picking one of the kinds that carry it.
+what a `specialises` names, but it is no map key, no `--subject <id>` naming exactly one kind, and no way to
+tell two kinds apart. This is why `tree.py` speaks in positions throughout.
+
+Where something has to resolve to exactly one kind — a subject to draw, or the parent a `specialises`
+names — a shared identity resolves to none, and nothing is drawn from it: the caller is told the identity is
+ambiguous rather than having one of its carriers picked for it. That claim is narrower than it sounds: a
+child is not such a reference, it is a kind that *points at* the subject, so two kinds may truly specialise
+one identity and both be drawn as children in the same diagram. When that happens the diagram says so, in
+words — a reader cannot tell the two boxes apart from the package, only from a name the drawing invented —
+citing `duplicate-kind-id`.
 
 ## The contract
 
@@ -42,8 +49,8 @@ corpus. Cases are compared on codes and fields, never on the wording of a messag
 
 - English everywhere: code, comments, messages, commit messages.
 - Python follows PEP 8, with four-space indentation and a line of at most 88 characters. `ruff.toml` holds
-  the rule and the workflow runs `ruff check`, so this is a sentence a reader can check rather than trust.
-  There is no formatter: the checker is read the way its prose is read, and where a line breaks is the
-  author's.
+  the rule and the workflow runs `ruff check checker skills`, so this is a sentence a reader can check
+  rather than trust. There is no formatter: the code is read the way its prose is read, and where a line
+  breaks is the author's.
 - JSON is indented with tabs. YAML is indented with two spaces, because YAML forbids tabs.
 - Commit after every task. Never push.

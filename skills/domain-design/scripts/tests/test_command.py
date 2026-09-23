@@ -84,6 +84,41 @@ kinds:
 """
 
 
+TWO_CHILDREN_ONE_IDENTITY = """schemaVersion: 3
+name: "Two children sharing one identity"
+version: ""
+valueDomains: []
+kinds:
+  - id: s
+    name: "S"
+    text: "shall hold"
+    whenItApplies: "Always."
+    parameters: []
+    rules: []
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: null
+  - id: t
+    name: "T first"
+    text: "shall hold"
+    whenItApplies: "Always."
+    parameters: []
+    rules: []
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: s
+  - id: t
+    name: "T second"
+    text: "shall hold"
+    whenItApplies: "Always."
+    parameters: []
+    rules: []
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: s
+"""
+
+
 def run(text, subject=None):
     out = io.StringIO()
     status = diagram.draw(text, subject, out)
@@ -95,6 +130,20 @@ def test_a_drawable_subject_exits_zero_and_writes_a_diagram():
     assert status == 0
     assert text.startswith("classDiagram")
     assert "parent <|-- child" in text
+
+
+def test_two_kinds_sharing_a_child_identity_both_draw_and_it_says_so():
+    # "t" (First) and "t" (Second) both specialise "s" and are both true
+    # children of it — draw only what is true — but the package gives no
+    # way to tell the two boxes apart, so the diagram must say that itself
+    # rather than silently drawing two boxes and inventing a name for one.
+    status, out = run(TWO_CHILDREN_ONE_IDENTITY, subject="s")
+    assert status == 0
+    assert out.startswith("classDiagram")
+    assert 'class t["T first"]' in out
+    assert 'class t_1["T second"]' in out
+    assert "%% The identity 't' is carried by 2 of the drawn kinds" in out
+    assert "duplicate-kind-id" in out
 
 
 def test_a_file_that_cannot_be_read_exits_two():
@@ -187,15 +236,31 @@ kinds:
 def test_a_kind_below_a_cycle_draws_and_says_why_its_parent_is_absent():
     # Corpus case 33: "c" descends from "a", which sits on a cycle with "b".
     # Drawing "c" must not be a lone box with nothing said — the parent is
-    # carried, just not drawn, and that has to be in words.
+    # carried, just not drawn, and that has to be in words, as a Mermaid
+    # comment so the fence around the diagram stays valid.
     path = CONFORMANCE / "33-a-kind-descending-from-a-cycle" / "package.yaml"
     text = path.read_text(encoding="utf-8")
     status, out = run(text, subject="c")
     assert status == 0
     assert out.startswith("classDiagram")
     assert "RequirementDefinition" not in out
+    assert "%% The parent it names, 'a'" in out
     assert "specialisation-cycle" in out
-    assert "'a'" in out
+
+
+def test_an_unknown_parent_gets_the_same_symmetric_sentence():
+    # Corpus case 06: "a" specialises "ghost", which no kind carries at
+    # all. This used to draw a lone, unexplained box; it must now say why,
+    # the same way case 33 already does for a cyclic parent — a "%%" line
+    # citing unknown-parent instead of specialisation-cycle.
+    path = CONFORMANCE / "06-unknown-parent" / "package.yaml"
+    text = path.read_text(encoding="utf-8")
+    status, out = run(text, subject="a")
+    assert status == 0
+    assert out.startswith("classDiagram")
+    assert "RequirementDefinition" not in out
+    assert "%% The parent it names, 'ghost'" in out
+    assert "unknown-parent" in out
 
 
 def test_a_cyclic_parent_and_an_unknown_parent_are_told_apart():
@@ -213,6 +278,7 @@ def test_a_cyclic_parent_and_an_unknown_parent_are_told_apart():
     assert cyclic_out != unknown_out
     assert "specialisation-cycle" in cyclic_out
     assert "specialisation-cycle" not in unknown_out
+    assert "unknown-parent" in unknown_out
 
 
 def test_the_wrong_arguments_exit_two(capsys):

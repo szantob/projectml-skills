@@ -18,7 +18,9 @@ package, and saying when the model is wrong.
   kind's neighbourhood as a Mermaid class diagram: run
   `python skills/domain-design/scripts/diagram.py path/to/package.yaml <identity>`. It exits 0 for a
   diagram written, 1 for a subject it will not draw, and 2 for nothing to draw from — which includes a
-  package that does not fit the schema, since there is then no subject to find in it.
+  package that does not fit the schema, since there is then no subject to find in it. stdout is always a
+  Mermaid diagram, never a diagram plus something else: anything the command has to say about what it drew
+  is a `%%` comment inside the same fence, not a line outside it.
 
 ## The three phases
 
