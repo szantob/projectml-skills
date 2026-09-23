@@ -184,7 +184,7 @@ def _prose(kind):
 def _mentions(text, name):
     """Whether ``text`` mentions ``name``: at the start of a word, in any
     case. Only the start is anchored, so an inflected or compounded use -
-    "LED wall's", "Lightingless" - is still found. A candidate that is noise
+    "radiator's", "Heatingless" - is still found. A candidate that is noise
     costs the agent a glance; one that is missed costs a stale requirement.
     """
     name = name.strip(WHITESPACE)

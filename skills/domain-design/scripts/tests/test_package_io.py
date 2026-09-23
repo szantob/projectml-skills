@@ -55,7 +55,7 @@ def test_writing_is_idempotent(text):
         "# not a comment",
         "",
         " leading space",
-        "Ledfal szélesség – ő",
+        "Fűtési teljesítmény – ő",
     ],
 )
 def test_a_string_stays_that_string(value):
