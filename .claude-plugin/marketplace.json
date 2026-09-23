@@ -1,0 +1,22 @@
+{
+	"name": "projectml-skills-marketplace",
+	"owner": {
+		"name": "szantob"
+	},
+	"metadata": {
+		"description": "ProjectML skills for designing requirement definitions",
+		"version": "0.1.0"
+	},
+	"plugins": [
+		{
+			"name": "projectml-skills",
+			"source": {
+				"source": "url",
+				"url": "https://github.com/szantob/projectml-skills.git"
+			},
+			"description": "Skills for designing requirement definitions of a domain with ProjectML",
+			"version": "0.1.0",
+			"strict": true
+		}
+	]
+}

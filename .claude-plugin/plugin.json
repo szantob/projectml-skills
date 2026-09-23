@@ -1,0 +1,17 @@
+{
+	"name": "projectml-skills",
+	"description": "Skills for designing requirement definitions of a domain with ProjectML",
+	"version": "0.1.0",
+	"author": {
+		"name": "szantob"
+	},
+	"homepage": "https://github.com/szantob/projectml-skills",
+	"repository": "https://github.com/szantob/projectml-skills",
+	"keywords": [
+		"requirements",
+		"modelling",
+		"domain-design",
+		"packages",
+		"definitions"
+	]
+}
