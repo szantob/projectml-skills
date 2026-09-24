@@ -1,9 +1,9 @@
-schemaVersion: 3
+schemaVersion: 4
 name: "Completeness rules that imply nothing, or nothing that exists"
 version: ""
 valueDomains: []
 kinds:
-  - id: a
+  - id: 00000000-0000-4000-8000-000000000001
     name: "A"
     text: "shall hold"
     whenItApplies: "Always."
@@ -20,7 +20,7 @@ kinds:
         inForce: true
         whenItApplies: "When this kind is stated."
         whatToLookFor: "Another kind it depends on."
-        implies: ghost
+        implies: 00000000-0000-4000-8000-000000000002
     howItWouldBeVerified: "By inspection."
     wordingRule: "One sentence."
     specialises: null

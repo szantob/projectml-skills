@@ -1,8 +1,8 @@
 {
 	"schemaValid": true,
 	"issues": [
-		{ "code": "unknown-value-domain", "kind": "capacity" },
-		{ "code": "unknown-value-domain", "kind": "capacity" }
+		{ "code": "unknown-value-domain", "kind": "00000000-0000-4000-8000-000000000001" },
+		{ "code": "unknown-value-domain", "kind": "00000000-0000-4000-8000-000000000001" }
 	],
 	"gaps": []
 }

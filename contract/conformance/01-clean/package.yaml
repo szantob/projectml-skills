@@ -1,4 +1,4 @@
-schemaVersion: 3
+schemaVersion: 4
 name: "A clean package"
 version: "1.0"
 valueDomains:
@@ -6,7 +6,7 @@ valueDomains:
     name: "Headcount"
     description: "A whole number of people."
 kinds:
-  - id: capacity
+  - id: 00000000-0000-4000-8000-000000000001
     name: "Capacity"
     text: "shall seat {count} people"
     whenItApplies: "When the venue seats an audience."
@@ -18,7 +18,7 @@ kinds:
     howItWouldBeVerified: "By counting the seats."
     wordingRule: "One sentence, in the present tense."
     specialises: null
-  - id: seating
+  - id: 00000000-0000-4000-8000-000000000002
     name: "Seating"
     text: "shall provide seats"
     whenItApplies: "When the audience is seated."
@@ -35,7 +35,7 @@ kinds:
         inForce: false
         whenItApplies: "When seating is required."
         whatToLookFor: "A stated capacity."
-        implies: capacity
+        implies: 00000000-0000-4000-8000-000000000001
     howItWouldBeVerified: "By inspecting the floor plan."
     wordingRule: "One sentence, in the present tense."
-    specialises: capacity
+    specialises: 00000000-0000-4000-8000-000000000001

@@ -1,4 +1,4 @@
-schemaVersion: 3
+schemaVersion: 4
 name: "Three value domains share one identity"
 version: ""
 valueDomains:
@@ -12,7 +12,7 @@ valueDomains:
     name: "Headcount a third time"
     description: "The same identity, declared three times."
 kinds:
-  - id: a
+  - id: 00000000-0000-4000-8000-000000000001
     name: "A"
     text: "shall hold"
     whenItApplies: "Always."

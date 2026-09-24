@@ -1,6 +1,6 @@
 %YAML 1.1
 ---
-schemaVersion: 3
+schemaVersion: 4
 name: "A package declaring which YAML it is written in"
 version: ""
 valueDomains: []

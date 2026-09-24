@@ -3,11 +3,11 @@
 	"issues": [
 		{
 			"code": "specialisation-cycle",
-			"kind": "a"
+			"kind": "00000000-0000-4000-8000-000000000001"
 		},
 		{
 			"code": "specialisation-cycle",
-			"kind": "b"
+			"kind": "00000000-0000-4000-8000-000000000002"
 		}
 	],
 	"gaps": []

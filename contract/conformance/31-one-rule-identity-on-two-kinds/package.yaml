@@ -1,9 +1,9 @@
-schemaVersion: 3
+schemaVersion: 4
 name: "The same rule identity on the rules of two kinds"
 version: ""
 valueDomains: []
 kinds:
-  - id: a
+  - id: 00000000-0000-4000-8000-000000000001
     name: "A"
     text: "shall hold"
     whenItApplies: "Always."
@@ -19,7 +19,7 @@ kinds:
     howItWouldBeVerified: "By inspection."
     wordingRule: "One sentence."
     specialises: null
-  - id: b
+  - id: 00000000-0000-4000-8000-000000000002
     name: "B"
     text: "shall hold"
     whenItApplies: "Always."

@@ -1,4 +1,4 @@
-schemaVersion: 3
+schemaVersion: 4
 name: A package holding a line separator outside quotes
 version: ""
 valueDomains: []

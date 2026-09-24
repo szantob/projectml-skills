@@ -1,8 +1,8 @@
 {
 	"schemaValid": true,
 	"issues": [
-		{ "code": "parameter-without-placeholder", "kind": "capacity" },
-		{ "code": "parameter-without-placeholder", "kind": "capacity" }
+		{ "code": "parameter-without-placeholder", "kind": "00000000-0000-4000-8000-000000000001" },
+		{ "code": "parameter-without-placeholder", "kind": "00000000-0000-4000-8000-000000000001" }
 	],
 	"gaps": []
 }

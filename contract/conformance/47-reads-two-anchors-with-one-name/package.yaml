@@ -1,4 +1,4 @@
-schemaVersion: 3
+schemaVersion: 4
 name: &label "Two anchors with one name, and nothing referring to either"
 version: &label ""
 valueDomains: []

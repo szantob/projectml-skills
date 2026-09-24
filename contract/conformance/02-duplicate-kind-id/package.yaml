@@ -1,9 +1,9 @@
-schemaVersion: 3
+schemaVersion: 4
 name: "Two kinds share an identity"
 version: ""
 valueDomains: []
 kinds:
-  - id: twin
+  - id: 00000000-0000-4000-8000-000000000001
     name: "First"
     text: "shall hold"
     whenItApplies: "Always."
@@ -12,7 +12,7 @@ kinds:
     howItWouldBeVerified: "By inspection."
     wordingRule: "One sentence."
     specialises: null
-  - id: twin
+  - id: 00000000-0000-4000-8000-000000000001
     name: "Second"
     text: "shall hold"
     whenItApplies: "Always."

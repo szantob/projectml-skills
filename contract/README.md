@@ -9,9 +9,12 @@ This is the editor's notation, not ProjectML's. ProjectML is a metamodel and has
 
 ## What is here
 
-- `package.schema.json` — the written shape of a package, schema version 3. **Strict**: every attribute
+- `package.schema.json` — the written shape of a package, schema version 4. **Strict**: every attribute
   is required and no other attribute is allowed. An agent adding an attribute of its own would be
-  inventing metamodel, so the schema refuses it.
+  inventing metamodel, so the schema refuses it. No earlier version is read: there is nothing to migrate.
+  **A kind's identity is a UUID**, and so is what a `specialises` or an `implies` names: lowercase, of any
+  version. An identity is a label, not a summary, and one that carries no meaning is one nobody is
+  tempted to edit; tools generate version 4. Value domain and rule identities are free text still.
 - `vocabulary.json` — the issue codes and gap fields a checker may report, each with a gloss saying exactly
   when it is reported and how often. Implementations are compared on the codes and fields, never on the
   wording of their messages.
@@ -71,8 +74,9 @@ with the language it is written in is the one thing this contract exists to prev
   what makes those sentences testable.
 - A case that does not fit the schema is compared on that verdict alone, and carries no issues or gaps:
   anything written beside the verdict would be asserting nothing, so a test refuses it.
-- Kinds are named by identity because that is how the reports name them. Identities are free text and need
-  not be unique; the corpus includes a case where two kinds share one.
+- Kinds are named by identity because that is how the reports name them. Identities are UUIDs, written
+  sequentially in the corpus (`00000000-0000-4000-8000-000000000001`, `…002`) so a reader can tell them
+  apart. They need not be unique; the corpus includes a case where two kinds share one.
 
 ## Rules for adding a case
 

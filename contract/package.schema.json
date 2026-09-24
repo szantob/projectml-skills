@@ -1,12 +1,12 @@
 {
 	"$schema": "http://json-schema.org/draft-07/schema#",
 	"title": "ProjectML implementation package",
-	"description": "The written shape of an implementation package, schema version 3. Strict: every attribute is required, and no attribute outside this schema is allowed. This is the editor's notation, not ProjectML's.",
+	"description": "The written shape of an implementation package, schema version 4. Strict: every attribute is required, and no attribute outside this schema is allowed. This is the editor's notation, not ProjectML's.",
 	"type": "object",
 	"additionalProperties": false,
 	"required": ["schemaVersion", "name", "version", "valueDomains", "kinds"],
 	"properties": {
-		"schemaVersion": { "const": 3 },
+		"schemaVersion": { "const": 4 },
 		"name": { "type": "string" },
 		"version": { "type": "string" },
 		"valueDomains": {
@@ -19,6 +19,14 @@
 		}
 	},
 	"definitions": {
+		"uuid": {
+			"$comment": "A kind's identity: a UUID of any version, lowercase. Generated identities are version 4; the pattern does not insist, so hand-written ones can be told apart by a reader.",
+			"type": "string",
+			"pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+		},
+		"uuidOrNull": {
+			"anyOf": [{ "$ref": "#/definitions/uuid" }, { "type": "null" }]
+		},
 		"valueDomain": {
 			"type": "object",
 			"additionalProperties": false,
@@ -49,7 +57,7 @@
 				"inForce": { "type": "boolean" },
 				"whenItApplies": { "type": "string" },
 				"whatToLookFor": { "type": "string" },
-				"implies": { "type": ["string", "null"] }
+				"implies": { "$ref": "#/definitions/uuidOrNull" }
 			},
 			"$comment": "ProjectML K96: a ConflictRule carries nothing beyond the shape every rule shares, so it implies no kind. A CompletenessRule may imply null; that is an issue a checker reports, not a malformed shape.",
 			"if": {
@@ -75,7 +83,7 @@
 				"specialises"
 			],
 			"properties": {
-				"id": { "type": "string" },
+				"id": { "$ref": "#/definitions/uuid" },
 				"name": { "type": "string" },
 				"text": { "type": "string" },
 				"whenItApplies": { "type": "string" },
@@ -89,7 +97,7 @@
 				},
 				"howItWouldBeVerified": { "type": "string" },
 				"wordingRule": { "type": "string" },
-				"specialises": { "type": ["string", "null"] }
+				"specialises": { "$ref": "#/definitions/uuidOrNull" }
 			}
 		}
 	}

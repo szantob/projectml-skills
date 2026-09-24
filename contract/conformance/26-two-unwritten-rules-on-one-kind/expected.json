@@ -3,22 +3,22 @@
 	"issues": [],
 	"gaps": [
 		{
-			"kind": "a",
+			"kind": "00000000-0000-4000-8000-000000000001",
 			"field": "ruleWhenItApplies",
 			"parameter": null
 		},
 		{
-			"kind": "a",
+			"kind": "00000000-0000-4000-8000-000000000001",
 			"field": "ruleWhenItApplies",
 			"parameter": null
 		},
 		{
-			"kind": "a",
+			"kind": "00000000-0000-4000-8000-000000000001",
 			"field": "ruleWhatToLookFor",
 			"parameter": null
 		},
 		{
-			"kind": "a",
+			"kind": "00000000-0000-4000-8000-000000000001",
 			"field": "ruleWhatToLookFor",
 			"parameter": null
 		}

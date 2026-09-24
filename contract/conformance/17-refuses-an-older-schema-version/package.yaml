@@ -1,9 +1,9 @@
-schemaVersion: 2
+schemaVersion: 3
 name: "A package written under an older schema version"
 version: ""
 valueDomains: []
 kinds:
-  - id: a
+  - id: 00000000-0000-4000-8000-000000000001
     name: "A"
     text: "shall hold"
     whenItApplies: "Always."

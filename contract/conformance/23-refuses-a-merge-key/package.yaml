@@ -1,4 +1,4 @@
-schemaVersion: 3
+schemaVersion: 4
 name: "A kind filling its attributes with a merge key"
 version: ""
 valueDomains: []

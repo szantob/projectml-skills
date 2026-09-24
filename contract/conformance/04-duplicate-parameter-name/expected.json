@@ -1,5 +1,5 @@
 {
 	"schemaValid": true,
-	"issues": [{ "code": "duplicate-parameter-name", "kind": "capacity" }],
+	"issues": [{ "code": "duplicate-parameter-name", "kind": "00000000-0000-4000-8000-000000000001" }],
 	"gaps": []
 }

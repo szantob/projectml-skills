@@ -1,4 +1,4 @@
-schemaVersion: 3
+schemaVersion: 4
 name: !!str "A package tagging a value with the type it already had"
 version: ""
 valueDomains: []

@@ -2,10 +2,10 @@
 	"schemaValid": true,
 	"issues": [],
 	"gaps": [
-		{ "kind": "blank", "field": "name", "parameter": null },
-		{ "kind": "blank", "field": "text", "parameter": null },
-		{ "kind": "blank", "field": "whenItApplies", "parameter": null },
-		{ "kind": "blank", "field": "howItWouldBeVerified", "parameter": null },
-		{ "kind": "blank", "field": "wordingRule", "parameter": null }
+		{ "kind": "00000000-0000-4000-8000-000000000001", "field": "name", "parameter": null },
+		{ "kind": "00000000-0000-4000-8000-000000000001", "field": "text", "parameter": null },
+		{ "kind": "00000000-0000-4000-8000-000000000001", "field": "whenItApplies", "parameter": null },
+		{ "kind": "00000000-0000-4000-8000-000000000001", "field": "howItWouldBeVerified", "parameter": null },
+		{ "kind": "00000000-0000-4000-8000-000000000001", "field": "wordingRule", "parameter": null }
 	]
 }

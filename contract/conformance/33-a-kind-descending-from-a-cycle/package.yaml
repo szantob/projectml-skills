@@ -1,9 +1,9 @@
-schemaVersion: 3
+schemaVersion: 4
 name: "A kind below a cycle, not on it"
 version: ""
 valueDomains: []
 kinds:
-  - id: a
+  - id: 00000000-0000-4000-8000-000000000001
     name: "A"
     text: "shall hold"
     whenItApplies: "Always."
@@ -11,8 +11,8 @@ kinds:
     rules: []
     howItWouldBeVerified: "By inspection."
     wordingRule: "One sentence."
-    specialises: b
-  - id: b
+    specialises: 00000000-0000-4000-8000-000000000002
+  - id: 00000000-0000-4000-8000-000000000002
     name: "B"
     text: "shall hold"
     whenItApplies: "Always."
@@ -20,8 +20,8 @@ kinds:
     rules: []
     howItWouldBeVerified: "By inspection."
     wordingRule: "One sentence."
-    specialises: a
-  - id: c
+    specialises: 00000000-0000-4000-8000-000000000001
+  - id: 00000000-0000-4000-8000-000000000003
     name: "C"
     text: "shall hold"
     whenItApplies: "Always."
@@ -29,4 +29,4 @@ kinds:
     rules: []
     howItWouldBeVerified: "By inspection."
     wordingRule: "One sentence."
-    specialises: a
+    specialises: 00000000-0000-4000-8000-000000000001

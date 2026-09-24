@@ -1,4 +1,4 @@
-schemaVersion: 3
+schemaVersion: 4
 name: &title "A package that names itself twice"
 version: *title
 valueDomains: []

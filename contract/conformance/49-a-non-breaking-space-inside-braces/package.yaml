@@ -1,4 +1,4 @@
-schemaVersion: 3
+schemaVersion: 4
 name: "A placeholder padded with non-breaking spaces"
 version: ""
 valueDomains:
@@ -6,7 +6,7 @@ valueDomains:
     name: "Headcount"
     description: "A whole number of people."
 kinds:
-  - id: capacity
+  - id: 00000000-0000-4000-8000-000000000001
     name: "Capacity"
     text: "shall seat { count } people"
     whenItApplies: "When the venue seats an audience."

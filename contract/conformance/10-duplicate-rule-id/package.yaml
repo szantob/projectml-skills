@@ -1,9 +1,9 @@
-schemaVersion: 3
+schemaVersion: 4
 name: "A kind states two rules with one identity"
 version: ""
 valueDomains: []
 kinds:
-  - id: a
+  - id: 00000000-0000-4000-8000-000000000001
     name: "A"
     text: "shall hold"
     whenItApplies: "Always."

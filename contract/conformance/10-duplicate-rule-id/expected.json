@@ -1,5 +1,5 @@
 {
 	"schemaValid": true,
-	"issues": [{ "code": "duplicate-rule-id", "kind": "a" }],
+	"issues": [{ "code": "duplicate-rule-id", "kind": "00000000-0000-4000-8000-000000000001" }],
 	"gaps": []
 }

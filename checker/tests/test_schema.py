@@ -5,7 +5,7 @@ import contract_schema
 
 def _kind(**changes):
     kind = {
-        "id": "a",
+        "id": "00000000-0000-4000-8000-000000000001",
         "name": "A",
         "text": "shall hold",
         "whenItApplies": "Always.",
@@ -21,7 +21,7 @@ def _kind(**changes):
 
 def _package(*kinds):
     return {
-        "schemaVersion": 3,
+        "schemaVersion": 4,
         "name": "A package",
         "version": "",
         "valueDomains": [],
@@ -45,9 +45,26 @@ def test_a_misfit_says_where_it_is():
 
 
 def test_a_misfit_at_the_top_names_the_package():
-    wrong = contract_schema.misfits({**_package(), "schemaVersion": 2})
-    assert wrong == ["schemaVersion: 3 was expected"]
+    wrong = contract_schema.misfits({**_package(), "schemaVersion": 3})
+    assert wrong == ["schemaVersion: 4 was expected"]
 
 
 def test_a_document_that_is_not_a_mapping_does_not_fit():
     assert contract_schema.misfits(None) != []
+
+
+def test_a_kind_identity_must_be_a_uuid():
+    wrong = contract_schema.misfits(_package(_kind(id="capacity")))
+    assert len(wrong) == 1 and wrong[0].startswith("kinds/0/id:")
+
+
+def test_a_uppercase_uuid_is_not_one():
+    wrong = contract_schema.misfits(
+        _package(_kind(id="00000000-0000-4000-8000-00000000000A"))
+    )
+    assert len(wrong) == 1 and wrong[0].startswith("kinds/0/id:")
+
+
+def test_a_parent_must_be_a_uuid_or_null():
+    wrong = contract_schema.misfits(_package(_kind(specialises="capacity")))
+    assert len(wrong) == 1 and wrong[0].startswith("kinds/0/specialises:")

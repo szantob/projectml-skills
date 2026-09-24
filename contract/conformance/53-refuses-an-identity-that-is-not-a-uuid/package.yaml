@@ -1,14 +1,14 @@
 schemaVersion: 4
-name: "A kind specialises one that does not exist"
+name: "A kind whose identity is not a UUID"
 version: ""
 valueDomains: []
 kinds:
-  - id: 00000000-0000-4000-8000-000000000001
-    name: "A"
+  - id: capacity
+    name: "Capacity"
     text: "shall hold"
     whenItApplies: "Always."
     parameters: []
     rules: []
     howItWouldBeVerified: "By inspection."
     wordingRule: "One sentence."
-    specialises: 00000000-0000-4000-8000-000000000002
+    specialises: null

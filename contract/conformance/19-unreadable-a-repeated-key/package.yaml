@@ -1,4 +1,4 @@
-schemaVersion: 3
+schemaVersion: 4
 name: "A key repeated in one mapping"
 name: "The second value"
 version: ""
