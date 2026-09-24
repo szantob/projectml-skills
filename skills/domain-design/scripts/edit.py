@@ -35,10 +35,21 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "checker"))
 
-import contract_schema  # noqa: E402
-import dialect  # noqa: E402
-import operations  # noqa: E402
-import package_io  # noqa: E402
+import dependencies  # noqa: E402
+
+try:
+    import contract_schema
+    import dialect
+    import operations
+    import package_io
+except ImportError as error:
+    sys.exit(
+        dependencies.explain(
+            error,
+            ("contract_schema", "dialect", "operations", "package_io", "tree",
+             "findings"),
+        )
+    )
 
 
 def _parser():

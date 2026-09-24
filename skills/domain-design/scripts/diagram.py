@@ -33,10 +33,21 @@ from pathlib import Path
 # through their conftest; a modeller running the command reaches it here.
 sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "checker"))
 
-import contract_schema  # noqa: E402
-import dialect  # noqa: E402
-import tree  # noqa: E402
-from findings import WHITESPACE  # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+import dependencies  # noqa: E402
+
+try:
+    import contract_schema
+    import dialect
+    import tree
+    from findings import WHITESPACE
+except ImportError as error:
+    sys.exit(
+        dependencies.explain(
+            error, ("contract_schema", "dialect", "tree", "findings")
+        )
+    )
 
 ROOT = "RequirementDefinition"
 

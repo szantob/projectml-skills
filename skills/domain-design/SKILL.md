@@ -111,8 +111,8 @@ skill's directory, because the working directory will be the package's, not the 
 
     python ../../checker/check.py path/to/package.yaml
 
-The checker requires Python with `PyYAML` and `jsonschema` installed; if either is missing, it will say so
-and name what to install. Its findings decide what is asked back -- the questions come from the package's
+The checker and both scripts require Python with `PyYAML` and `jsonschema` installed; if either is missing,
+they say so, name what to install, and exit 2. Ask the modeller before installing anything. Its findings decide what is asked back -- the questions come from the package's
 own holes, not from memory of what a package usually needs. This has a limit at the very start: an empty
 package raises no issue and has no gaps, because there is nothing yet for the checker to measure. So the
 skeleton, drawn from nothing, is driven by whatever the modeller has given -- a conversation, documents --
