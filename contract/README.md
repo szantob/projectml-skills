@@ -54,9 +54,10 @@ a reader that follows the rules above, whatever language it is written in.
 
 ## What counts as whitespace
 
-Two rules turn on it: text of only whitespace is unwritten, and whitespace inside a placeholder's braces is
-trimmed. Whitespace is **space, tab, carriage return and line feed**, and nothing else. Every other
-character is text, however it prints — a name of one non-breaking space is a name.
+Three rules turn on it: text of only whitespace is unwritten, whitespace inside a placeholder's braces is
+trimmed, and a kind's name is trimmed before it is compared with another's. Whitespace is **space, tab,
+carriage return and line feed**, and nothing else. Every other character is text, however it prints — a
+name of one non-breaking space is a name.
 
 The four are named rather than left to the implementation's language, because `strip` in one language and
 `trim` in another do not agree. They part over U+0085, U+FEFF and the C1 controls, and a rule that varies
