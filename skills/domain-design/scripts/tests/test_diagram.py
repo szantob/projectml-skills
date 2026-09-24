@@ -129,8 +129,8 @@ def test_a_named_kind_carries_its_name():
     assert 'class a["Capacity"]' in draw([kind("a", name="Capacity")], 0)
 
 
-def test_an_unnamed_kind_shows_its_identifier_alone():
-    assert "class a[" not in draw([kind("a")], 0)
+def test_an_unnamed_kind_is_labelled_rather_than_left_to_its_identifier():
+    assert 'class a["(unnamed) · a"]' in draw([kind("a")], 0)
 
 
 def test_a_name_is_flattened_and_its_quotes_made_safe():

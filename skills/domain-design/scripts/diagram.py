@@ -94,6 +94,27 @@ def _label(name):
     return _RUNS.sub(" ", single_line).strip(WHITESPACE).replace('"', "#quot;")
 
 
+def _label_of(kinds, position):
+    """What a kind's box says: its name. Every box carries one, because the
+    class name underneath is the kind's identity, a UUID that says nothing to
+    a reader.
+
+    Until names are required and unique, a name that is unwritten, or that
+    another kind in the package carries too, has the first six characters of
+    the identity added, so two such boxes can still be told apart. The editor
+    labels the same box the same way.
+    """
+    kind = kinds[position]
+    name = kind["name"].strip(WHITESPACE)
+    shared = name and any(
+        other != position and kinds[other]["name"].strip(WHITESPACE) == name
+        for other in range(len(kinds))
+    )
+    if name and not shared:
+        return name
+    return f"{name or '(unnamed)'} · {kind['id'][:6]}"
+
+
 def _duplicate_identity_comments(kinds, positions, names):
     """One ``%%`` comment for each identity that more than one drawn kind
     carries.
@@ -136,9 +157,7 @@ def to_mermaid(kinds, near):
     uses_root = False
     for position in positions:
         own = names[position]
-        name = _label(kinds[position]["name"])
-        if name:
-            body.append(f'\tclass {own}["{name}"]')
+        body.append(f'\tclass {own}["{_label(_label_of(kinds, position))}"]')
 
         if position == near.subject:
             if near.parent is not None:

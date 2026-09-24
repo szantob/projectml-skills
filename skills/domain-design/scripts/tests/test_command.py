@@ -356,3 +356,20 @@ def test_every_drawable_kind_in_the_corpus_stays_inside_the_grammar():
 def test_the_wrong_arguments_exit_two(capsys):
     assert diagram.main(["diagram.py"]) == 2
     assert "Usage:" in capsys.readouterr().out
+
+
+def test_an_unnamed_kind_is_labelled_with_part_of_its_identity():
+    # Its class name is a UUID, which says nothing to a reader; the editor
+    # labels the same box the same way.
+    text = CLEAN.replace('name: "Child"', 'name: ""')
+    status, out = run(text, subject=CHILD)
+    assert status == 0
+    assert f'class {diagram._sanitise(CHILD)}["(unnamed) · 000000"]' in out
+
+
+def test_a_shared_name_is_labelled_with_part_of_its_identity():
+    text = CLEAN.replace('name: "Child"', 'name: "Parent"')
+    status, out = run(text, subject=CHILD)
+    assert status == 0
+    assert f'class {diagram._sanitise(CHILD)}["Parent · 000000"]' in out
+    assert f'class {diagram._sanitise(PARENT)}["Parent · 000000"]' in out
