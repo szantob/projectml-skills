@@ -1,0 +1,41 @@
+schemaVersion: 4
+name: "Two kinds in different branches share a name"
+version: ""
+valueDomains: []
+kinds:
+  - id: 00000000-0000-4000-8000-000000000001
+    name: "Hardware"
+    text: "shall hold"
+    whenItApplies: "Always."
+    parameters: []
+    rules: []
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: null
+  - id: 00000000-0000-4000-8000-000000000002
+    name: "Software"
+    text: "shall hold"
+    whenItApplies: "Always."
+    parameters: []
+    rules: []
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: null
+  - id: 00000000-0000-4000-8000-000000000003
+    name: "Other"
+    text: "shall hold"
+    whenItApplies: "Always."
+    parameters: []
+    rules: []
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: 00000000-0000-4000-8000-000000000001
+  - id: 00000000-0000-4000-8000-000000000004
+    name: "Other"
+    text: "shall hold"
+    whenItApplies: "Always."
+    parameters: []
+    rules: []
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: 00000000-0000-4000-8000-000000000002

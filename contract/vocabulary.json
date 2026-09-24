@@ -1,6 +1,7 @@
 {
 	"issueCodes": [
 		"duplicate-kind-id",
+		"duplicate-kind-name",
 		"duplicate-value-domain-id",
 		"duplicate-parameter-name",
 		"unknown-value-domain",
@@ -23,6 +24,7 @@
 	],
 	"issueGlosses": {
 		"duplicate-kind-id": "Two or more kinds carry the same identity. Reported once per repeated identity, naming it, however many kinds carry it.",
+		"duplicate-kind-name": "Two or more kinds carry the same name. Reported once per kind carrying a shared name, naming that kind, so three kinds sharing one name give three entries. Names are compared across the whole package, not only among siblings, because a name is what tells a reader which kind is meant. The whitespace around a name is trimmed; otherwise names are compared exactly, character for character, so names differing only in case, or in how an accented letter is encoded, are different names. An unwritten name is a gap and is shared with nothing, however many kinds leave theirs unwritten.",
 		"duplicate-value-domain-id": "Two or more value domains carry the same identity. Reported once per repeated identity, as an issue about the package as a whole, so it names no kind.",
 		"duplicate-parameter-name": "A kind declares two or more parameters with the same name. Reported once per repeated name, naming the kind.",
 		"unknown-value-domain": "A parameter names a value domain the package does not declare, an empty name included. Reported once per such parameter, naming its kind.",

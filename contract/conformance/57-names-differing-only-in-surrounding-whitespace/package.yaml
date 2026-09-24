@@ -1,0 +1,23 @@
+schemaVersion: 4
+name: "Two names differ only in the whitespace around them"
+version: ""
+valueDomains: []
+kinds:
+  - id: 00000000-0000-4000-8000-000000000001
+    name: "Payment"
+    text: "shall hold"
+    whenItApplies: "Always."
+    parameters: []
+    rules: []
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: null
+  - id: 00000000-0000-4000-8000-000000000002
+    name: " Payment\t"
+    text: "shall hold"
+    whenItApplies: "Always."
+    parameters: []
+    rules: []
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: null

@@ -1,0 +1,8 @@
+{
+	"schemaValid": true,
+	"issues": [
+		{ "code": "duplicate-kind-name", "kind": "00000000-0000-4000-8000-000000000001" },
+		{ "code": "duplicate-kind-name", "kind": "00000000-0000-4000-8000-000000000002" }
+	],
+	"gaps": []
+}

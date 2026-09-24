@@ -22,7 +22,9 @@ Two processes follow. Use the first when there is no package yet, the second whe
 
 1. **Read the domain as a whole and draw a shallow skeleton** -- the main kinds and their important
    sub-kinds, **two or three levels deep and no deeper**. Give each a **name** and a parent, and leave
-   every other attribute blank. The name is not optional here: it is what a reviewer reads. A skeleton
+   every other attribute blank. The name is not optional here: it is what a reviewer reads, so it must
+   also be one no other kind in the package carries -- the checker raises `duplicate-kind-name` otherwise,
+   and two sub-kinds both called *Other* under different parents are exactly that case. A skeleton
    this shallow is quick to review and makes the later work local. Create each kind with `create` (see
    *The operations*), which generates its identity -- a UUID -- and prints it; never write an identity
    into the file by hand. Start from an empty package: `schemaVersion: 4`, a name, `version: ""`, and

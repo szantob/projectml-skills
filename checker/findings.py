@@ -96,6 +96,23 @@ def issues(package):
             )
         )
 
+    # A name is compared trimmed and otherwise exactly. An unwritten name is a
+    # gap, so it is left out here: two kinds without a name share nothing.
+    written_names = [
+        kind["name"].strip(WHITESPACE) for kind in kinds if not _blank(kind["name"])
+    ]
+    shared_names = set(_repeated(written_names))
+    for kind in kinds:
+        name = kind["name"].strip(WHITESPACE)
+        if name in shared_names:
+            found.append(
+                Issue(
+                    "duplicate-kind-name",
+                    kind["id"],
+                    f"The name {name!r} is carried by more than one kind.",
+                )
+            )
+
     known_kind_ids = {kind["id"] for kind in kinds}
     known_domain_ids = {domain["id"] for domain in package["valueDomains"]}
 

@@ -1,0 +1,41 @@
+schemaVersion: 4
+name: "Three kinds share one name"
+version: ""
+valueDomains: []
+kinds:
+  - id: 00000000-0000-4000-8000-000000000001
+    name: "Payment"
+    text: "shall hold"
+    whenItApplies: "Always."
+    parameters: []
+    rules: []
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: null
+  - id: 00000000-0000-4000-8000-000000000002
+    name: "Payment"
+    text: "shall hold"
+    whenItApplies: "Always."
+    parameters: []
+    rules: []
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: null
+  - id: 00000000-0000-4000-8000-000000000003
+    name: "Payment"
+    text: "shall hold"
+    whenItApplies: "Always."
+    parameters: []
+    rules: []
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: null
+  - id: 00000000-0000-4000-8000-000000000004
+    name: "Refund"
+    text: "shall hold"
+    whenItApplies: "Always."
+    parameters: []
+    rules: []
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: null
