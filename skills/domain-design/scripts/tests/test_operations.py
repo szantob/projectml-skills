@@ -29,7 +29,7 @@ def kind(identity, parent=None, name=None, **prose):
 
 def package(*kinds, domains=()):
     return {
-        "schemaVersion": 3,
+        "schemaVersion": 4,
         "name": "Building services",
         "version": "",
         "valueDomains": list(domains),
@@ -84,6 +84,18 @@ SAMPLE = package(
 @pytest.fixture
 def sample():
     return copy.deepcopy(SAMPLE)
+
+
+# The sample's identities are readable words, not UUIDs: no operation depends
+# on what an identity looks like, and the tests read better for it. A test
+# that holds a result to the schema uses this one instead.
+ROOT = "00000000-0000-4000-8000-000000000001"
+LEAF = "00000000-0000-4000-8000-000000000002"
+
+
+@pytest.fixture
+def valid():
+    return package(kind(ROOT, None, "Building"), kind(LEAF, ROOT, "Ventilation"))
 
 
 # -- resolving a subject ------------------------------------------------------
@@ -258,12 +270,13 @@ def test_setting_the_same_value_changes_nothing(sample):
 # -- create ---------------------------------------------------------------------
 
 
-def test_create_adds_one_leaf_with_a_uuid(sample):
-    result = operations.create(sample, "ventilation", "Extractor fan")
-    assert result.document["kinds"][:-1] == SAMPLE["kinds"]
+def test_create_adds_one_leaf_with_a_uuid(valid):
+    result = operations.create(valid, LEAF, "Extractor fan")
+    assert result.document["kinds"][:-1] == valid["kinds"]
     new = result.document["kinds"][-1]
     assert str(uuid.UUID(new["id"])) == new["id"] == result.created
-    assert new["specialises"] == "ventilation"
+    assert uuid.UUID(new["id"]).version == 4
+    assert new["specialises"] == LEAF
     assert new["name"] == "Extractor fan"
     assert contract_schema.misfits(result.document) == []
 
@@ -312,6 +325,6 @@ def test_extract_notes_where_the_ancestor_chain_breaks(sample):
     assert any("'gone'" in n for n in result.notes)
 
 
-def test_an_extract_fits_the_schema(sample):
-    extracted = operations.extract(sample, "air-handler").document
+def test_an_extract_fits_the_schema(valid):
+    extracted = operations.extract(valid, LEAF).document
     assert contract_schema.misfits(extracted) == []

@@ -59,11 +59,22 @@ def check(text, out):
 
     out.write("Fits the schema.\n")
 
+    # An identity is a UUID, which says nothing to a reader, so a kind is
+    # named beside it. For display only: where two kinds share an identity,
+    # the first one's name is shown, and the issue itself says they share it.
+    names = {}
+    for kind in document["kinds"]:
+        names.setdefault(kind["id"], kind["name"].strip(findings.WHITESPACE))
+
+    def kind_ref(identity):
+        name = names.get(identity, "")
+        return f"{identity!r} ({name})" if name else repr(identity)
+
     found = findings.issues(document)
     if found:
         out.write(f"Issues ({len(found)}):\n")
         for issue in found:
-            where = "" if issue.kind is None else f" [kind {issue.kind!r}]"
+            where = "" if issue.kind is None else f" [kind {kind_ref(issue.kind)}]"
             out.write(f"  - {issue.code}{where}: {issue.message}\n")
     else:
         out.write("No issues.\n")
@@ -73,7 +84,7 @@ def check(text, out):
         out.write(f"Gaps ({len(holes)}):\n")
         for gap in holes:
             which = "" if gap.parameter is None else f" (parameter {gap.parameter!r})"
-            out.write(f"  - kind {gap.kind!r}: {gap.field}{which}\n")
+            out.write(f"  - kind {kind_ref(gap.kind)}: {gap.field}{which}\n")
     else:
         out.write("No gaps.\n")
 

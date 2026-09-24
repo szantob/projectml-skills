@@ -66,3 +66,14 @@ def test_a_file_that_is_not_utf_8_exits_two(tmp_path, capsys):
 def test_the_wrong_number_of_arguments_exits_two(capsys):
     assert check.main(["check.py"]) == 2
     assert "Usage:" in capsys.readouterr().out
+
+
+def test_a_kind_is_named_beside_its_identity():
+    # An identity is a UUID, which says nothing to a reader; the name does.
+    _, text = _run("06-unknown-parent")
+    assert "[kind '00000000-0000-4000-8000-000000000001' (A)]" in text
+
+
+def test_a_kind_with_no_name_is_its_identity_alone():
+    _, text = _run("12-gaps-on-a-kind")
+    assert "kind '00000000-0000-4000-8000-000000000001': text" in text

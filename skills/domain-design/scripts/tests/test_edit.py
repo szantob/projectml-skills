@@ -11,12 +11,15 @@ import edit
 
 SCRIPT = Path(__file__).resolve().parents[1] / "edit.py"
 
-PACKAGE = """schemaVersion: 3
+BUILDING = "00000000-0000-4000-8000-000000000001"
+VENTILATION = "00000000-0000-4000-8000-000000000002"
+
+PACKAGE = """schemaVersion: 4
 name: "Building services"
 version: ""
 valueDomains: []
 kinds:
-  - id: building
+  - id: 00000000-0000-4000-8000-000000000001
     name: "Building"
     text: ""
     whenItApplies: ""
@@ -25,7 +28,7 @@ kinds:
     howItWouldBeVerified: ""
     wordingRule: ""
     specialises: null
-  - id: ventilation
+  - id: 00000000-0000-4000-8000-000000000002
     name: "Ventilation"
     text: "Serves the whole Building."
     whenItApplies: ""
@@ -33,7 +36,7 @@ kinds:
     rules: []
     howItWouldBeVerified: ""
     wordingRule: ""
-    specialises: building
+    specialises: 00000000-0000-4000-8000-000000000001
 """
 
 
@@ -51,7 +54,7 @@ def _run(*argv, stdin=""):
 
 def test_move_writes_the_package_and_names_its_candidates(tmp_path):
     path = _package(tmp_path)
-    status, printed = _run("move", str(path), "ventilation", "--to-root")
+    status, printed = _run("move", str(path), VENTILATION, "--to-root")
     assert status == 0
     kinds = dialect.load(path.read_text(encoding="utf-8"))["kinds"]
     assert kinds[1]["specialises"] is None
@@ -62,7 +65,7 @@ def test_move_writes_the_package_and_names_its_candidates(tmp_path):
 def test_a_refusal_leaves_the_file_byte_identical(tmp_path):
     path = _package(tmp_path)
     before = path.read_bytes()
-    status, printed = _run("move", str(path), "building", "--under", "ventilation")
+    status, printed = _run("move", str(path), BUILDING, "--under", VENTILATION)
     assert status == 1
     assert "inside the subtree" in printed
     assert path.read_bytes() == before
@@ -71,7 +74,7 @@ def test_a_refusal_leaves_the_file_byte_identical(tmp_path):
 def test_nothing_to_change_leaves_the_file_byte_identical(tmp_path):
     path = _package(tmp_path)
     before = path.read_bytes()
-    status, _ = _run("move", str(path), "ventilation", "--under", "building")
+    status, _ = _run("move", str(path), VENTILATION, "--under", BUILDING)
     assert status == 0
     assert path.read_bytes() == before
 
@@ -79,7 +82,7 @@ def test_nothing_to_change_leaves_the_file_byte_identical(tmp_path):
 def test_set_reads_a_dash_from_stdin_less_one_line_break(tmp_path):
     path = _package(tmp_path)
     status, _ = _run(
-        "set", str(path), "ventilation", "text", "-", stdin="Line one.\nLine two.\n"
+        "set", str(path), VENTILATION, "text", "-", stdin="Line one.\nLine two.\n"
     )
     assert status == 0
     kinds = dialect.load(path.read_text(encoding="utf-8"))["kinds"]
@@ -88,7 +91,7 @@ def test_set_reads_a_dash_from_stdin_less_one_line_break(tmp_path):
 
 def test_set_refuses_the_identity(tmp_path):
     path = _package(tmp_path)
-    status, printed = _run("set", str(path), "ventilation", "id", "airflow")
+    status, printed = _run("set", str(path), VENTILATION, "id", "airflow")
     assert status == 1
     assert "never edited" in printed
 
@@ -96,7 +99,7 @@ def test_set_refuses_the_identity(tmp_path):
 def test_create_prints_the_identity_it_generated(tmp_path):
     path = _package(tmp_path)
     status, printed = _run(
-        "create", str(path), "--under", "ventilation", "--name", "Air handler"
+        "create", str(path), "--under", VENTILATION, "--name", "Air handler"
     )
     assert status == 0
     created = dialect.load(path.read_text(encoding="utf-8"))["kinds"][-1]
@@ -108,45 +111,45 @@ def test_extract_writes_a_new_file_and_leaves_the_source(tmp_path):
     path = _package(tmp_path)
     before = path.read_bytes()
     output = tmp_path / "extract.yaml"
-    status, _ = _run("extract", str(path), "ventilation", str(output))
+    status, _ = _run("extract", str(path), VENTILATION, str(output))
     assert status == 0
     assert path.read_bytes() == before
     assert [k["id"] for k in dialect.load(output.read_text("utf-8"))["kinds"]] == [
-        "building",
-        "ventilation",
+        BUILDING,
+        VENTILATION,
     ]
 
 
 def test_extract_never_overwrites(tmp_path):
     path = _package(tmp_path)
     output = _package(tmp_path, "keep\n", "extract.yaml")
-    status, _ = _run("extract", str(path), "ventilation", str(output))
+    status, _ = _run("extract", str(path), VENTILATION, str(output))
     assert status == 1
     assert output.read_text("utf-8") == "keep\n"
 
 
 def test_json_is_nothing_to_work_from(tmp_path):
     path = _package(tmp_path, '{"schemaVersion": 3}', "package.json")
-    status, printed = _run("delete", str(path), "ventilation")
+    status, printed = _run("delete", str(path), VENTILATION)
     assert status == 2
     assert "YAML" in printed
 
 
 def test_a_package_outside_the_schema_is_nothing_to_work_from(tmp_path):
     path = _package(tmp_path, "schemaVersion: 3\n")
-    status, printed = _run("delete", str(path), "ventilation")
+    status, printed = _run("delete", str(path), VENTILATION)
     assert status == 2
     assert "schema" in printed
 
 
 def test_an_unreadable_file_is_nothing_to_work_from(tmp_path):
     path = _package(tmp_path, "a: 1\na: 2\n")
-    status, _ = _run("delete", str(path), "ventilation")
+    status, _ = _run("delete", str(path), VENTILATION)
     assert status == 2
 
 
 def test_a_malformed_command_is_nothing_to_work_from(tmp_path, capsys):
-    status, _ = _run("move", str(_package(tmp_path)), "ventilation")
+    status, _ = _run("move", str(_package(tmp_path)), VENTILATION)
     assert status == 2
 
 
@@ -155,11 +158,11 @@ def test_it_runs_as_a_script(tmp_path):
     # skill's.
     path = _package(tmp_path)
     finished = subprocess.run(
-        [sys.executable, str(SCRIPT), "delete", str(path), "ventilation"],
+        [sys.executable, str(SCRIPT), "delete", str(path), VENTILATION],
         cwd=tmp_path,
         capture_output=True,
         encoding="utf-8",
     )
     assert finished.returncode == 0, finished.stdout + finished.stderr
     kinds = dialect.load(path.read_text(encoding="utf-8"))["kinds"]
-    assert [k["id"] for k in kinds] == ["building"]
+    assert [k["id"] for k in kinds] == [BUILDING]

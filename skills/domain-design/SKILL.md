@@ -21,9 +21,12 @@ Two processes follow. Use the first when there is no package yet, the second whe
 ## 1. Building a new model
 
 1. **Read the domain as a whole and draw a shallow skeleton** -- the main kinds and their important
-   sub-kinds, **two or three levels deep and no deeper**. Give each an identity, a **name** and a parent,
-   and leave every other attribute blank. The name is not optional here: it is what a reviewer reads. A
-   skeleton this shallow is quick to review and makes the later work local.
+   sub-kinds, **two or three levels deep and no deeper**. Give each a **name** and a parent, and leave
+   every other attribute blank. The name is not optional here: it is what a reviewer reads. A skeleton
+   this shallow is quick to review and makes the later work local. Create each kind with `create` (see
+   *The operations*), which generates its identity -- a UUID -- and prints it; never write an identity
+   into the file by hand. Start from an empty package: `schemaVersion: 4`, a name, `version: ""`, and
+   empty `valueDomains` and `kinds`.
 2. **Show the skeleton to the modeller** and take their changes. Nothing is cheaper to change than a
    skeleton, so this is the place to argue about what the kinds are.
 3. **Work each kind out, top down** -- a parent before its children -- refining it with new sub-kinds as

@@ -21,6 +21,11 @@ CYCLIC_PARENT_PACKAGE = (
     CONFORMANCE / "33-a-kind-descending-from-a-cycle" / "package.yaml"
 )
 
+# Identities as each case numbers them.
+FIRST = "00000000-0000-4000-8000-000000000001"
+SECOND = "00000000-0000-4000-8000-000000000002"
+THIRD = "00000000-0000-4000-8000-000000000003"
+
 
 def test_run_as_a_script_from_outside_the_scripts_directory(tmp_path):
     # A modeller runs this from the repository root, not from inside
@@ -28,7 +33,7 @@ def test_run_as_a_script_from_outside_the_scripts_directory(tmp_path):
     # ``tmp_path`` is neither, and further exercises that the bootstrap is
     # not relying on the current working directory at all.
     result = subprocess.run(
-        [sys.executable, str(SCRIPT), str(PACKAGE), "seating"],
+        [sys.executable, str(SCRIPT), str(PACKAGE), SECOND],
         cwd=tmp_path,
         capture_output=True,
         text=True,
@@ -44,11 +49,11 @@ def test_run_as_a_script_says_what_it_drew_as_a_mermaid_comment(tmp_path):
     # runs rather than on the imported module. This package does have
     # something to say — "c"'s parent sits on a cycle.
     result = subprocess.run(
-        [sys.executable, str(SCRIPT), str(CYCLIC_PARENT_PACKAGE), "c"],
+        [sys.executable, str(SCRIPT), str(CYCLIC_PARENT_PACKAGE), THIRD],
         cwd=tmp_path,
         capture_output=True,
         text=True,
     )
     assert result.returncode == 0, result.stderr
     assert result.stdout.startswith("classDiagram")
-    assert "\n%% The parent it names, 'a'" in result.stdout
+    assert f"\n%% The parent it names, '{FIRST}'" in result.stdout
