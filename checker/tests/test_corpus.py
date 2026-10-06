@@ -1,7 +1,7 @@
-﻿"""Every case in the contract's corpus, run through the checker's functions.
+"""Every case in the contract's corpus, run through the checker's functions.
 
 Results are compared as the contract says: parse verdict, schema verdict, and
-issues and gaps as multisets of codes and fields â€” never as wording, and never
+issues and gaps as multisets of codes and fields — never as wording, and never
 in order.
 """
 
