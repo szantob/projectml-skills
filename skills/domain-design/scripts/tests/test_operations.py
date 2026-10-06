@@ -17,6 +17,7 @@ def kind(identity, parent=None, name=None, **prose):
     return {
         "id": identity,
         "name": identity.title() if name is None else name,
+        "abstract": prose.get("abstract", False),
         "text": prose.get("text", ""),
         "whenItApplies": prose.get("whenItApplies", ""),
         "parameters": prose.get("parameters", []),
@@ -29,7 +30,7 @@ def kind(identity, parent=None, name=None, **prose):
 
 def package(*kinds, domains=()):
     return {
-        "schemaVersion": 4,
+        "schemaVersion": 5,
         "name": "Building services",
         "version": "",
         "valueDomains": list(domains),
@@ -38,11 +39,22 @@ def package(*kinds, domains=()):
 
 
 def domain(identity):
-    return {"id": identity, "name": identity, "description": ""}
+    return {
+        "id": identity,
+        "name": identity,
+        "comparability": "ordered",
+        "description": "",
+    }
 
 
 def parameter(name, domain_id):
-    return {"name": name, "valueDomainId": domain_id, "whatToAsk": ""}
+    # A UUID derived from the name, so a test reads the same on every run.
+    return {
+        "id": str(uuid.uuid5(uuid.NAMESPACE_URL, name)),
+        "name": name,
+        "valueDomainId": domain_id,
+        "whatToAsk": "",
+    }
 
 
 def rule(identity, implies):
@@ -50,6 +62,7 @@ def rule(identity, implies):
         "id": identity,
         "type": "CompletenessRule",
         "inForce": True,
+        "guard": [],
         "whenItApplies": "",
         "whatToLookFor": "",
         "implies": implies,
@@ -244,6 +257,26 @@ def test_set_changes_only_that_attribute(sample):
     assert result.document == expected
 
 
+def test_set_makes_a_kind_abstract_and_back(sample):
+    result = operations.set_attribute(sample, "heating", "abstract", "true")
+    assert by_id(result.document, "heating")["abstract"] is True
+    result = operations.set_attribute(result.document, "heating", "abstract", "false")
+    assert result.document == SAMPLE
+
+
+def test_set_abstract_keeps_the_template_it_would_not_carry(sample):
+    # The checker reports template-on-abstract-kind; the operation decides
+    # nothing about the template.
+    result = operations.set_attribute(sample, "heating", "abstract", "true")
+    assert by_id(result.document, "heating")["text"] == "Heating in the building."
+
+
+@pytest.mark.parametrize("value", ["yes", "True", "1", ""])
+def test_set_abstract_refuses_anything_but_true_or_false(sample, value):
+    with pytest.raises(Refused, match="true or false"):
+        operations.set_attribute(sample, "heating", "abstract", value)
+
+
 @pytest.mark.parametrize("attribute", ["id", "specialises", "parameters", "rules"])
 def test_set_refuses_what_is_not_prose(sample, attribute):
     with pytest.raises(Refused):
@@ -278,6 +311,7 @@ def test_create_adds_one_leaf_with_a_uuid(valid):
     assert uuid.UUID(new["id"]).version == 4
     assert new["specialises"] == LEAF
     assert new["name"] == "Extractor fan"
+    assert new["abstract"] is False
     assert contract_schema.misfits(result.document) == []
 
 
@@ -290,6 +324,45 @@ def test_create_under_an_ambiguous_parent_is_refused(sample):
     sample["kinds"].append(kind("ventilation", None, "Another ventilation"))
     with pytest.raises(Refused):
         operations.create(sample, "ventilation", "Extractor fan")
+
+
+# -- add-parameter ------------------------------------------------------------------
+
+
+def test_add_parameter_appends_one_with_a_uuid(valid):
+    result = operations.add_parameter(
+        valid, ROOT, "airflow", "cubic-metres", "How much?"
+    )
+    (added,) = by_id(result.document, ROOT)["parameters"]
+    assert str(uuid.UUID(added["id"])) == added["id"] == result.created
+    assert uuid.UUID(added["id"]).version == 4
+    assert added == {
+        "id": added["id"],
+        "name": "airflow",
+        "valueDomainId": "cubic-metres",
+        "whatToAsk": "How much?",
+    }
+    assert by_id(result.document, LEAF) == by_id(valid, LEAF)
+
+
+def test_add_parameter_notes_the_kinds_beneath_that_have_it_too(valid):
+    result = operations.add_parameter(valid, ROOT, "airflow")
+    assert any("1 kind(s) beneath" in n for n in result.notes)
+    assert operations.add_parameter(valid, LEAF, "speed").notes == []
+
+
+def test_add_parameter_to_an_ambiguous_subject_is_refused(sample):
+    sample["kinds"].append(kind("ventilation", None, "Another ventilation"))
+    with pytest.raises(Refused, match="carried by 2 kinds"):
+        operations.add_parameter(sample, "ventilation", "airflow")
+
+
+def test_move_notes_the_parameters_the_subtree_loses_and_gains(sample):
+    by_id(sample, "heating")["parameters"] = [parameter("output", "kilowatts")]
+    by_id(sample, "ventilation")["parameters"] = [parameter("airflow", "m3")]
+    result = operations.move(sample, "radiator", "ventilation")
+    assert any("no longer has the parameter 'output'" in n for n in result.notes)
+    assert any("now has the parameter 'airflow'" in n for n in result.notes)
 
 
 # -- extract ----------------------------------------------------------------------

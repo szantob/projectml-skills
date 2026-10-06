@@ -43,14 +43,21 @@ PROSE_ATTRIBUTES = (
     "wordingRule",
 )
 
+# Whether a kind is abstract is the one attribute set writes that is not
+# prose: a yes or a no, given as one of these two words.
+_ABSTRACT = {"true": True, "false": False}
+
 _NOT_PROSE = {
     "id": (
         "An identity is never edited: every specialises naming this kind "
         "points at it, and it is a label, not something the kind says."
     ),
     "specialises": "Where a kind hangs is changed by move, not by set.",
-    "parameters": "Parameters are structured; set edits prose attributes only.",
-    "rules": "Rules are structured; set edits prose attributes only.",
+    "parameters": (
+        "Parameters are structured; add one with add-parameter, and set edits "
+        "a kind's own attributes only."
+    ),
+    "rules": "Rules are structured; set edits a kind's own attributes only.",
 }
 
 
@@ -154,6 +161,16 @@ def _ancestors(kinds, position):
         chain.append(current)
 
 
+def _inherited(kinds, position):
+    """The ``(declaring position, parameter)`` pairs ``position`` inherits,
+    resolved as the contract's *What a kind has* says."""
+    return [
+        (owner, parameter)
+        for owner, parameter in tree.parameters_had(kinds, position)
+        if owner != position
+    ]
+
+
 # -- prose --------------------------------------------------------------------
 
 
@@ -241,8 +258,25 @@ def move(document, subject, target):
         )
 
     before, _ = _ancestors(kinds, root)
+    inherited_before = _inherited(kinds, root)
     kinds[root]["specialises"] = parent
     after, _ = _ancestors(kinds, root)
+    inherited_after = _inherited(kinds, root)
+
+    # A kind has every parameter its ancestors declare (ProjectML K107), so
+    # moving it changes which parameters the whole subtree has: a fact about
+    # structure, which the checker reports wherever a template no longer fits.
+    notes = [
+        f"The subtree no longer has the parameter {p['name']!r} ({p['id']}), "
+        f"declared on {_label(kinds[owner])}."
+        for owner, p in inherited_before
+        if (owner, p["id"]) not in {(o, q["id"]) for o, q in inherited_after}
+    ] + [
+        f"The subtree now has the parameter {p['name']!r} ({p['id']}), "
+        f"declared on {_label(kinds[owner])}."
+        for owner, p in inherited_after
+        if (owner, p["id"]) not in {(o, q["id"]) for o, q in inherited_before}
+    ]
 
     count = len(members)
     lost = [p for p in before if p not in after]
@@ -258,6 +292,7 @@ def move(document, subject, target):
     return Result(
         document,
         f"Moved {subject!r} and the {count - 1} kind(s) beneath it under {where}.",
+        notes=notes,
         candidates=candidates,
     )
 
@@ -294,13 +329,20 @@ def delete(document, subject):
 
 
 def set_attribute(document, subject, attribute, value):
-    """Set one prose attribute of ``subject`` to ``value``, as given."""
+    """Set one prose attribute of ``subject`` to ``value``, as given - or
+    ``abstract``, to ``true`` or ``false``."""
     if attribute in _NOT_PROSE:
         raise Refused(_NOT_PROSE[attribute])
-    if attribute not in PROSE_ATTRIBUTES:
+    if attribute == "abstract":
+        if value not in _ABSTRACT:
+            raise Refused(
+                f"Whether a kind is abstract is set to true or false, not {value!r}."
+            )
+        value = _ABSTRACT[value]
+    elif attribute not in PROSE_ATTRIBUTES:
         raise Refused(
             f"A kind has no attribute {attribute!r}. Set edits one of: "
-            f"{', '.join(PROSE_ATTRIBUTES)}."
+            f"{', '.join(PROSE_ATTRIBUTES)}, or abstract."
         )
     document = copy.deepcopy(document)
     kinds = document["kinds"]
@@ -311,6 +353,13 @@ def set_attribute(document, subject, attribute, value):
             document, f"{attribute} of {subject!r} already holds that.", changed=False
         )
     kinds[position][attribute] = value
+
+    if attribute == "abstract":
+        # Nothing is lost either way: a template written on a kind made
+        # abstract stays, and the checker reports it, so the modeller decides
+        # what becomes of it rather than this.
+        state = "abstract" if value else "not abstract"
+        return Result(document, f"{subject!r} is now {state}.")
 
     candidates = []
     if attribute == "name" and not _blank(old):
@@ -340,6 +389,8 @@ def create(document, parent, name, new_id=None):
         {
             "id": identity,
             "name": name,
+            # A kind is abstract only where it says so (ProjectML K109).
+            "abstract": False,
             "text": "",
             "whenItApplies": "",
             "parameters": [],
@@ -351,6 +402,41 @@ def create(document, parent, name, new_id=None):
     )
     return Result(
         document, f"Created {identity} under {where}.", created=identity
+    )
+
+
+def add_parameter(document, subject, name, domain="", ask="", new_id=None):
+    """A new parameter on ``subject``, carrying a generated identity, the
+    name, value domain and ask given, and nothing else.
+
+    The name is what the kind's template writes in a placeholder; the
+    identity is what a gap or a guard names. Every descendant of ``subject``
+    has the parameter too, with this ask (ProjectML K107, K112)."""
+    document = copy.deepcopy(document)
+    kinds = document["kinds"]
+    position = _resolve(kinds, subject)
+    identity = new_id or str(uuid.uuid4())
+    kinds[position]["parameters"].append(
+        {"id": identity, "name": name, "valueDomainId": domain, "whatToAsk": ask}
+    )
+    try:
+        descendants = [p for p in _subtree(kinds, position) if p != position]
+    except Refused:
+        # A kind on a cycle, or one whose descendants cannot be told apart,
+        # still takes the parameter; only the count below is not decided.
+        descendants = []
+    notes = []
+    if descendants:
+        notes.append(
+            f"{len(descendants)} kind(s) beneath {subject!r} have the parameter "
+            f"too; each that is not abstract needs it in its template, which the "
+            f"checker reports as parameter-without-placeholder until it is there."
+        )
+    return Result(
+        document,
+        f"Added parameter {identity} to {subject!r} ({_label(kinds[position])}).",
+        notes=notes,
+        created=identity,
     )
 
 

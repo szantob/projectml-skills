@@ -169,6 +169,10 @@ def to_mermaid(kinds, near):
     for position in positions:
         own = names[position]
         body.append(f'\tclass {own}["{_label(_label_of(kinds, position))}"]')
+        if kinds[position]["abstract"]:
+            # The marking the diagram language already gives the abstract
+            # root, so an abstract kind is drawn the way ProjectML draws one.
+            body.append(f"\t<<abstract>> {own}")
 
         if position == near.subject:
             if near.parent is not None:

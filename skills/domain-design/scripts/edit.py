@@ -7,10 +7,13 @@
     move    PACKAGE SUBJECT (--under TARGET | --to-root)
     create  PACKAGE (--under PARENT | --at-root) [--name NAME]
     delete  PACKAGE SUBJECT
+    add-parameter PACKAGE SUBJECT --name NAME [--domain ID] [--ask TEXT]
 
 SUBJECT, TARGET and PARENT are identities. For ``set``, a VALUE of ``-`` is
 read from stdin, less one final line break, so prose of several lines need
-not pass through a command line.
+not pass through a command line; ``set ... abstract`` takes ``true`` or
+``false``. ``create`` and ``add-parameter`` print the identity they
+generated.
 
 The package is edited in place. ``extract`` writes a new package to OUTPUT
 and leaves the source alone. What each operation guarantees is in
@@ -86,6 +89,13 @@ def _parser():
     delete = commands.add_parser("delete", help="delete a subtree")
     delete.add_argument("package")
     delete.add_argument("subject")
+
+    add = commands.add_parser("add-parameter", help="add a parameter to a kind")
+    add.add_argument("package")
+    add.add_argument("subject")
+    add.add_argument("--name", required=True)
+    add.add_argument("--domain", default="")
+    add.add_argument("--ask", default="")
     return parser
 
 
@@ -172,6 +182,10 @@ def run(argv, out, stdin):
         elif args.command == "create":
             parent = None if args.at_root else args.under
             result = operations.create(document, parent, args.name)
+        elif args.command == "add-parameter":
+            result = operations.add_parameter(
+                document, args.subject, args.name, args.domain, args.ask
+            )
         else:
             result = operations.delete(document, args.subject)
     except operations.Refused as refusal:

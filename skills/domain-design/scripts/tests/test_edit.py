@@ -14,13 +14,14 @@ SCRIPT = Path(__file__).resolve().parents[1] / "edit.py"
 BUILDING = "00000000-0000-4000-8000-000000000001"
 VENTILATION = "00000000-0000-4000-8000-000000000002"
 
-PACKAGE = """schemaVersion: 4
+PACKAGE = """schemaVersion: 5
 name: "Building services"
 version: ""
 valueDomains: []
 kinds:
   - id: 00000000-0000-4000-8000-000000000001
     name: "Building"
+    abstract: false
     text: ""
     whenItApplies: ""
     parameters: []
@@ -30,6 +31,7 @@ kinds:
     specialises: null
   - id: 00000000-0000-4000-8000-000000000002
     name: "Ventilation"
+    abstract: false
     text: "Serves the whole Building."
     whenItApplies: ""
     parameters: []
@@ -105,6 +107,29 @@ def test_create_prints_the_identity_it_generated(tmp_path):
     created = dialect.load(path.read_text(encoding="utf-8"))["kinds"][-1]
     assert created["id"] in printed
     assert created["name"] == "Air handler"
+
+
+def test_add_parameter_prints_the_identity_it_generated(tmp_path):
+    path = _package(tmp_path)
+    status, printed = _run(
+        "add-parameter", str(path), BUILDING, "--name", "floors", "--ask", "How many?"
+    )
+    assert status == 0
+    (added,) = dialect.load(path.read_text(encoding="utf-8"))["kinds"][0]["parameters"]
+    assert added["id"] in printed
+    assert (added["name"], added["valueDomainId"], added["whatToAsk"]) == (
+        "floors",
+        "",
+        "How many?",
+    )
+    assert "beneath" in printed
+
+
+def test_set_abstract_takes_a_word(tmp_path):
+    path = _package(tmp_path)
+    status, _ = _run("set", str(path), BUILDING, "abstract", "true")
+    assert status == 0
+    assert dialect.load(path.read_text(encoding="utf-8"))["kinds"][0]["abstract"]
 
 
 def test_extract_writes_a_new_file_and_leaves_the_source(tmp_path):

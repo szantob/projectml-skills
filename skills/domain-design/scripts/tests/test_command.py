@@ -21,13 +21,14 @@ FIRST = "00000000-0000-4000-8000-000000000001"
 SECOND = "00000000-0000-4000-8000-000000000002"
 THIRD = "00000000-0000-4000-8000-000000000003"
 
-CLEAN = """schemaVersion: 4
+CLEAN = """schemaVersion: 5
 name: "Two kinds"
 version: ""
 valueDomains: []
 kinds:
   - id: 00000000-0000-4000-8000-000000000001
     name: "Parent"
+    abstract: false
     text: "shall hold"
     whenItApplies: "Always."
     parameters: []
@@ -37,6 +38,7 @@ kinds:
     specialises: null
   - id: 00000000-0000-4000-8000-000000000002
     name: "Child"
+    abstract: false
     text: "shall hold"
     whenItApplies: "Always."
     parameters: []
@@ -46,13 +48,14 @@ kinds:
     specialises: 00000000-0000-4000-8000-000000000001
 """
 
-TWINS = """schemaVersion: 4
+TWINS = """schemaVersion: 5
 name: "Two kinds carrying one identity"
 version: ""
 valueDomains: []
 kinds:
   - id: 00000000-0000-4000-8000-000000000001
     name: "First"
+    abstract: false
     text: "shall hold"
     whenItApplies: "Always."
     parameters: []
@@ -62,6 +65,7 @@ kinds:
     specialises: null
   - id: 00000000-0000-4000-8000-000000000001
     name: "Second"
+    abstract: false
     text: "shall hold"
     whenItApplies: "Always."
     parameters: []
@@ -71,13 +75,14 @@ kinds:
     specialises: null
 """
 
-CYCLIC = """schemaVersion: 4
+CYCLIC = """schemaVersion: 5
 name: "Two kinds specialising each other"
 version: ""
 valueDomains: []
 kinds:
   - id: 00000000-0000-4000-8000-000000000001
     name: "Parent"
+    abstract: false
     text: "shall hold"
     whenItApplies: "Always."
     parameters: []
@@ -87,6 +92,7 @@ kinds:
     specialises: 00000000-0000-4000-8000-000000000002
   - id: 00000000-0000-4000-8000-000000000002
     name: "Child"
+    abstract: false
     text: "shall hold"
     whenItApplies: "Always."
     parameters: []
@@ -97,13 +103,14 @@ kinds:
 """
 
 
-TWO_CHILDREN_ONE_IDENTITY = """schemaVersion: 4
+TWO_CHILDREN_ONE_IDENTITY = """schemaVersion: 5
 name: "Two children sharing one identity"
 version: ""
 valueDomains: []
 kinds:
   - id: 00000000-0000-4000-8000-000000000003
     name: "S"
+    abstract: false
     text: "shall hold"
     whenItApplies: "Always."
     parameters: []
@@ -113,6 +120,7 @@ kinds:
     specialises: null
   - id: 00000000-0000-4000-8000-000000000004
     name: "T first"
+    abstract: false
     text: "shall hold"
     whenItApplies: "Always."
     parameters: []
@@ -122,6 +130,7 @@ kinds:
     specialises: 00000000-0000-4000-8000-000000000003
   - id: 00000000-0000-4000-8000-000000000004
     name: "T second"
+    abstract: false
     text: "shall hold"
     whenItApplies: "Always."
     parameters: []
@@ -198,13 +207,14 @@ def test_ambiguity_from_a_cyclic_carrier_is_not_hidden_by_filtering():
     # Counting only off-cycle carriers would call "p" unambiguous and
     # silently pick one of the two kinds named "p"; drawing "s" must refuse
     # instead, the way the checker's own duplicate-kind-id does.
-    text = """schemaVersion: 4
+    text = """schemaVersion: 5
 name: "A cyclic pair plus a root sharing its identity"
 version: ""
 valueDomains: []
 kinds:
   - id: 00000000-0000-4000-8000-000000000005
     name: "P0"
+    abstract: false
     text: "shall hold"
     whenItApplies: "Always."
     parameters: []
@@ -214,6 +224,7 @@ kinds:
     specialises: 00000000-0000-4000-8000-000000000006
   - id: 00000000-0000-4000-8000-000000000006
     name: "Q"
+    abstract: false
     text: "shall hold"
     whenItApplies: "Always."
     parameters: []
@@ -223,6 +234,7 @@ kinds:
     specialises: 00000000-0000-4000-8000-000000000005
   - id: 00000000-0000-4000-8000-000000000005
     name: "P2"
+    abstract: false
     text: "shall hold"
     whenItApplies: "Always."
     parameters: []
@@ -232,6 +244,7 @@ kinds:
     specialises: null
   - id: 00000000-0000-4000-8000-000000000003
     name: "S"
+    abstract: false
     text: "shall hold"
     whenItApplies: "Always."
     parameters: []

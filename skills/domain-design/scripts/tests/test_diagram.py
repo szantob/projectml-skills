@@ -5,10 +5,11 @@ import tree
 from tree import Neighbourhood
 
 
-def kind(identity, specialises=None, name=""):
+def kind(identity, specialises=None, name="", abstract=False):
     return {
         "id": identity,
         "name": name,
+        "abstract": abstract,
         "text": "",
         "whenItApplies": "",
         "parameters": [],
@@ -161,6 +162,12 @@ def test_two_drawn_kinds_sanitising_alike_stay_distinct():
 def test_a_kind_called_like_the_root_does_not_take_its_name():
     drawn = draw([kind("RequirementDefinition")], 0)
     assert "RequirementDefinition <|-- RequirementDefinition_1" in drawn
+
+
+def test_an_abstract_kind_is_marked_as_the_root_is():
+    drawn = draw([kind("a", abstract=True), kind("b", "a")], 1)
+    assert "\t<<abstract>> a" in drawn.splitlines()
+    assert "<<abstract>> b" not in drawn
 
 
 def test_the_subject_is_marked():
