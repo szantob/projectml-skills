@@ -1,8 +1,9 @@
 ---
 name: domain-design
 description: >
-  Turn what a modeller knows about a domain -- a conversation, a company's own documents, or a package
-  already begun -- into a complete, valid set of requirement definitions (kinds) and the tree of how they
+  Turn what a modeller knows about a domain -- the forms and models its project modelling ends in, a
+  conversation, a company's own documents, or a package already begun -- into a complete, valid set of
+  the requirement definitions (kinds) a client answers, and the tree of how they
   specialise one another, and change that tree later without losing what was written. Checks the work as
   it goes and asks back only what is actually missing, rather than guessing. Use this for domain design:
   deciding what kinds of requirement a domain has, writing each one's attributes, and extending or
@@ -16,32 +17,71 @@ time anything is touched: **what is a kind and where does it sit**, and **what d
 decided first where it is cheap to decide, and changed later with operations that carry every kind's prose
 along with it -- never by rebuilding the tree, which throws the prose away.
 
-Two processes follow. Use the first when there is no package yet, the second whenever one exists.
+Two processes follow. Use the first when there is no package yet, the second whenever one exists. Both
+rest on one distinction, stated first, and on one question asked every time a kind is proposed.
+
+## Project requirements, not requirement analysis
+
+Two activities produce requirements, and only one of them is modelled here:
+
+- **Project management** collects what the **client answers**: how many people, which date, what
+  budget, which rooms. Every value in such a requirement is stated by somebody on the project's side,
+  who is answerable for it. These are the kinds this skill designs.
+- **Requirement analysis** works out, from the agreed baseline, the low-level requirements an
+  implementation needs: how many pieces, which part, what rating. Its values are not answers but
+  conclusions somebody draws for the implementation. That is design, beyond the seam, and it belongs to
+  the next phase's model, not to this package.
+
+**Ask it of every kind before it enters the package -- in the skeleton, while refining, and in every
+change plan: *is this a project requirement or a derived one? Who answers it -- the client, or whoever
+designs the implementation?*** Ask it of a parameter too: a value somebody would compute from other values
+rather than be told is a derived one. When the answer is *derived*, say so to the modeller and leave it out;
+do not go looking for the answers to questions only the implementation asks. When the answer is unclear,
+that is a question for the modeller, not a reason to model it just in case.
+
+Do not confuse this with ProjectML's *derivation* between requirements, which is a project requirement
+too: an elaboration the client stated, beneath the requirement it elaborates.
 
 ## 1. Building a new model
 
-1. **Read the domain as a whole and draw a shallow skeleton** -- the main kinds and their important
+1. **Ask first for the end product, before reading anything else.** Ask the modeller for whatever the
+   finished project modelling must turn into, because that bounds what the domain needs and stops the
+   search from running deep into questions nobody will ask:
+   - **the model or document the next phase works from** -- what a designer or an implementer receives
+     once the requirements are agreed;
+   - **the forms and questionnaires used today** to take a project in -- briefs, order forms, intake
+     checklists;
+   - **a past project's filled-in version of either**, which shows which questions were really answered;
+   - **what a quote or an offer has to know**, and **the acceptance or handover checklist**, where they
+     exist -- the first bounds what must be asked, the second what must be verifiable.
+
+   What the client is asked in these is the project side of the domain. What they work out from it is
+   requirement analysis -- see above. When no such material exists, say that the skeleton then has nothing
+   to be measured against, and keep it shallower still.
+2. **Read the domain as a whole and draw a shallow skeleton** -- the main kinds and their important
    sub-kinds, **two or three levels deep and no deeper**. Give each a **name** and a parent, and leave
    every other attribute blank. The name is not optional here: it is what a reviewer reads, so it must
    also be one no other kind in the package carries -- the checker raises `duplicate-kind-name` otherwise,
    and two sub-kinds both called *Other* under different parents are exactly that case. A skeleton
-   this shallow is quick to review and makes the later work local. Create each kind with `create` (see
-   *The operations*), which generates its identity -- a UUID -- and prints it; never write an identity
-   into the file by hand. Start from an empty package: `schemaVersion: 5`, a name, `version: ""`, and
+   this shallow is quick to review and makes the later work local. Draw it from the end product: a kind
+   earns its place because the end product asks for it, and every kind passes the question above. Create
+   each kind with `create` (see *The operations*), which generates its identity -- a UUID -- and prints
+   it; never write an identity into the file by hand. Start from an empty package: `schemaVersion: 5`, a name, `version: ""`, and
    empty `valueDomains` and `kinds`.
-2. **Show the skeleton to the modeller** and take their changes. Nothing is cheaper to change than a
-   skeleton, so this is the place to argue about what the kinds are.
-3. **Work each kind out, top down** -- a parent before its children -- refining it with new sub-kinds as
-   you go. Work one kind at a time in a small context: `extract` it (see *The operations*) rather than
-   reading the whole package. Write its attributes, reading
+3. **Show the skeleton to the modeller** and take their changes. Nothing is cheaper to change than a
+   skeleton, so this is the place to argue about what the kinds are -- and which of them are derived.
+4. **Work each kind out, top down** -- a parent before its children -- refining it with new sub-kinds
+   only where the end product tells them apart: a sub-kind that the client would be asked nothing
+   different for is not one. Work one kind at a time in a small context: `extract` it (see *The
+   operations*) rather than reading the whole package. Write its attributes, reading
    `skills/domain-design/reference/requirement-definitions.md` first; use outside sources where the
    modeller offers them; show it to the modeller when they want to see it; run the checker after each.
    Top down, so that a child's prose can be **compared** with its parent's -- never copied from it (see
    *What this skill does not do*).
-4. **When working a kind out shows the structure is wrong** -- it belongs elsewhere, or it is the same kind
+5. **When working a kind out shows the structure is wrong** -- it belongs elsewhere, or it is the same kind
    as another -- that is not a failure and not a reason to start over: run a small round of process 2 for
    that change, then carry on.
-5. **When you are unsure whether a kind overlaps a sibling**, widen the context: extract its **parent**
+6. **When you are unsure whether a kind overlaps a sibling**, widen the context: extract its **parent**
    rather than the kind, which brings the siblings in. The shallow skeleton makes this rarely necessary; do
    it whenever it is.
 
@@ -49,14 +89,15 @@ Two processes follow. Use the first when there is no package yet, the second whe
 
 For extending a domain and for restructuring one alike.
 
-1. **Read the new need and find where it belongs.** Draft a change plan in terms of the operations: new
-   kinds, an intermediate parent, moves, deletions. If the change is a restructuring, name it from
+1. **Read the new need and find where it belongs.** First ask of it the question above: a need that only
+   requirement analysis has is no change to this package. Then draft a change plan in terms of the
+   operations: new kinds, an intermediate parent, moves, deletions. If the change is a restructuring, name it from
    `skills/domain-design/reference/restructuring.md` and follow its recipe where it has one.
 2. **Show the plan to the modeller as structure only** -- which kinds appear, move or go, and under what --
    before anything runs. This is the cheap point again: nothing has been written against the new shape yet.
 3. **Carry it out with the operations**, then run the checker.
 4. **Judge every candidate the operations returned** (see *Candidates*), then work out the new kinds and
-   any kind whose prose no longer holds, as in 1.3.
+   any kind whose prose no longer holds, as in 1.4.
 
 ## The operations
 
@@ -69,7 +110,7 @@ For extending a domain and for restructuring one alike.
 
 - **extract** writes the subject's subtree, its ancestor chain and the value domains they use to a new
   package at OUTPUT, which the checker can check on its own. The source is not touched. This is the small
-  context of 1.3.
+  context of 1.4.
 - **set** writes one prose attribute -- `name`, `text`, `whenItApplies`, `howItWouldBeVerified` or
   `wordingRule` -- exactly as given. A VALUE of `-` is read from stdin, for prose of several lines. It
   also sets `abstract`, to `true` or `false`. It refuses the identity: **no operation edits an
@@ -123,8 +164,9 @@ The checker and both scripts require Python with `PyYAML` and `jsonschema` insta
 they say so, name what to install, and exit 2. Ask the modeller before installing anything. Its findings decide what is asked back -- the questions come from the package's
 own holes, not from memory of what a package usually needs. This has a limit at the very start: an empty
 package raises no issue and has no gaps, because there is nothing yet for the checker to measure. So the
-skeleton, drawn from nothing, is driven by whatever the modeller has given -- a conversation, documents --
-not by the checker. Once kinds exist, the checker takes over.
+skeleton is driven by the end product asked for in 1.1, and by whatever else the modeller has given -- a
+conversation, documents -- not by the checker. Once kinds exist, the checker takes over. Neither ever
+decides that a kind belongs: a gap on a derived kind is no reason to fill it, only to take the kind out.
 
 ## What the checker's exit status means
 
@@ -193,6 +235,9 @@ whose effect on prose no operation reports.
 
 Decline these rather than drift into them:
 
+- **Requirement analysis.** Kinds and parameters whose values somebody works out from the baseline for an
+  implementation -- see *Project requirements, not requirement analysis*. Name such a kind to the
+  modeller as derived, and leave it to the next phase's model.
 - **Rules.** A kind's `rules` stays empty here. Rules are phase 2.
 - **Project modelling.** Sources, needs, requirements and questions belong to phase 3.
 - **Answering an open metamodel question for convenience.** Where the metamodel leaves something open --
