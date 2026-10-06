@@ -1,6 +1,6 @@
 # What a `RequirementDefinition` is
 
-Read this before writing or judging any one of a `RequirementDefinition`'s eight attributes: it says what
+Read this before writing or judging any one of a `RequirementDefinition`'s nine attributes: it says what
 each one *means* — what a reader is deciding when they write it — not what shape it takes on the page. The
 package's own written shape, and the checks run over that shape, belong to the contract, not to this file.
 
@@ -19,9 +19,9 @@ domain's own level; the requirements a project model instantiates from it belong
 Treating a definition as though it already carried one requirement's answer — a value settled rather than a
 shape waiting to be filled — mistakes the middle level for the bottom one.
 
-## The eight attributes
+## The nine attributes
 
-`RequirementDefinition` carries eight attributes, and they are the whole of what the metamodel can read
+`RequirementDefinition` carries nine attributes, and they are the whole of what the metamodel can read
 without depending on anything an implementation supplies (K27). Each earns its place because there is a
 question about it a reader must answer — not because it has a particular shape, which is the contract's
 business.
@@ -33,6 +33,11 @@ business.
 - **Name.** The human-readable label a person reads. Deciding a name is deciding what someone scanning a
   list of definitions would look for; nothing else here depends on it.
 
+- **Abstract.** Whether no requirement is ever produced under this definition, only under the definitions
+  that specialise it (K109). A definition is abstract only where it says so; an empty template is a
+  template nobody has written yet, not a declaration. See below for what an abstract definition does not
+  carry.
+
 - **The wording template.** The structural pattern a requirement's wording is produced from, with places
   left for the definition's parameters. Writing this is deciding the sentence shape every requirement of
   this kind will share — not what any one requirement will say, which depends on the parameter values a
@@ -42,12 +47,13 @@ business.
   It carries a claim of its own that is easy to get backwards — see below.
 
 - **Parameters.** The variables a requirement of this kind fills in, each one naming the value domain it
-  draws from. Declaring a parameter is deciding what varies from one requirement of this kind to the next;
-  which value domains exist for it to draw from is an implementation's business, exactly as which kinds
-  exist is (K30).
+  draws from and carrying an identity of its own (K106). Declaring a parameter is deciding what varies from
+  one requirement of this kind to the next; which value domains exist for it to draw from is an
+  implementation's business, exactly as which kinds exist is (K30). A definition also has every parameter
+  its ancestors declare (K107) — see `specialisation-and-domains.md`.
 
 - **What to ask.** For each parameter, how a non-expert is asked for the value that is missing. It is
-  written once per parameter, not once per definition — see below for why.
+  written once per parameter, not once per definition, and it is a rule in its own right — see below.
 
 - **How it would be verified.** The method by which a requirement produced under this definition would be
   shown to hold, written once for the kind rather than once per requirement. It sits on the definition
@@ -58,21 +64,43 @@ business.
 - **The wording rule.** A well-formedness rule for the wording a requirement produced under this definition
   must satisfy. It stands on the same footing as *how it would be verified* — see below.
 
-A bad attribute, on any of the eight, is one answering a different question than the one it was asked: a
+A bad attribute, on any of the nine, is one answering a different question than the one it was asked: a
 name doing the work of an identity, a wording template trying to say when the definition applies, an
-identity trying to describe what the definition is for. The eight stay separate because each is a separate
+identity trying to describe what the definition is for. The nine stay separate because each is a separate
 decision, and folding two into one field loses the record of which decision was actually made.
 
-## Two attributes answer to the value-state model, not to a design language
+## A value comes from a source, and *what to ask* is how it is obtained
 
-*Parameters* and *what to ask* do not take their meaning from any notation or design language. A parameter
-with no value yet is not a special case — it is a value in the unknown state, the same state any value can
-be in before it is filled in. *What to ask* is how that value is obtained from somebody who holds it: the
-question that turns an unknown value into a known one.
+*Parameters* and *what to ask* do not take their meaning from any notation or design language. A value
+exists only where a source states it (K125): somebody with standing said it, and the requirement records
+who. Where nobody has, the value is missing — not assumed, not defaulted, and never supplied by the modeller,
+who decides nothing for the project. An implementation's default is at most a suggestion the ask can carry,
+and it becomes a value only when somebody states it (K127).
+
+*What to ask* is how a missing value is obtained from somebody who holds it, and it is a rule (K116): where
+a requirement of this kind has no value for the parameter, it raises a clarification, and where
+requirements of this kind state different values of the parameter for the same thing, it raises a choice
+for the project manager (K141). Write it as the question a non-expert can actually answer, addressed to
+whoever would know.
 
 This is also why *what to ask* is written per parameter and not once per definition. Each parameter can be
 missing on its own, independently of the others, so each needs its own question — one *what to ask* per
-unknown, not a single question trying to cover every unknown a definition might ever have at once.
+parameter, not a single question trying to cover every gap a definition might ever have at once. A
+parameter inherited from an ancestor brings its ask with it, and a descendant has none of its own for it
+(K112): every descendant is after the same value.
+
+## An abstract definition
+
+An abstract definition exists so that the definitions beneath it share what it declares — its parameters,
+above all, which every descendant has. Nothing is produced under it, so three of the nine do not apply
+(K110): it carries no **wording template**, and neither **how it would be verified** nor the **wording
+rule** applies to it, since all three speak of a requirement produced under the definition. The other six
+apply as they do anywhere: it still says **when it applies**, which guides whoever is classifying a new
+requirement down the tree, and every parameter it declares still needs its **what to ask**, because it is
+filled through the definitions beneath.
+
+A definition that is not abstract uses every parameter it has in its template, the inherited ones included
+(K111): a value filled in that the wording never states would be a value the requirement carries silently.
 
 ## When it applies is prose, and its absence is a gap, not a claim
 
@@ -111,5 +139,5 @@ present but wrong, only one that is missing.
 
 ## What this does not cover
 
-This covers a definition's own eight attributes — phase 1. A `Rule`, and how one relates to a definition, is
+This covers a definition's own nine attributes — phase 1. A `Rule`, and how one relates to a definition, is
 phase 2, and is out of scope here.

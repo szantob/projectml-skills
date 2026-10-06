@@ -2,7 +2,7 @@
 
 Read this before drawing, proposing, or judging the edge between two kinds, or the domain a parameter draws
 from. It says what the edge and the domain *are* — what a reader is deciding when they place one — not what
-shape either takes on the page. This file is read independently of the one on a definition's eight
+shape either takes on the page. This file is read independently of the one on a definition's nine
 attributes: it does not build on that file, and does not repeat it.
 
 ## Every definition is a specialisation
@@ -31,18 +31,23 @@ invalidity rather than picking a winner. This is why a checker reports an unreso
 `specialises` instead of guessing which kind was meant, and why a tree diagram declines to draw a subject
 whose identity more than one kind carries: there is no fact of the matter for it to draw.
 
-## Specialising does not inherit values
+## What specialising inherits: parameters, and nothing else
 
-A kind that specialises another does not thereby receive its ancestor's attribute values. Showing a
-descendant's parameters, its wording, its verification method beside the ancestor's own is useful — a reader
-comparing the two is exactly how a specialisation earns its place — but showing is not copying, and nothing
-here treats an ancestor's value as a default a descendant starts from.
+**A specialisation has every parameter its ancestors declare, in addition to its own** (K107), each with its
+*what to ask* (K112). It is the same parameter all the way down — one identity, one value domain, one ask —
+so a descendant **never declares a parameter an ancestor already declares** (K108), under that identity or
+under that name: a rule stated high in the tree must find the same parameter on every kind it reaches. Where
+a parameter belongs to every kind beneath some point, it belongs on that point, declared once.
 
-**What specialisation actually licenses a subtype to add, narrow, or override is open — ProjectML's OQ9, and
-it is unresolved.** K30 chose the mechanism, specialisation, without defining what exercising it means. A
-tool that copied an ancestor's value down the tree would be answering OQ9 by accident, in code, for every
-package it touched — settling by convenience a question the metamodel has deliberately left for whoever
-first has a real tree to reason from. Until then, an ancestor's value is shown for comparison and never
+**Nothing else is inherited.** A definition's wording template is its own: a descendant inherits the
+parameters, never the sentence (K113). Its *when it applies* is its own too, because it says which branch of
+the tree is worth following and an inherited one would point every branch the same way (K114). Whether a
+definition is abstract is not inherited either (K109).
+
+**What is still open is ProjectML's OQ9, narrowed:** whether an inherited parameter may ever be overridden or
+narrowed, whether a wording rule is inherited, and whether *how it would be verified* is. A tool that copied
+an ancestor's wording rule or verification method down the tree would be answering OQ9 by accident, in code,
+for every package it touched. Until it is answered, an ancestor's prose is shown for comparison and never
 copied.
 
 ## A value domain is what a parameter draws from
@@ -52,23 +57,28 @@ that parameter could be. As with the set of kinds, which value domains exist, an
 an implementation's business rather than the metamodel's: the metamodel provides the slot a domain fills
 without naming what goes into it (K30).
 
-**Whether a domain fixes a unit is open — ProjectML's OQ27, and it is unresolved.** Two values in the same
-domain are already presumed comparable elsewhere in the metamodel — a conflict between them is meaningless
-otherwise — but nothing settles whether that comparability comes from the domain fixing one unit, so that a
-value need carry none of its own, or from the domain leaving units alone, so that a value must carry one to
-be comparable at all. Treating a domain as though it obviously fixed a unit, or obviously did not, is
-answering OQ27 in passing, and a convenience reached that way is exactly the failure this file exists to
-head off. Declare a domain; do not decide, on its behalf, a question the metamodel has not decided.
+**A domain fixes no unit; it declares how its values compare** (K101). Exactly one of three: **not
+comparable**, **comparable for equality**, or **ordered**, the last including the second. That is what a
+rule's guard needs, and nothing more: *equals* and *is one of* need a domain comparable for equality or
+ordered, *less than* and its relatives an ordered one. How a domain achieves its level — a fixed unit, an
+enumeration, anything else — is the implementation's business. Two domains for one measure in different
+units are two ordered domains, each in its own unit, and nothing ever converts between them; a domain is
+declared as comparable as its values really are, and no more.
 
 ## What good shape looks like in a tree
 
 **The rest of this file states what the metamodel and its open questions require. This last part does not —
 it is guidance, not a rule traced to any decision, and it can be wrong in a way a citation cannot.**
 
-A specialisation earns its place by narrowing what its parent already asks — sharpening a parameter, tightening
-what to ask for it, restating a verification method for a more specific case — not merely by adding something
-beside it. A kind that only adds is not yet using the edge for anything the parent could not have carried
-itself.
+A specialisation earns its place by being a narrower case of what its parent describes — a wording template
+that says the more specific thing, a *when it applies* that picks out the narrower circumstance, a
+verification method fitted to the more specific case — not merely by sitting beside it. It does not earn it
+by re-asking for its parent's parameters: those it already has, with their asks. A kind that differs from its
+parent in nothing it says is not yet using the edge for anything.
+
+A kind whose only purpose is to hold what its children share — their parameters, a *when it applies* that
+guides the choice between them — is a candidate for being abstract. One that is abstract and has no children
+holds parameters nothing will ever fill, which is worth an opinion.
 
 A tree that is wide at every level, with little narrowing from one level to the next, is usually a list
 wearing a tree's clothes: the specialisations are really just alternatives, related by nothing more than

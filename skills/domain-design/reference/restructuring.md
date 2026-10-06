@@ -9,9 +9,16 @@ and `extract` for reading -- so none needs a tool of its own. What differs betwe
 worth saying, a restructuring has no recipe; where they cannot, because the question is one of meaning, it
 has one.
 
-Values are not inherited down the tree: what specialisation licenses a child to add, narrow or override is
-ProjectML's OQ9, and it is open (see `specialisation-and-domains.md`). So no recipe ever deletes a child's
-statement because its parent now says the same. It says that the two overlap, and leaves it there.
+Prose is not inherited down the tree, and whether a wording rule or a verification method ever is remains
+ProjectML's OQ9 (see `specialisation-and-domains.md`). So no recipe ever deletes a child's statement because
+its parent now says the same. It says that the two overlap, and leaves it there.
+
+**Parameters are the exception, and they move with the tree.** A kind has every parameter its ancestors
+declare, so a move changes which parameters a whole subtree has — `move` notes each one lost and gained, and
+the checker reports a template that no longer fits. And a parameter is never declared twice down one branch:
+lifting one that siblings share (14) means declaring it once on the parent and taking it off each sibling,
+not leaving a copy on each. No operation moves a parameter yet; that is an edit to the file, and every
+template, guard and ask that names it has to be checked after.
 
 ## The catalogue
 

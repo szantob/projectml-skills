@@ -27,7 +27,7 @@ Two processes follow. Use the first when there is no package yet, the second whe
    and two sub-kinds both called *Other* under different parents are exactly that case. A skeleton
    this shallow is quick to review and makes the later work local. Create each kind with `create` (see
    *The operations*), which generates its identity -- a UUID -- and prints it; never write an identity
-   into the file by hand. Start from an empty package: `schemaVersion: 4`, a name, `version: ""`, and
+   into the file by hand. Start from an empty package: `schemaVersion: 5`, a name, `version: ""`, and
    empty `valueDomains` and `kinds`.
 2. **Show the skeleton to the modeller** and take their changes. Nothing is cheaper to change than a
    skeleton, so this is the place to argue about what the kinds are.
@@ -65,22 +65,28 @@ For extending a domain and for restructuring one alike.
     python scripts/edit.py move    PACKAGE SUBJECT (--under TARGET | --to-root)
     python scripts/edit.py create  PACKAGE (--under PARENT | --at-root) [--name NAME]
     python scripts/edit.py delete  PACKAGE SUBJECT
+    python scripts/edit.py add-parameter PACKAGE SUBJECT --name NAME [--domain ID] [--ask TEXT]
 
 - **extract** writes the subject's subtree, its ancestor chain and the value domains they use to a new
   package at OUTPUT, which the checker can check on its own. The source is not touched. This is the small
   context of 1.3.
 - **set** writes one prose attribute -- `name`, `text`, `whenItApplies`, `howItWouldBeVerified` or
   `wordingRule` -- exactly as given. A VALUE of `-` is read from stdin, for prose of several lines. It
-  refuses the identity: **no operation edits an identity**. It refuses `specialises`: that is a move.
+  also sets `abstract`, to `true` or `false`. It refuses the identity: **no operation edits an
+  identity**. It refuses `specialises`: that is a move.
 - **move** cuts the subject **with everything beneath it** and pastes it under the target, or at the root
-  level. Every kind moved keeps every attribute; only the subject's parent changes.
+  level. Every kind moved keeps every attribute; only the subject's parent changes. Since a kind has
+  every parameter its ancestors declare, it notes the parameters the subtree loses and gains.
 - **create** adds one new kind under a parent or at the root level, with a generated identity, the name
-  given and nothing else. It prints the identity, which later operations need.
+  given and nothing else. It is not abstract. It prints the identity, which later operations need.
 - **delete** removes the subject **with everything beneath it**, so nothing is left pointing at a kind that
   is gone.
+- **add-parameter** adds one parameter to the subject, with a generated identity and the name, value
+  domain and *what to ask* given. It prints the identity. The name is what the template writes in a
+  placeholder; every kind beneath the subject has the parameter too.
 
-Parameters, rules and value domains are structured rather than prose, and no operation writes them yet;
-write those in the package file directly, and run the checker after.
+A parameter's other attributes, rules and value domains are structured rather than prose, and no operation
+writes them yet; write those in the package file directly -- never an identity -- and run the checker after.
 
 There is no operation that moves or deletes a kind without its children. Where the children should go
 somewhere else, move them there first, one subtree at a time; then the kind is a leaf, and moving or
@@ -174,7 +180,7 @@ non-zero exit it writes a sentence saying why, which is not a diagram.
 ## The three reference files
 
 Read `skills/domain-design/reference/requirement-definitions.md` before writing or judging any of a kind's
-eight attributes -- it says what each one means, not what shape it takes on the page.
+nine attributes -- it says what each one means, not what shape it takes on the page.
 
 Read `skills/domain-design/reference/specialisation-and-domains.md` before drawing, proposing, or judging
 the edge between two kinds, or the value domain a parameter draws from.
@@ -190,7 +196,8 @@ Decline these rather than drift into them:
 - **Rules.** A kind's `rules` stays empty here. Rules are phase 2.
 - **Project modelling.** Sources, needs, requirements and questions belong to phase 3.
 - **Answering an open metamodel question for convenience.** Where the metamodel leaves something open --
-  whether specialisation inherits an ancestor's values, whether a value domain fixes a unit -- do not settle
-  it because a package needs an answer now. Say that it is open, and act consistently with that: for
-  instance, never copy an ancestor's value down the tree, and never delete a child's statement because its
-  parent now says the same.
+  whether an inherited parameter may be narrowed, whether a wording rule or a verification method is
+  inherited -- do not settle it because a package needs an answer now. Say that it is open, and act
+  consistently with that: for instance, never copy an ancestor's prose down the tree, and never delete a
+  child's statement because its parent now says the same. Parameters are the one thing that *is*
+  inherited, and that is decided: never redeclare an ancestor's parameter on a descendant.

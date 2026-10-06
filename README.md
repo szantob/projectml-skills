@@ -23,7 +23,7 @@ package, and saying when the model is wrong.
   diagram plus something else: anything the script has to say about what it drew is a `%%` comment inside
   that same fence. On a non-zero exit it writes a sentence saying why, which is not a diagram.
   `python skills/domain-design/scripts/edit.py` changes a package's structure — extract, set, move,
-  create, delete — carrying every kind's prose with what it moves, and prints the prose that may no
+  create, delete, add-parameter — carrying every kind's prose with what it moves, and prints the prose that may no
   longer hold where it now stands. It exits 0 when done, 1 when it refused rather than guess, and 2 for
   nothing to work from.
 
