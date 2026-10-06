@@ -35,9 +35,17 @@ Two activities produce requirements, and only one of them is modelled here:
 **Ask it of every kind before it enters the package -- in the skeleton, while refining, and in every
 change plan: *is this a project requirement or a derived one? Who answers it -- the client, or whoever
 designs the implementation?*** Ask it of a parameter too: a value somebody would compute from other values
-rather than be told is a derived one. When the answer is *derived*, say so to the modeller and leave it out;
-do not go looking for the answers to questions only the implementation asks. When the answer is unclear,
-that is a question for the modeller, not a reason to model it just in case.
+rather than be told is a derived one. When the answer is *derived*, say so to the modeller and leave it out
+of the package; do not go looking for the answers to questions only the implementation asks. When the
+answer is unclear, that is a question for the modeller, not a reason to model it just in case.
+
+**A derived requirement left out need not be thrown away.** Offer to write the ones found as a by-product,
+so that the next phase does not start from nothing -- and write it only if the modeller wants it. It is a
+Markdown file beside the package, `derived-requirements.md` unless the modeller names another, with one
+entry per requirement: what it would say, which project kind or kinds it is worked out from, and where it
+was found. It is notes, not a model: it is not part of the package, nothing checks it, and nothing in the
+package may depend on it. Add to it as the work goes; never move an entry back into the package without
+asking the question above again.
 
 Do not confuse this with ProjectML's *derivation* between requirements, which is a project requirement
 too: an elaboration the client stated, beneath the requirement it elaborates.
@@ -56,8 +64,8 @@ too: an elaboration the client stated, beneath the requirement it elaborates.
      exist -- the first bounds what must be asked, the second what must be verifiable.
 
    What the client is asked in these is the project side of the domain. What they work out from it is
-   requirement analysis -- see above. When no such material exists, say that the skeleton then has nothing
-   to be measured against, and keep it shallower still.
+   requirement analysis -- see above. When the modeller has none of it, skip this step and work from the
+   conversation and whatever else they give.
 2. **Read the domain as a whole and draw a shallow skeleton** -- the main kinds and their important
    sub-kinds, **two or three levels deep and no deeper**. Give each a **name** and a parent, and leave
    every other attribute blank. The name is not optional here: it is what a reviewer reads, so it must
@@ -237,7 +245,7 @@ Decline these rather than drift into them:
 
 - **Requirement analysis.** Kinds and parameters whose values somebody works out from the baseline for an
   implementation -- see *Project requirements, not requirement analysis*. Name such a kind to the
-  modeller as derived, and leave it to the next phase's model.
+  modeller as derived, and leave it to the next phase's model, noted in the optional by-product at most.
 - **Rules.** A kind's `rules` stays empty here. Rules are phase 2.
 - **Project modelling.** Sources, needs, requirements and questions belong to phase 3.
 - **Answering an open metamodel question for convenience.** Where the metamodel leaves something open --
