@@ -1,10 +1,11 @@
-schemaVersion: 4
+schemaVersion: 5
 name: "A kind with its prose unwritten"
 version: ""
 valueDomains: []
 kinds:
   - id: 00000000-0000-4000-8000-000000000001
     name: ""
+    abstract: false
     text: ""
     whenItApplies: ""
     parameters: []

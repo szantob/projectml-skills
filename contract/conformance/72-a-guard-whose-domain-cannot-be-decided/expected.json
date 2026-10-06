@@ -1,0 +1,10 @@
+{
+	"schemaValid": true,
+	"issues": [
+		{ "code": "unknown-value-domain", "kind": "00000000-0000-4000-8000-000000000001" },
+		{ "code": "duplicate-value-domain-id", "kind": null },
+		{ "code": "duplicate-parameter-id", "kind": "00000000-0000-4000-8000-000000000001" },
+		{ "code": "duplicate-parameter-name", "kind": "00000000-0000-4000-8000-000000000001" }
+	],
+	"gaps": []
+}

@@ -1,8 +1,9 @@
-schemaVersion: 4
+schemaVersion: 5
 name: "A value domain identity that reads as a word"
 version: ""
 valueDomains:
   - id: yes
     name: "Yes"
+    comparability: ordered
     description: ""
 kinds: []

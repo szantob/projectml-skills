@@ -1,0 +1,59 @@
+schemaVersion: 5
+name: "Guards on a parameter with no known domain, one with a shared domain, and one with a shared identity"
+version: ""
+valueDomains:
+  - id: shared
+    name: "Shared"
+    comparability: notComparable
+    description: ""
+  - id: shared
+    name: "Shared"
+    comparability: ordered
+    description: ""
+  - id: note
+    name: "Note"
+    comparability: notComparable
+    description: ""
+kinds:
+  - id: 00000000-0000-4000-8000-000000000001
+    name: "Capacity"
+    abstract: false
+    text: "shall seat {count} people at {tables} tables in {rooms} rooms"
+    whenItApplies: "When it is needed."
+    parameters:
+      - id: 00000000-0000-4000-9000-000000000001
+        name: count
+        valueDomainId: missing
+        whatToAsk: "What is it?"
+      - id: 00000000-0000-4000-9000-000000000002
+        name: tables
+        valueDomainId: shared
+        whatToAsk: "What is it?"
+      - id: 00000000-0000-4000-9000-000000000003
+        name: rooms
+        valueDomainId: note
+        whatToAsk: "What is it?"
+      - id: 00000000-0000-4000-9000-000000000003
+        name: rooms
+        valueDomainId: note
+        whatToAsk: "What is it?"
+    rules:
+      - id: r1
+        type: ConflictRule
+        inForce: true
+        guard:
+          - parameter: 00000000-0000-4000-9000-000000000001
+            operation: lessThan
+            constant: "1"
+          - parameter: 00000000-0000-4000-9000-000000000002
+            operation: lessThan
+            constant: "1"
+          - parameter: 00000000-0000-4000-9000-000000000003
+            operation: equals
+            constant: "1"
+        whenItApplies: "When it is stated."
+        whatToLookFor: "What contradicts it."
+        implies: null
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: null

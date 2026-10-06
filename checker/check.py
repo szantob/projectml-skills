@@ -63,8 +63,13 @@ def check(text, out):
     # named beside it. For display only: where two kinds share an identity,
     # the first one's name is shown, and the issue itself says they share it.
     names = {}
+    parameter_names = {}
     for kind in document["kinds"]:
         names.setdefault(kind["id"], kind["name"].strip(findings.WHITESPACE))
+        for parameter in kind["parameters"]:
+            parameter_names.setdefault(
+                parameter["id"], parameter["name"].strip(findings.WHITESPACE)
+            )
 
     def kind_ref(identity):
         name = names.get(identity, "")
@@ -83,7 +88,11 @@ def check(text, out):
     if holes:
         out.write(f"Gaps ({len(holes)}):\n")
         for gap in holes:
-            which = "" if gap.parameter is None else f" (parameter {gap.parameter!r})"
+            which = ""
+            if gap.parameter is not None:
+                name = parameter_names.get(gap.parameter, "")
+                named = f" ({name})" if name else ""
+                which = f" (parameter {gap.parameter!r}{named})"
             out.write(f"  - kind {kind_ref(gap.kind)}: {gap.field}{which}\n")
     else:
         out.write("No gaps.\n")

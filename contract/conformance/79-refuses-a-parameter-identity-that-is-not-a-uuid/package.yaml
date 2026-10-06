@@ -1,0 +1,23 @@
+schemaVersion: 5
+name: "A parameter whose identity is its name"
+version: ""
+valueDomains:
+  - id: headcount
+    name: "Headcount"
+    comparability: ordered
+    description: ""
+kinds:
+  - id: 00000000-0000-4000-8000-000000000001
+    name: "Capacity"
+    abstract: false
+    text: "shall seat {count} people"
+    whenItApplies: "When it is needed."
+    parameters:
+      - id: count
+        name: count
+        valueDomainId: headcount
+        whatToAsk: "What is it?"
+    rules: []
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: null

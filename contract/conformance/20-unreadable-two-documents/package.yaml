@@ -1,10 +1,10 @@
-schemaVersion: 4
+schemaVersion: 5
 name: "The first of two documents"
 version: ""
 valueDomains: []
 kinds: []
 ---
-schemaVersion: 4
+schemaVersion: 5
 name: "The second"
 version: ""
 valueDomains: []

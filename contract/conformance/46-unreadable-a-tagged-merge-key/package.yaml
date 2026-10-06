@@ -1,6 +1,6 @@
-schemaVersion: 4
+schemaVersion: 5
 name: "A kind filling its attributes with a tagged merge key"
 version: ""
 valueDomains: []
 kinds:
-  - !!merge <<: {id: copy, name: "Copy", text: "shall hold", whenItApplies: "Always.", parameters: [], rules: [], howItWouldBeVerified: "By inspection.", wordingRule: "One sentence.", specialises: null}
+  - !!merge <<: {id: copy, name: "Copy", abstract: false, text: "shall hold", whenItApplies: "Always.", parameters: [], rules: [], howItWouldBeVerified: "By inspection.", wordingRule: "One sentence.", specialises: null}

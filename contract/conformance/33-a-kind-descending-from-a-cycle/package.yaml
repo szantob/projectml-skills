@@ -1,10 +1,11 @@
-schemaVersion: 4
+schemaVersion: 5
 name: "A kind below a cycle, not on it"
 version: ""
 valueDomains: []
 kinds:
   - id: 00000000-0000-4000-8000-000000000001
     name: "A"
+    abstract: false
     text: "shall hold"
     whenItApplies: "Always."
     parameters: []
@@ -14,6 +15,7 @@ kinds:
     specialises: 00000000-0000-4000-8000-000000000002
   - id: 00000000-0000-4000-8000-000000000002
     name: "B"
+    abstract: false
     text: "shall hold"
     whenItApplies: "Always."
     parameters: []
@@ -23,6 +25,7 @@ kinds:
     specialises: 00000000-0000-4000-8000-000000000001
   - id: 00000000-0000-4000-8000-000000000003
     name: "C"
+    abstract: false
     text: "shall hold"
     whenItApplies: "Always."
     parameters: []

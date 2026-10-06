@@ -1,17 +1,20 @@
-schemaVersion: 4
+schemaVersion: 5
 name: "A placeholder written with spaces inside its braces"
 version: ""
 valueDomains:
   - id: headcount
     name: "Headcount"
+    comparability: ordered
     description: "A whole number of people."
 kinds:
   - id: 00000000-0000-4000-8000-000000000001
     name: "A"
+    abstract: false
     text: "shall seat { count } people"
     whenItApplies: "Always."
     parameters:
-      - name: count
+      - id: 00000000-0000-4000-9000-000000000001
+        name: count
         valueDomainId: headcount
         whatToAsk: "How many?"
     rules: []

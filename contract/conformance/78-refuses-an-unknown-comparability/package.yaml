@@ -1,0 +1,9 @@
+schemaVersion: 5
+name: "A value domain declaring a level of comparability that is not one of the three"
+version: ""
+valueDomains:
+  - id: headcount
+    name: "Headcount"
+    comparability: partial
+    description: ""
+kinds: []

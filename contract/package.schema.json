@@ -1,12 +1,12 @@
 {
 	"$schema": "http://json-schema.org/draft-07/schema#",
 	"title": "ProjectML implementation package",
-	"description": "The written shape of an implementation package, schema version 4. Strict: every attribute is required, and no attribute outside this schema is allowed. This is the editor's notation, not ProjectML's.",
+	"description": "The written shape of an implementation package, schema version 5. Strict: every attribute is required, and no attribute outside this schema is allowed. This is the editor's notation, not ProjectML's.",
 	"type": "object",
 	"additionalProperties": false,
 	"required": ["schemaVersion", "name", "version", "valueDomains", "kinds"],
 	"properties": {
-		"schemaVersion": { "const": 4 },
+		"schemaVersion": { "const": 5 },
 		"name": { "type": "string" },
 		"version": { "type": "string" },
 		"valueDomains": {
@@ -20,7 +20,7 @@
 	},
 	"definitions": {
 		"uuid": {
-			"$comment": "A kind's identity: a UUID of any version, lowercase. Generated identities are version 4; the pattern does not insist, so hand-written ones can be told apart by a reader.",
+			"$comment": "A kind's or a parameter's identity: a UUID of any version, lowercase. Generated identities are version 4; the pattern does not insist, so hand-written ones can be told apart by a reader.",
 			"type": "string",
 			"pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
 		},
@@ -30,31 +30,68 @@
 		"valueDomain": {
 			"type": "object",
 			"additionalProperties": false,
-			"required": ["id", "name", "description"],
+			"required": ["id", "name", "comparability", "description"],
 			"properties": {
 				"id": { "type": "string" },
 				"name": { "type": "string" },
+				"comparability": {
+					"$comment": "ProjectML K101: a domain fixes no unit; it declares exactly one of three levels of comparability, the last including the second.",
+					"enum": ["notComparable", "equality", "ordered"]
+				},
 				"description": { "type": "string" }
 			}
 		},
 		"parameter": {
 			"type": "object",
 			"additionalProperties": false,
-			"required": ["name", "valueDomainId", "whatToAsk"],
+			"required": ["id", "name", "valueDomainId", "whatToAsk"],
 			"properties": {
+				"id": { "$ref": "#/definitions/uuid" },
 				"name": { "type": "string" },
 				"valueDomainId": { "type": "string" },
 				"whatToAsk": { "type": "string" }
 			}
 		},
+		"criterion": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["parameter", "operation", "constant"],
+			"properties": {
+				"parameter": { "$ref": "#/definitions/uuidOrNull" },
+				"operation": {
+					"enum": ["equals", "isOneOf", "lessThan", "atMost", "greaterThan", "atLeast"]
+				},
+				"constant": {
+					"anyOf": [
+						{ "type": "string" },
+						{ "type": "array", "items": { "type": "string" } }
+					]
+				}
+			},
+			"$comment": "ProjectML K102: the constant is a value of the parameter's domain, or for isOneOf a set of them. How a value is written is notation, so it is text here.",
+			"if": {
+				"required": ["operation"],
+				"properties": { "operation": { "const": "isOneOf" } }
+			},
+			"then": {
+				"properties": { "constant": { "type": "array" } }
+			},
+			"else": {
+				"properties": { "constant": { "type": "string" } }
+			}
+		},
 		"rule": {
 			"type": "object",
 			"additionalProperties": false,
-			"required": ["id", "type", "inForce", "whenItApplies", "whatToLookFor", "implies"],
+			"required": ["id", "type", "inForce", "guard", "whenItApplies", "whatToLookFor", "implies"],
 			"properties": {
 				"id": { "type": "string" },
 				"type": { "enum": ["ConflictRule", "CompletenessRule"] },
 				"inForce": { "type": "boolean" },
+				"guard": {
+					"type": "array",
+					"items": { "$ref": "#/definitions/criterion" }
+				},
 				"whenItApplies": { "type": "string" },
 				"whatToLookFor": { "type": "string" },
 				"implies": { "$ref": "#/definitions/uuidOrNull" }
@@ -74,6 +111,7 @@
 			"required": [
 				"id",
 				"name",
+				"abstract",
 				"text",
 				"whenItApplies",
 				"parameters",
@@ -85,6 +123,10 @@
 			"properties": {
 				"id": { "$ref": "#/definitions/uuid" },
 				"name": { "type": "string" },
+				"abstract": {
+					"$comment": "ProjectML K109: no requirement is produced under an abstract kind, only under its specialisations. A kind is abstract only where it says so.",
+					"type": "boolean"
+				},
 				"text": { "type": "string" },
 				"whenItApplies": { "type": "string" },
 				"parameters": {

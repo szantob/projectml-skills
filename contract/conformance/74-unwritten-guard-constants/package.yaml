@@ -1,0 +1,45 @@
+schemaVersion: 5
+name: "A blank constant, an empty set, a set holding a blank entry, and one written"
+version: ""
+valueDomains:
+  - id: label
+    name: "Label"
+    comparability: equality
+    description: ""
+kinds:
+  - id: 00000000-0000-4000-8000-000000000001
+    name: "Capacity"
+    abstract: false
+    text: "shall seat {label} guests"
+    whenItApplies: "When it is needed."
+    parameters:
+      - id: 00000000-0000-4000-9000-000000000001
+        name: label
+        valueDomainId: label
+        whatToAsk: "What is it?"
+    rules:
+      - id: r1
+        type: ConflictRule
+        inForce: true
+        guard:
+          - parameter: 00000000-0000-4000-9000-000000000001
+            operation: equals
+            constant: " \t"
+          - parameter: 00000000-0000-4000-9000-000000000001
+            operation: isOneOf
+            constant: []
+          - parameter: 00000000-0000-4000-9000-000000000001
+            operation: isOneOf
+            constant:
+              - "a"
+              - ""
+          - parameter: 00000000-0000-4000-9000-000000000001
+            operation: isOneOf
+            constant:
+              - "a"
+        whenItApplies: "When it is stated."
+        whatToLookFor: "What contradicts it."
+        implies: null
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: null

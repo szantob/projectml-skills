@@ -1,0 +1,33 @@
+schemaVersion: 5
+name: "A concrete child whose template leaves out the parameter it inherits"
+version: ""
+valueDomains:
+  - id: headcount
+    name: "Headcount"
+    comparability: ordered
+    description: ""
+kinds:
+  - id: 00000000-0000-4000-8000-000000000001
+    name: "Capacity"
+    abstract: true
+    text: ""
+    whenItApplies: "When it is needed."
+    parameters:
+      - id: 00000000-0000-4000-9000-000000000001
+        name: count
+        valueDomainId: headcount
+        whatToAsk: "What is it?"
+    rules: []
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: null
+  - id: 00000000-0000-4000-8000-000000000002
+    name: "Seating"
+    abstract: false
+    text: "shall provide seats"
+    whenItApplies: "When it is needed."
+    parameters: []
+    rules: []
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: 00000000-0000-4000-8000-000000000001

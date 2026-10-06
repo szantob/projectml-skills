@@ -1,0 +1,50 @@
+schemaVersion: 5
+name: "A guard naming no parameter, and one naming another kind's"
+version: ""
+valueDomains:
+  - id: headcount
+    name: "Headcount"
+    comparability: ordered
+    description: ""
+kinds:
+  - id: 00000000-0000-4000-8000-000000000001
+    name: "Capacity"
+    abstract: false
+    text: "shall seat {count} people"
+    whenItApplies: "When it is needed."
+    parameters:
+      - id: 00000000-0000-4000-9000-000000000001
+        name: count
+        valueDomainId: headcount
+        whatToAsk: "What is it?"
+    rules:
+      - id: r1
+        type: ConflictRule
+        inForce: true
+        guard:
+          - parameter: null
+            operation: atLeast
+            constant: "100"
+          - parameter: 00000000-0000-4000-9000-000000000002
+            operation: atLeast
+            constant: "100"
+        whenItApplies: "When it is stated."
+        whatToLookFor: "What contradicts it."
+        implies: null
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: null
+  - id: 00000000-0000-4000-8000-000000000002
+    name: "Catering"
+    abstract: false
+    text: "shall feed {guests} guests"
+    whenItApplies: "When it is needed."
+    parameters:
+      - id: 00000000-0000-4000-9000-000000000002
+        name: guests
+        valueDomainId: headcount
+        whatToAsk: "What is it?"
+    rules: []
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: null

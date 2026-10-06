@@ -51,6 +51,41 @@ def positions_carrying(kinds, identity):
     ]
 
 
+def ancestor_positions(kinds, position):
+    """The positions of the ancestors of the kind at ``position``, nearest
+    first, as the contract's *What a kind has* defines them.
+
+    ``specialises`` is followed while it names exactly one kind. The walk
+    stops at an identity no kind carries, at one more than one kind carries
+    - which resolves to none, as everywhere here - and at a kind already
+    met, so a cycle is walked once.
+    """
+    chain = []
+    seen = {position}
+    current = position
+    while True:
+        named = kinds[current]["specialises"]
+        if named is None:
+            return chain
+        carrying = positions_carrying(kinds, named)
+        if len(carrying) != 1 or carrying[0] in seen:
+            return chain
+        current = carrying[0]
+        seen.add(current)
+        chain.append(current)
+
+
+def parameters_had(kinds, position):
+    """Every parameter the kind at ``position`` has, as ``(declaring
+    position, parameter)`` pairs: its own first, in order, then each
+    ancestor's, nearest ancestor first."""
+    return [
+        (owner, parameter)
+        for owner in [position, *ancestor_positions(kinds, position)]
+        for parameter in kinds[owner]["parameters"]
+    ]
+
+
 def cyclic_positions(kinds):
     """The positions of the kinds sitting on a specialisation cycle.
 

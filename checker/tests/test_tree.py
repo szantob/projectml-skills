@@ -9,6 +9,7 @@ def kind(identity, specialises=None):
     return {
         "id": identity,
         "name": "",
+        "abstract": False,
         "text": "",
         "whenItApplies": "",
         "parameters": [],
@@ -145,3 +146,40 @@ def test_an_ambiguous_subject_identity_is_refused():
 def test_a_child_on_a_cycle_is_not_drawn_beside_the_subject():
     kinds = [kind("a"), kind("b", "a"), kind("c", "d"), kind("d", "c")]
     assert tree.neighbourhood(kinds, 0).children == (1,)
+
+
+def with_parameters(identity, specialises, *names):
+    return dict(
+        kind(identity, specialises),
+        parameters=[
+            {"id": name, "name": name, "valueDomainId": "", "whatToAsk": ""}
+            for name in names
+        ],
+    )
+
+
+def test_ancestors_come_nearest_first():
+    kinds = [kind("a"), kind("b", "a"), kind("c", "b")]
+    assert tree.ancestor_positions(kinds, 2) == [1, 0]
+
+
+def test_ancestry_stops_at_a_parent_no_kind_carries():
+    assert tree.ancestor_positions([kind("a", "ghost")], 0) == []
+
+
+def test_ancestry_stops_at_a_parent_two_kinds_carry():
+    kinds = [kind("root"), kind("twin", "root"), kind("twin", "root"),
+             kind("child", "twin")]
+    assert tree.ancestor_positions(kinds, 3) == []
+
+
+def test_a_cycle_is_walked_once():
+    kinds = [kind("a", "b"), kind("b", "a")]
+    assert tree.ancestor_positions(kinds, 0) == [1]
+
+
+def test_a_kind_has_its_own_parameters_first_then_its_ancestors():
+    kinds = [with_parameters("a", None, "p"), with_parameters("b", "a", "q"),
+             with_parameters("c", "b", "r")]
+    had = tree.parameters_had(kinds, 2)
+    assert [(owner, p["name"]) for owner, p in had] == [(2, "r"), (1, "q"), (0, "p")]

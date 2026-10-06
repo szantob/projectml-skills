@@ -1,0 +1,63 @@
+schemaVersion: 5
+name: "Operations checked against each of the three levels of comparability"
+version: ""
+valueDomains:
+  - id: headcount
+    name: "Headcount"
+    comparability: ordered
+    description: ""
+  - id: label
+    name: "Label"
+    comparability: equality
+    description: ""
+  - id: note
+    name: "Note"
+    comparability: notComparable
+    description: ""
+kinds:
+  - id: 00000000-0000-4000-8000-000000000001
+    name: "Capacity"
+    abstract: false
+    text: "shall seat {count} people, as {label}, noting {note}"
+    whenItApplies: "When it is needed."
+    parameters:
+      - id: 00000000-0000-4000-9000-000000000001
+        name: count
+        valueDomainId: headcount
+        whatToAsk: "What is it?"
+      - id: 00000000-0000-4000-9000-000000000002
+        name: label
+        valueDomainId: label
+        whatToAsk: "What is it?"
+      - id: 00000000-0000-4000-9000-000000000003
+        name: note
+        valueDomainId: note
+        whatToAsk: "What is it?"
+    rules:
+      - id: r1
+        type: ConflictRule
+        inForce: true
+        guard:
+          - parameter: 00000000-0000-4000-9000-000000000001
+            operation: atLeast
+            constant: "10"
+          - parameter: 00000000-0000-4000-9000-000000000001
+            operation: equals
+            constant: "10"
+          - parameter: 00000000-0000-4000-9000-000000000002
+            operation: isOneOf
+            constant:
+              - "a"
+              - "b"
+          - parameter: 00000000-0000-4000-9000-000000000002
+            operation: lessThan
+            constant: "b"
+          - parameter: 00000000-0000-4000-9000-000000000003
+            operation: equals
+            constant: "x"
+        whenItApplies: "When it is stated."
+        whatToLookFor: "What contradicts it."
+        implies: null
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: null

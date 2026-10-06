@@ -1,10 +1,11 @@
-schemaVersion: 4
+schemaVersion: 5
 name: "A kind specialises one that does not exist"
 version: ""
 valueDomains: []
 kinds:
   - id: 00000000-0000-4000-8000-000000000001
     name: "A"
+    abstract: false
     text: "shall hold"
     whenItApplies: "Always."
     parameters: []

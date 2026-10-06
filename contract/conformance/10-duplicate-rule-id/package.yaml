@@ -1,10 +1,11 @@
-schemaVersion: 4
+schemaVersion: 5
 name: "A kind states two rules with one identity"
 version: ""
 valueDomains: []
 kinds:
   - id: 00000000-0000-4000-8000-000000000001
     name: "A"
+    abstract: false
     text: "shall hold"
     whenItApplies: "Always."
     parameters: []
@@ -12,12 +13,14 @@ kinds:
       - id: r1
         type: ConflictRule
         inForce: true
+        guard: []
         whenItApplies: "When two statements are made."
         whatToLookFor: "Two that cannot both hold."
         implies: null
       - id: r1
         type: ConflictRule
         inForce: true
+        guard: []
         whenItApplies: "When a third statement is made."
         whatToLookFor: "One that contradicts the first two."
         implies: null

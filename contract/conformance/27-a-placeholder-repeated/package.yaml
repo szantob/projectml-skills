@@ -1,10 +1,11 @@
-schemaVersion: 4
+schemaVersion: 5
 name: "A template naming one missing parameter twice"
 version: ""
 valueDomains: []
 kinds:
   - id: 00000000-0000-4000-8000-000000000001
     name: "A"
+    abstract: false
     text: "shall seat {count} and then {count} again"
     whenItApplies: "Always."
     parameters: []

@@ -1,0 +1,27 @@
+schemaVersion: 5
+name: "Two parameters with no name and nothing to ask"
+version: ""
+valueDomains:
+  - id: headcount
+    name: "Headcount"
+    comparability: ordered
+    description: ""
+kinds:
+  - id: 00000000-0000-4000-8000-000000000001
+    name: "Capacity"
+    abstract: false
+    text: "shall hold"
+    whenItApplies: "When it is needed."
+    parameters:
+      - id: 00000000-0000-4000-9000-000000000001
+        name: ""
+        valueDomainId: headcount
+        whatToAsk: ""
+      - id: 00000000-0000-4000-9000-000000000002
+        name: " "
+        valueDomainId: headcount
+        whatToAsk: "What is it?"
+    rules: []
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: null

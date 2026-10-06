@@ -1,16 +1,19 @@
-schemaVersion: 4
+schemaVersion: 5
 name: "Two value domains share an identity"
 version: ""
 valueDomains:
   - id: headcount
     name: "Headcount"
+    comparability: ordered
     description: "A whole number of people."
   - id: headcount
     name: "Headcount again"
+    comparability: ordered
     description: "The same identity, declared twice."
 kinds:
   - id: 00000000-0000-4000-8000-000000000001
     name: "A"
+    abstract: false
     text: "shall hold"
     whenItApplies: "Always."
     parameters: []

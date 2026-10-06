@@ -2,7 +2,7 @@
 	"schemaValid": true,
 	"issues": [],
 	"gaps": [
-		{ "kind": "00000000-0000-4000-8000-000000000001", "field": "whatToAsk", "parameter": "count" },
+		{ "kind": "00000000-0000-4000-8000-000000000001", "field": "whatToAsk", "parameter": "00000000-0000-4000-9000-000000000001" },
 		{ "kind": "00000000-0000-4000-8000-000000000001", "field": "ruleWhenItApplies", "parameter": null },
 		{ "kind": "00000000-0000-4000-8000-000000000001", "field": "ruleWhatToLookFor", "parameter": null }
 	]

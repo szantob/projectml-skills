@@ -1,0 +1,37 @@
+schemaVersion: 5
+name: "Two kinds on a cycle, each using the other's parameter"
+version: ""
+valueDomains:
+  - id: headcount
+    name: "Headcount"
+    comparability: ordered
+    description: ""
+kinds:
+  - id: 00000000-0000-4000-8000-000000000001
+    name: "Capacity"
+    abstract: false
+    text: "shall seat {count} people in {seats} seats"
+    whenItApplies: "When it is needed."
+    parameters:
+      - id: 00000000-0000-4000-9000-000000000001
+        name: count
+        valueDomainId: headcount
+        whatToAsk: "What is it?"
+    rules: []
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: 00000000-0000-4000-8000-000000000002
+  - id: 00000000-0000-4000-8000-000000000002
+    name: "Seating"
+    abstract: false
+    text: "shall provide {seats} seats for {count} people"
+    whenItApplies: "When it is needed."
+    parameters:
+      - id: 00000000-0000-4000-9000-000000000002
+        name: seats
+        valueDomainId: headcount
+        whatToAsk: "What is it?"
+    rules: []
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: 00000000-0000-4000-8000-000000000001

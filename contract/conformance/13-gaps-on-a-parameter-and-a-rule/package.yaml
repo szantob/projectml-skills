@@ -1,23 +1,27 @@
-schemaVersion: 4
+schemaVersion: 5
 name: "A parameter and a rule with their prose unwritten"
 version: ""
 valueDomains:
   - id: headcount
     name: "Headcount"
+    comparability: ordered
     description: "A whole number of people."
 kinds:
   - id: 00000000-0000-4000-8000-000000000001
     name: "Capacity"
+    abstract: false
     text: "shall seat {count} people"
     whenItApplies: "When the venue seats an audience."
     parameters:
-      - name: count
+      - id: 00000000-0000-4000-9000-000000000001
+        name: count
         valueDomainId: headcount
         whatToAsk: ""
     rules:
       - id: r1
         type: ConflictRule
         inForce: true
+        guard: []
         whenItApplies: ""
         whatToLookFor: ""
         implies: null

@@ -1,0 +1,19 @@
+schemaVersion: 5
+name: "An abstract kind stating a verification method and a wording rule"
+version: ""
+valueDomains:
+  - id: headcount
+    name: "Headcount"
+    comparability: ordered
+    description: ""
+kinds:
+  - id: 00000000-0000-4000-8000-000000000001
+    name: "Capacity"
+    abstract: true
+    text: ""
+    whenItApplies: "When it is needed."
+    parameters: []
+    rules: []
+    howItWouldBeVerified: "By counting."
+    wordingRule: "One sentence."
+    specialises: null

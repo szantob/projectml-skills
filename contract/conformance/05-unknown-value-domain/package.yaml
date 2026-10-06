@@ -1,14 +1,16 @@
-schemaVersion: 4
+schemaVersion: 5
 name: "A parameter names no declared value domain"
 version: ""
 valueDomains: []
 kinds:
   - id: 00000000-0000-4000-8000-000000000001
     name: "Capacity"
+    abstract: false
     text: "shall seat {count} people"
     whenItApplies: "When the venue seats an audience."
     parameters:
-      - name: count
+      - id: 00000000-0000-4000-9000-000000000001
+        name: count
         valueDomainId: ghost
         whatToAsk: "How many people must be seated?"
     rules: []

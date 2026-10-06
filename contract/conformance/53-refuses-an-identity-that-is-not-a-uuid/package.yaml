@@ -1,10 +1,11 @@
-schemaVersion: 4
+schemaVersion: 5
 name: "A kind whose identity is not a UUID"
 version: ""
 valueDomains: []
 kinds:
   - id: capacity
     name: "Capacity"
+    abstract: false
     text: "shall hold"
     whenItApplies: "Always."
     parameters: []

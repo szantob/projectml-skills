@@ -1,7 +1,7 @@
-"""Every case in the contract's corpus, run through the checker's functions.
+﻿"""Every case in the contract's corpus, run through the checker's functions.
 
 Results are compared as the contract says: parse verdict, schema verdict, and
-issues and gaps as multisets of codes and fields — never as wording, and never
+issues and gaps as multisets of codes and fields â€” never as wording, and never
 in order.
 """
 
@@ -65,7 +65,7 @@ def test_case(name):
 
 
 def test_the_corpus_is_all_there():
-    assert len(NAMES) == 58
+    assert len(NAMES) == 83
 
 
 def test_every_issue_code_and_every_gap_field_has_a_case():

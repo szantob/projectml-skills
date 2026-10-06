@@ -1,4 +1,4 @@
-schemaVersion: 4
+schemaVersion: 5
 name: "A version that looks like a date"
 version: 2026-09-19
 valueDomains: []

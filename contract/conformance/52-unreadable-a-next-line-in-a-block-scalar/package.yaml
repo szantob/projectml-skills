@@ -1,4 +1,4 @@
-schemaVersion: 4
+schemaVersion: 5
 name: |-
   A package holding a nextline character in a block scalar
 version: ""

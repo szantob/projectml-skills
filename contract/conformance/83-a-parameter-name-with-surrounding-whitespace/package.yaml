@@ -1,0 +1,27 @@
+schemaVersion: 5
+name: "A parameter name with spaces around it fills its placeholder, and is the same name as one without"
+version: ""
+valueDomains:
+  - id: headcount
+    name: "Headcount"
+    comparability: ordered
+    description: ""
+kinds:
+  - id: 00000000-0000-4000-8000-000000000001
+    name: "Capacity"
+    abstract: false
+    text: "shall seat {count} people"
+    whenItApplies: "When it is needed."
+    parameters:
+      - id: 00000000-0000-4000-9000-000000000001
+        name: " count "
+        valueDomainId: headcount
+        whatToAsk: "What is it?"
+      - id: 00000000-0000-4000-9000-000000000002
+        name: count
+        valueDomainId: headcount
+        whatToAsk: "What is it?"
+    rules: []
+    howItWouldBeVerified: "By inspection."
+    wordingRule: "One sentence."
+    specialises: null

@@ -3,14 +3,18 @@
 		"duplicate-kind-id",
 		"duplicate-kind-name",
 		"duplicate-value-domain-id",
+		"duplicate-parameter-id",
 		"duplicate-parameter-name",
 		"unknown-value-domain",
 		"unknown-parent",
 		"specialisation-cycle",
+		"template-on-abstract-kind",
 		"placeholder-without-parameter",
 		"parameter-without-placeholder",
 		"duplicate-rule-id",
-		"unknown-implied-definition"
+		"unknown-implied-definition",
+		"unknown-guard-parameter",
+		"guard-operation-not-allowed"
 	],
 	"gapFields": [
 		"name",
@@ -18,31 +22,39 @@
 		"whenItApplies",
 		"howItWouldBeVerified",
 		"wordingRule",
+		"parameterName",
 		"whatToAsk",
 		"ruleWhenItApplies",
-		"ruleWhatToLookFor"
+		"ruleWhatToLookFor",
+		"guardConstant"
 	],
 	"issueGlosses": {
 		"duplicate-kind-id": "Two or more kinds carry the same identity. Reported once per repeated identity, naming it, however many kinds carry it.",
 		"duplicate-kind-name": "Two or more kinds carry the same name. Reported once per kind carrying a shared name, naming that kind, so three kinds sharing one name give three entries. Names are compared across the whole package, not only among siblings, because a name is what tells a reader which kind is meant. The whitespace around a name is trimmed; otherwise names are compared exactly, character for character, so names differing only in case, or in how an accented letter is encoded, are different names. An unwritten name is a gap and is shared with nothing, however many kinds leave theirs unwritten.",
 		"duplicate-value-domain-id": "Two or more value domains carry the same identity. Reported once per repeated identity, as an issue about the package as a whole, so it names no kind.",
-		"duplicate-parameter-name": "A kind declares two or more parameters with the same name. Reported once per repeated name, naming the kind.",
-		"unknown-value-domain": "A parameter names a value domain the package does not declare, an empty name included. Reported once per such parameter, naming its kind.",
+		"duplicate-parameter-id": "A kind declares a parameter whose identity another parameter the kind has also carries — one it declares, or one it inherits (see README, What a kind has). Reported once per repeated identity, naming the declaring kind. A descendant that declares neither of the two is not reported, so one clash is not repeated down the tree.",
+		"duplicate-parameter-name": "A kind declares a parameter whose name another parameter the kind has also carries — one it declares, or one it inherits. Reported once per repeated name, naming the declaring kind; a descendant declaring neither is not reported. Names are compared as duplicate-kind-name compares them. An unwritten name is a gap and is shared with nothing.",
+		"unknown-value-domain": "A parameter names a value domain the package does not declare, an empty name included. Reported once per such parameter, naming the kind that declares it.",
 		"unknown-parent": "A kind specialises an identity no kind carries. Reported once per such kind. A kind that specialises itself is a cycle, not an unknown parent.",
 		"specialisation-cycle": "A kind sits on a specialisation cycle, a kind that specialises itself included. Reported once per kind on the cycle, each naming itself. A kind that only descends from a cycle is not reported.",
-		"placeholder-without-parameter": "A placeholder in a kind's wording template names no parameter of that kind. A placeholder is written {name}: whitespace inside the braces is trimmed, an empty placeholder is ignored, and a placeholder repeated within one template is reported once.",
-		"parameter-without-placeholder": "A parameter appears in no placeholder of its kind's wording template, read by the same rules. Reported once per parameter.",
+		"template-on-abstract-kind": "An abstract kind's wording template is written. No requirement is produced under an abstract kind, so it carries no template. Reported once per such kind.",
+		"placeholder-without-parameter": "A placeholder in the wording template of a kind that is not abstract names no parameter the kind has, declared or inherited. A placeholder is written {name}: whitespace inside the braces is trimmed, an empty placeholder is ignored, and a placeholder repeated within one template is reported once. An abstract kind is never checked.",
+		"parameter-without-placeholder": "A parameter a kind that is not abstract has, declared or inherited, appears in no placeholder of the kind's wording template, read by the same rules. Reported once per such parameter, naming the kind whose template lacks it. A parameter whose name is unwritten is a gap, not this. An abstract kind is never checked.",
 		"duplicate-rule-id": "A kind states two or more rules with the same identity. Reported once per repeated identity, naming the kind. A rule's identity is unique among its own kind's rules only, so the same identity on rules of two different kinds is not an issue.",
-		"unknown-implied-definition": "A CompletenessRule implies no kind, or implies an identity no kind carries. Reported once per such rule, naming its kind. A ConflictRule is never checked, and a rule is checked whether or not it is in force."
+		"unknown-implied-definition": "A CompletenessRule implies no kind, or implies an identity no kind carries. Reported once per such rule, naming its kind. A ConflictRule is never checked, and a rule is checked whether or not it is in force.",
+		"unknown-guard-parameter": "A criterion of a rule's guard names no parameter, or names an identity that none of the parameters the rule's kind has carries, declared or inherited. Reported once per such criterion, naming the kind. A rule is checked whether or not it is in force.",
+		"guard-operation-not-allowed": "A criterion's operation is not one its parameter's value domain defines: equals and isOneOf need a domain comparable for equality or ordered, the four orderings an ordered one, and a domain that is not comparable defines none. Reported once per such criterion, naming the kind. Decided only where exactly one parameter the kind has carries the identity the criterion names, and exactly one value domain carries the identity that parameter names; otherwise another issue already says what is wrong, and this one is not reported. A rule is checked whether or not it is in force."
 	},
 	"gapGlosses": {
 		"name": "A kind's name is unwritten. For this field and every other, text of only whitespace counts as unwritten, and whitespace is the space, tab, carriage return and line feed — nothing else, whatever the implementation's language calls whitespace.",
-		"text": "A kind's wording template is unwritten.",
+		"text": "A kind's wording template is unwritten. Not reported for an abstract kind, which carries no template.",
 		"whenItApplies": "A kind's statement of when it applies is unwritten.",
-		"howItWouldBeVerified": "A kind's statement of how it would be verified is unwritten.",
-		"wordingRule": "A kind's wording rule is unwritten.",
-		"whatToAsk": "A parameter's statement of what to ask is unwritten. The only gap that names a parameter, which it does by name.",
+		"howItWouldBeVerified": "A kind's statement of how it would be verified is unwritten. Not reported for an abstract kind, to which it does not apply.",
+		"wordingRule": "A kind's wording rule is unwritten. Not reported for an abstract kind, to which it does not apply.",
+		"parameterName": "A parameter's name is unwritten. Names the kind declaring it and the parameter, by identity.",
+		"whatToAsk": "A parameter's statement of what to ask is unwritten. Names the kind declaring it and the parameter, by identity. Reported for an abstract kind too: its parameters are still filled, through its specialisations.",
 		"ruleWhenItApplies": "A rule's statement of when it applies is unwritten. Reported once per such rule, naming its kind and no parameter, so two such rules on one kind give two identical entries. A rule is checked whether or not it is in force.",
-		"ruleWhatToLookFor": "A rule's statement of what to look for is unwritten. Reported once per such rule, naming its kind and no parameter, so two such rules on one kind give two identical entries. A rule is checked whether or not it is in force."
+		"ruleWhatToLookFor": "A rule's statement of what to look for is unwritten. Reported once per such rule, naming its kind and no parameter, so two such rules on one kind give two identical entries. A rule is checked whether or not it is in force.",
+		"guardConstant": "A criterion's constant is unwritten: a text of only whitespace, or for isOneOf an empty list or a list holding such a text. Reported once per such criterion, naming the rule's kind and the parameter the criterion names, which is null where it names none. A rule is checked whether or not it is in force."
 	}
 }

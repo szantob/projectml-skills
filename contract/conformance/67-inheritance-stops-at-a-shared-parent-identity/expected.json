@@ -1,0 +1,8 @@
+{
+	"schemaValid": true,
+	"issues": [
+		{ "code": "duplicate-kind-id", "kind": "00000000-0000-4000-8000-000000000001" },
+		{ "code": "placeholder-without-parameter", "kind": "00000000-0000-4000-8000-000000000003" }
+	],
+	"gaps": []
+}

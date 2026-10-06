@@ -9,12 +9,14 @@ This is the editor's notation, not ProjectML's. ProjectML is a metamodel and has
 
 ## What is here
 
-- `package.schema.json` — the written shape of a package, schema version 4. **Strict**: every attribute
+- `package.schema.json` — the written shape of a package, schema version 5. **Strict**: every attribute
   is required and no other attribute is allowed. An agent adding an attribute of its own would be
-  inventing metamodel, so the schema refuses it. No earlier version is read: there is nothing to migrate.
-  **A kind's identity is a UUID**, and so is what a `specialises` or an `implies` names: lowercase, of any
-  version. An identity is a label, not a summary, and one that carries no meaning is one nobody is
-  tempted to edit; tools generate version 4. Value domain and rule identities are free text still.
+  inventing metamodel, so the schema refuses it. No earlier version is read: until 1.0 there is nothing
+  to migrate. **A kind's identity is a UUID, and so is a parameter's**, and so is what a `specialises`, an
+  `implies` or a guard criterion names: lowercase, of any version. An identity is a label, not a summary,
+  and one that carries no meaning is one nobody is tempted to edit; tools generate version 4. Value domain
+  and rule identities are free text still. A parameter also has a **name**, which is what a placeholder
+  writes: a template is prose a person reads, and the identity is what everything else names.
 - `vocabulary.json` — the issue codes and gap fields a checker may report, each with a gloss saying exactly
   when it is reported and how often. Implementations are compared on the codes and fields, never on the
   wording of their messages.
@@ -52,10 +54,25 @@ implementations can disagree about what a file says before any rule is applied t
 YAML 1.1 differs on most of these points, and PyYAML's `safe_load` implements YAML 1.1. A consumer must use
 a reader that follows the rules above, whatever language it is written in.
 
+## What a kind has
+
+Several rules ask which parameters a kind *has*, not only which it declares: a specialisation has every
+parameter its ancestors declare, each with its *what to ask*, and redeclares none. Two implementations
+resolving ancestry differently would disagree about a package before any rule ran, so it is stated once:
+
+- A kind has the parameters it declares and the parameters every one of its ancestors declares.
+- Its ancestors are found by following `specialises` while it names **exactly one** kind. The walk stops at
+  an identity no kind carries, at one more than one kind carries, and at a kind already met, so a cycle is
+  walked once and every kind on it has the parameters of every other.
+
+Stopping at a shared identity follows the rule this repository holds everywhere: an identity that has to
+resolve to exactly one kind and does not resolves to none, and the issue that says so is raised on its own.
+
 ## What counts as whitespace
 
-Three rules turn on it: text of only whitespace is unwritten, whitespace inside a placeholder's braces is
-trimmed, and a kind's name is trimmed before it is compared with another's. Whitespace is **space, tab,
+Four rules turn on it: text of only whitespace is unwritten, whitespace inside a placeholder's braces is
+trimmed, a kind's name is trimmed before it is compared with another's, and a parameter's name is trimmed
+before it is compared with another's or with a placeholder. Whitespace is **space, tab,
 carriage return and line feed**, and nothing else. Every other character is text, however it prints — a
 name of one non-breaking space is a name.
 
@@ -68,7 +85,8 @@ with the language it is written in is the one thing this contract exists to prev
 - A case first says whether its file can be read at all. `"parses": false` marks one that cannot, and such a
   case carries nothing else. A case that can be read omits `parses`, and says whether it fits the schema.
 - Issues are compared as a code and the kind they name — or `null`, for an issue about the package as a
-  whole. Gaps are compared as a kind, a field, and, for a *what to ask* gap, the parameter.
+  whole. Gaps are compared as a kind, a field, and, for a gap about a parameter or a guard criterion, the
+  parameter's identity.
 - Results are compared as multisets: how many times an entry appears counts, the order it appears in does
   not. Two entries alike in every compared part are two results, not one — a checker that reports one where
   a case expects two does not conform. Several glosses say how often a finding is reported, and this is
@@ -77,7 +95,9 @@ with the language it is written in is the one thing this contract exists to prev
   anything written beside the verdict would be asserting nothing, so a test refuses it.
 - Kinds are named by identity because that is how the reports name them. Identities are UUIDs, written
   sequentially in the corpus (`00000000-0000-4000-8000-000000000001`, `…002`) so a reader can tell them
-  apart. They need not be unique; the corpus includes a case where two kinds share one.
+  apart, and a parameter's in a series of its own (`00000000-0000-4000-9000-000000000001`), so a kind and
+  a parameter are never mistaken for each other. They need not be unique; the corpus includes cases where
+  two kinds, or two parameters, share one.
 
 ## Rules for adding a case
 

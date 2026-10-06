@@ -7,6 +7,7 @@ def _kind(**changes):
     kind = {
         "id": "00000000-0000-4000-8000-000000000001",
         "name": "A",
+        "abstract": False,
         "text": "shall hold",
         "whenItApplies": "Always.",
         "parameters": [],
@@ -21,7 +22,7 @@ def _kind(**changes):
 
 def _package(*kinds):
     return {
-        "schemaVersion": 4,
+        "schemaVersion": 5,
         "name": "A package",
         "version": "",
         "valueDomains": [],
@@ -45,8 +46,8 @@ def test_a_misfit_says_where_it_is():
 
 
 def test_a_misfit_at_the_top_names_the_package():
-    wrong = contract_schema.misfits({**_package(), "schemaVersion": 3})
-    assert wrong == ["schemaVersion: 4 was expected"]
+    wrong = contract_schema.misfits({**_package(), "schemaVersion": 4})
+    assert wrong == ["schemaVersion: 5 was expected"]
 
 
 def test_a_document_that_is_not_a_mapping_does_not_fit():

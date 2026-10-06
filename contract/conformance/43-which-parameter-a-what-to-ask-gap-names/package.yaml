@@ -1,23 +1,28 @@
-schemaVersion: 4
+schemaVersion: 5
 name: "Three parameters, and only the middle one has nothing to ask"
 version: ""
 valueDomains:
   - id: headcount
     name: "Headcount"
+    comparability: ordered
     description: "A whole number of people."
 kinds:
   - id: 00000000-0000-4000-8000-000000000001
     name: "Capacity"
+    abstract: false
     text: "shall seat {count} people within {area} for {duration}"
     whenItApplies: "When the venue seats an audience."
     parameters:
-      - name: count
+      - id: 00000000-0000-4000-9000-000000000001
+        name: count
         valueDomainId: headcount
         whatToAsk: "How many people must be seated?"
-      - name: area
+      - id: 00000000-0000-4000-9000-000000000002
+        name: area
         valueDomainId: headcount
         whatToAsk: ""
-      - name: duration
+      - id: 00000000-0000-4000-9000-000000000003
+        name: duration
         valueDomainId: headcount
         whatToAsk: "For how long?"
     rules: []

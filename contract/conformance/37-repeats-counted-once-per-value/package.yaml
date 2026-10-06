@@ -1,47 +1,57 @@
-schemaVersion: 4
+schemaVersion: 5
 name: "One name repeated three times, another twice, and one rule identity three times"
 version: ""
 valueDomains:
   - id: headcount
     name: "Headcount"
+    comparability: ordered
     description: "A whole number of people."
 kinds:
   - id: 00000000-0000-4000-8000-000000000001
     name: "Capacity"
+    abstract: false
     text: "shall seat {count} people within {area}"
     whenItApplies: "When the venue seats an audience."
     parameters:
-      - name: count
+      - id: 00000000-0000-4000-9000-000000000001
+        name: count
         valueDomainId: headcount
         whatToAsk: "How many people must be seated?"
-      - name: count
+      - id: 00000000-0000-4000-9000-000000000002
+        name: count
         valueDomainId: headcount
         whatToAsk: "How many people, again?"
-      - name: count
+      - id: 00000000-0000-4000-9000-000000000003
+        name: count
         valueDomainId: headcount
         whatToAsk: "How many people, a third time?"
-      - name: area
+      - id: 00000000-0000-4000-9000-000000000004
+        name: area
         valueDomainId: headcount
         whatToAsk: "Over how large an area?"
-      - name: area
+      - id: 00000000-0000-4000-9000-000000000005
+        name: area
         valueDomainId: headcount
         whatToAsk: "Over how large an area, again?"
     rules:
       - id: r1
         type: ConflictRule
         inForce: true
+        guard: []
         whenItApplies: "When two statements are made."
         whatToLookFor: "Two that cannot both hold."
         implies: null
       - id: r1
         type: ConflictRule
         inForce: true
+        guard: []
         whenItApplies: "When a third statement is made."
         whatToLookFor: "One that contradicts the first two."
         implies: null
       - id: r1
         type: ConflictRule
         inForce: true
+        guard: []
         whenItApplies: "When a fourth statement is made."
         whatToLookFor: "One that contradicts any of the first three."
         implies: null

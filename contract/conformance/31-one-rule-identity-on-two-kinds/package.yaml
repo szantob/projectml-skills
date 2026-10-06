@@ -1,10 +1,11 @@
-schemaVersion: 4
+schemaVersion: 5
 name: "The same rule identity on the rules of two kinds"
 version: ""
 valueDomains: []
 kinds:
   - id: 00000000-0000-4000-8000-000000000001
     name: "A"
+    abstract: false
     text: "shall hold"
     whenItApplies: "Always."
     parameters: []
@@ -12,6 +13,7 @@ kinds:
       - id: r1
         type: ConflictRule
         inForce: true
+        guard: []
         whenItApplies: "When stated."
         whatToLookFor: "A contradiction."
         implies: null
@@ -21,6 +23,7 @@ kinds:
     specialises: null
   - id: 00000000-0000-4000-8000-000000000002
     name: "B"
+    abstract: false
     text: "shall hold"
     whenItApplies: "Always."
     parameters: []
@@ -28,6 +31,7 @@ kinds:
       - id: r1
         type: ConflictRule
         inForce: true
+        guard: []
         whenItApplies: "When stated."
         whatToLookFor: "A contradiction."
         implies: null

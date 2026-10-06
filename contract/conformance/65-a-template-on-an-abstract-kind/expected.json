@@ -1,0 +1,7 @@
+{
+	"schemaValid": true,
+	"issues": [
+		{ "code": "template-on-abstract-kind", "kind": "00000000-0000-4000-8000-000000000001" }
+	],
+	"gaps": []
+}
