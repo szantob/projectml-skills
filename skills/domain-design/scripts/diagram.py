@@ -29,13 +29,14 @@ import sys
 from pathlib import Path
 
 # Run as a script, this file's own directory is the only thing on the path,
-# and the checker it reads the tree from is four levels up. Tests reach it
-# through their conftest; a modeller running the command reaches it here.
-sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "checker"))
-
+# and the checker it reads the tree from is wherever dependencies.py finds it.
+# Tests reach it through their conftest; a modeller running the command
+# reaches it here.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import dependencies  # noqa: E402
+
+sys.path.insert(0, str(dependencies.CHECKER))
 
 try:
     import contract_schema

@@ -27,7 +27,11 @@ import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "checker"))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+import dependencies  # noqa: E402
+
+sys.path.insert(0, str(dependencies.CHECKER))
 
 import tree  # noqa: E402
 from findings import WHITESPACE  # noqa: E402

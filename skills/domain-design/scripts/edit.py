@@ -36,9 +36,10 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "checker"))
 
 import dependencies  # noqa: E402
+
+sys.path.insert(0, str(dependencies.CHECKER))
 
 try:
     import contract_schema

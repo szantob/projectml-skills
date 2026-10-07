@@ -26,6 +26,20 @@ package, and saying when the model is wrong.
   create, delete, add-parameter — carrying every kind's prose with what it moves, and prints the prose that may no
   longer hold where it now stands. It exits 0 when done, 1 when it refused rather than guess, and 2 for
   nothing to work from.
+- `release/` — `bundle.py`, which builds the skill as the one ZIP a claude.ai upload takes. When a
+  release is published, a workflow attaches that ZIP to it.
+
+## Using the skill
+
+- **In Claude Code**, as a plugin: `/plugin marketplace add szantob/projectml-skills`, then
+  `/plugin install projectml-skills@projectml-skills-marketplace`. The checker comes with it.
+- **In claude.ai**, as an uploaded skill: take `domain-design.zip` from a release, or build it with
+  `python release/bundle.py OUTPUT_DIRECTORY`, and upload it as a skill. Code execution has to be on,
+  since the skill runs the checker and its scripts. The ZIP carries the checker and the contract's schema
+  inside the skill, because claude.ai uploads nothing outside the skill's own folder; the scripts look
+  there first.
+
+Either way, the packages you build are yours: keep them out of this repository, which is public.
 
 ## The three phases
 

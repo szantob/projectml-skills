@@ -168,6 +168,11 @@ skill's directory, because the working directory will be the package's, not the 
 
     python ../../checker/check.py path/to/package.yaml
 
+That is where the checker is when the skill came with its repository, as a plugin. When it came as the
+bundle uploaded to claude.ai, the checker travels inside the skill, and the command is
+`python checker/check.py path/to/package.yaml`: use whichever of the two exists. The scripts find it in
+either place on their own.
+
 The checker and both scripts require Python with `PyYAML` and `jsonschema` installed; if either is missing,
 they say so, name what to install, and exit 2. Ask the modeller before installing anything. Its findings decide what is asked back -- the questions come from the package's
 own holes, not from memory of what a package usually needs. This has a limit at the very start: an empty
