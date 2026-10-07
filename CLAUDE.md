@@ -49,7 +49,7 @@ corpus. Cases are compared on codes and fields, never on the wording of a messag
 
 - English everywhere: code, comments, messages, commit messages.
 - Python follows PEP 8, with four-space indentation and a line of at most 88 characters. `ruff.toml` holds
-  the rule and the workflow runs `ruff check checker skills`, so this is a sentence a reader can check
+  the rule and the workflow runs `ruff check checker skills release`, so this is a sentence a reader can check
   rather than trust. There is no formatter: the code is read the way its prose is read, and where a line
   breaks is the author's.
 - JSON is indented with tabs. YAML is indented with two spaces, because YAML forbids tabs.

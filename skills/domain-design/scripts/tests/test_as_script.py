@@ -2,8 +2,8 @@
 
 Every other test in this package reaches ``diagram`` as an imported module,
 with ``conftest.py`` already on ``sys.path``. Nothing exercises the module's
-own bootstrap — the ``sys.path.insert`` that finds ``checker/`` by counting
-parent directories — so a wrong count there would pass every other test and
+own bootstrap — the ``sys.path.insert`` that finds ``checker/`` through
+``dependencies.py`` — so a wrong path there would pass every other test and
 only fail for someone typing the command.
 """
 

@@ -24,8 +24,12 @@ from pathlib import Path
 import yaml
 
 # Run as a script, this file's own directory is the only thing on the path;
-# the checker's reader is four levels up. See diagram.py.
-sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "checker"))
+# the checker's reader is wherever dependencies.py finds it. See diagram.py.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+import dependencies  # noqa: E402
+
+sys.path.insert(0, str(dependencies.CHECKER))
 
 import dialect  # noqa: E402
 

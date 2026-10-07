@@ -1,0 +1,30 @@
+name: bundle
+
+# When a release is published, attach the domain-design skill to it as the
+# one ZIP a claude.ai upload takes. See release/bundle.py.
+on:
+  release:
+    types: [published]
+
+# Attaching a file to a release is a write to the repository's contents, and
+# nothing else here writes.
+permissions:
+  contents: write
+
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.release.tag_name }}
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: python -m pip install -r checker/requirements-dev.txt
+      - run: python -m pytest release/tests
+      - run: python release/bundle.py dist
+      - run: gh release upload "$TAG" dist/domain-design.zip --clobber
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name }}
